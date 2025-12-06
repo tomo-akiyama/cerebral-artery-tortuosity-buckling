@@ -35,7 +35,6 @@ voxel_size = 0.5
 # 画像フォルダ
 import os
 case_path = os.path.join(dataset, case)
-print(f"case_path = {case_path}")
 
 # 画像フォルダ
 import os
@@ -53,13 +52,9 @@ mca_intermediate_data1_3ds_path = os.path.join(case_path, 'MCA Intermediate_data
 # Load the images
 input_MRA_path = os.path.join(case_path, case + "-MRA.nii.gz")
 input_T1_path = os.path.join(case_path, case + "-T1.nii.gz")
-print(f"input_MRA_path = {input_MRA_path}")
-print(f"input_T1_path = {input_T1_path}")
 
 img_MRA = ants.image_read(input_MRA_path); img_mra_array = img_MRA.numpy()
 img_T1 = ants.image_read(input_T1_path); img_T1_array = img_T1.numpy()
-print("MRA image header", img_MRA)
-print("T1w image header", img_T1)
 
 # Show original image
 
@@ -76,9 +71,7 @@ print("T1w image header", img_T1)
 #    ---------
 # Returns    ANTsImage
 
-print(f"spacing = {voxel_size} mm")
 resampled_img_T1 = ants.resample_image(img_T1, (voxel_size, voxel_size, voxel_size),False,4)
-print("T1 image header after resampling", resampled_img_T1)
 
 # Cell 8
 # Resamplingの影響でT1画像のbackgoundでマイナス値となったボクセル値のところを0にする
@@ -94,7 +87,6 @@ ants.image_write(resampled_img_T1, resampled_img_T1_path, ri=False)
 end = time.time()  # 現在時刻（処理完了後）を取得
 # 処理完了後の時刻（終了時間）を表示
 終了時間 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end))
-print("終了時間:", 終了時間)
 
 time_diff = end - start  # 処理完了後の時刻から処理開始前の時刻を減算する
 
@@ -102,7 +94,6 @@ time_diff = end - start  # 処理完了後の時刻から処理開始前の時�
 hours, remainder = divmod(time_diff, 3600)
 minutes, seconds = divmod(remainder, 60)
 # 処理にかかった時間を「時：分」形式で表示
-print("処理時間: {:02}時間{:02}分".format(int(hours), int(minutes)))
 
 # Cell 11
 tool.notify(case)
