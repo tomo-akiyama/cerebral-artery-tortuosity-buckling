@@ -132,7 +132,7 @@ if __name__ == "__main__":
     ax1.plot(Pi_P_results, max_displacements_steady, 'o-', markersize=ms, color=blue_color, clip_on=False)
     ax1.set_xlabel(r'Axial load parameter $\Pi_P$')
     ax1.set_ylabel(r'Steady-state maximum displacement $\max_x |h(x)|$')
-    ax1.yaxis.set_label_coords(-0.1,0.42) # y軸ラベルのy方向の位置を少し下げる（x方向はデフォルトのまま）
+    ax1.yaxis.set_label_coords(-0.1,0.42) # y軸ラベルのy方向の位置を少し下げる
     ax1.grid(True, alpha=0.3)
     ax1.set_ylim(0, max(max_displacements_steady)*1.1)
     # 目盛りを軸の位置に表示
