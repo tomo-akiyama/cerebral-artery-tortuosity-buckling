@@ -1,22 +1,23 @@
 # Cerebral Artery Tortuosity and Buckling Analysis
 
 This repository contains all custom Python code used in the study  
-**“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.”**
+**“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity”**.  
 
 This study aims to quantify age-related changes in cerebral arterial tortuosity  
 and to develop a mathematical model based on a mechanical buckling framework,  
-using head MRI data.
+using head MRI data.  
 
-本リポジトリは、以下の研究で使用した **すべてのカスタム Python コード**を収録している。  
-**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**
+The analyses include MRI preprocessing, vessel centerline extraction,  
+quantification of vascular tortuosity, numerical simulations based on a  
+buckling model, and statistical analyses.  
+
+本リポジトリは、**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**に関する研究で使用した  
+**すべてのカスタム Python コード**を収録している。  
 
 本研究では、ヒト脳動脈の加齢に伴う形態変化を対象とし、  
-頭部MRIデータの処理、血管中心線の抽出、血管弯曲の定量評価、  
+頭部MRIデータの前処理、血管中心線の抽出、血管弯曲の定量評価、  
 座屈モデルに基づく数値シミュレーション、  
-および統計解析を統合的に行っている。
-
-本リポジトリのコードを用いることで、  
-**論文に掲載された主要な解析および図表を再現できる構成**となっている。  
+および統計解析を統合的に行っている。  
 
 ---
 
