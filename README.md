@@ -1,31 +1,22 @@
 # Cerebral Artery Tortuosity and Buckling Analysis
 
-This repository contains all custom Python code used in the study  
-**“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity”**.  
+This repository contains all custom Python code used in the study **“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity”**.  
 
-This study aims to quantify age-related changes in cerebral arterial tortuosity  
-and to develop a mathematical model based on a mechanical buckling framework,  
-using head MRI data.  
+This study aims to quantify age-related changes in cerebral arterial tortuosity and to develop a mathematical model based on a mechanical buckling framework, using head MRI data.  
 
-The analyses include MRI preprocessing, vessel centerline extraction,  
-quantification of vascular tortuosity, numerical simulations based on a  
-buckling model, and statistical analyses.  
+The analyses include MRI preprocessing, vessel centerline extraction, quantification of vascular tortuosity, numerical simulations based on a mechanical buckling model, and statistical analyses.  
 
 
-本リポジトリは、**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**に関する研究で使用した  
-**すべてのカスタム Python コード**を収録している。  
+本リポジトリは、**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**に関する研究で使用した**すべてのカスタム Python コード**を収録している。  
 
-本研究では、ヒト脳動脈の加齢に伴う形態変化を対象とし、  
-頭部MRIデータの前処理、血管中心線の抽出、血管弯曲の定量評価、  
-座屈モデルに基づく数値シミュレーション、  
-および統計解析を統合的に行っている。  
+本研究では、ヒト脳動脈の加齢に伴う形態変化を対象とし、頭部MRIデータの前処理、血管中心線の抽出、血管弯曲の定量評価、座屈モデルに基づく数値シミュレーション、および統計解析を統合的に行っている。  
 
 ---
 
 ## Datasets
 
-All MRI data used in this study are publicly available human datasets,   
-including T1-weighted images and MR angiography.   
+All MRI data used in this study are publicly available human datasets, including T1-weighted images and MR angiography. 
+
 The IXI Dataset can be downloaded from the following URL:  [IXI Dataset](https://brain-development.org/ixi-dataset/)
 
 ---
@@ -64,8 +55,7 @@ conda activate cerebral-tortuosity-buckling
 
 ## Steps for Analysis
 
-The analysis presented in this study can be reproduced by executing the following
-Python scripts in order.
+The analysis presented in this study can be reproduced by executing the following Python scripts in order.
 
 ### 1. Image processing
 - `analysis_code/preprocessing.py`
@@ -127,8 +117,7 @@ See `environment.yml` for details of the Python/Conda environment used in this s
 ## Citation
 
 When using these codes, please cite the following reports:   
-Akiyama T., et al. (2025) Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.
-Journal.  
+Akiyama T., et al. (2025) Geometric analysis and mechanical buckling model of human cerebral artery tortuosity. Journal.  
 
 ---
 
