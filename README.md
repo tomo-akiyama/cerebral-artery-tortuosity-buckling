@@ -11,6 +11,7 @@ The analyses include MRI preprocessing, vessel centerline extraction,
 quantification of vascular tortuosity, numerical simulations based on a  
 buckling model, and statistical analyses.  
 
+
 本リポジトリは、**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**に関する研究で使用した  
 **すべてのカスタム Python コード**を収録している。  
 
@@ -23,10 +24,9 @@ buckling model, and statistical analyses.
 
 ## Datasets
 
-All MRI data used in this study are publicly available human datasets,
-including T1-weighted images and MR angiography.
-The IXI Dataset can be downloaded from the following URL:  
-[IXI Dataset](https://brain-development.org/ixi-dataset/)
+All MRI data used in this study are publicly available human datasets,   
+including T1-weighted images and MR angiography.   
+The IXI Dataset can be downloaded from the following URL:  [IXI Dataset](https://brain-development.org/ixi-dataset/)
 
 ---
 
