@@ -13,7 +13,7 @@ Cerebral Artery Buckling Project
 ---
 
 ## 使用したデータセット
-IXI Dataset(https://brain-development.org/ixi-dataset/)
+IXI Dataset (https://brain-development.org/ixi-dataset/)
 
 ---
 
@@ -34,7 +34,7 @@ IXI Dataset(https://brain-development.org/ixi-dataset/)
 
 ---
 
-## 🔧 インストール手順（Installation）
+## インストール手順（Installation）
 
 1. Anaconda または Miniconda をインストール  
 2. 以下のコマンドを実行：
@@ -43,7 +43,7 @@ conda activate cerebral-buckling
 
 ---
 
-## ▶ 解析の再現方法（How to reproduce the analysis）
+## 解析の再現方法（How to reproduce the analysis）
 
 本研究の解析は、以下の Python スクリプトを順に実行することで再現できます。
 
