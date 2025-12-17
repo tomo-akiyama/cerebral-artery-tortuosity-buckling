@@ -16,7 +16,7 @@ using head MRI data.
 および統計解析を統合的に行っている。
 
 本リポジトリのコードを用いることで、  
-**論文に掲載された主要な解析および図表を再現できる構成**となっている。
+**論文に掲載された主要な解析および図表を再現できる構成**となっている。  
 
 ---
 
@@ -42,7 +42,8 @@ Below is the directory structure of the project:
         figures/              # 論文で使用した図
         results/              # 中間・最終解析結果（CSV など）
         environment.yml       # conda 環境（再現性の確保）
-        README.md             # このファイル
+        README.md             # このファイル  
+        **日本語部分は修正予定**  
 
 ---
 
@@ -99,6 +100,7 @@ Generated figures and tables are saved in the `figures/` and `results/` director
 - AIC / BIC  
 - 尤度比検定（LRT）  
 - ブートストラップ信頼区間  
+**日本語部分は修正予定**
 
 ---
 
@@ -111,21 +113,21 @@ Generated figures and tables are saved in the `figures/` and `results/` director
 - 座屈波長 λ と血管半径 r のスケーリング  
 - 血圧・tethering・伸長 mismatch の負荷分解  
 - 加齢による tortuosity 増大の時間発展モデル  
+**日本語部分は修正予定**  
 
 ---
 
 ## Dependencies
 
-See `environment.yml` for details of the Python/Conda environment used in this study.
+See `environment.yml` for details of the Python/Conda environment used in this study.  
 
 ---
 
 ## Citation
 
-When using these codes, please cite the following reports: 
-Akiyama T., et al. (2025)
-Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.
-Journal.
+When using these codes, please cite the following reports:   
+Akiyama T., et al. (2025) Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.
+Journal.  
 
 ---
 
@@ -134,12 +136,12 @@ Journal.
 **First Author**  
 Tomoaki Akiyama (秋山 智明), MD  
 Email: akiyama.tomoaki@kyudai.jp  
-Affiliation:
-- Department of Neurosurgery, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 脳神経外科)
-- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)
+Affiliation:  
+- Department of Neurosurgery, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 脳神経外科)  
+- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)   
 
 **Corresponding Author**  
 Prof. Takashi Miura (三浦 岳), MD, PhD  
 Email: miura.takashi.869@m.kyushu-u.ac.jp  
-Affiliation:
-- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)
+Affiliation:  
+- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)  
