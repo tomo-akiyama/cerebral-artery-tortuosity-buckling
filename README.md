@@ -7,8 +7,8 @@ This study aims to quantify age-related changes in cerebral arterial tortuosity
 and to develop a mathematical model based on a mechanical buckling framework,  
 using head MRI data.
 
-本リポジトリは、以下の研究で使用した **すべてのカスタム Python コード**を収録している。
-**脳動脈弯曲の形態変化と座屈メカニズムの数理解析 (Geometric analysis and mechanical buckling model of human cerebral artery tortuosity)**
+本リポジトリは、以下の研究で使用した **すべてのカスタム Python コード**を収録している。  
+**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**
 
 本研究では、ヒト脳動脈の加齢に伴う形態変化を対象とし、  
 頭部MRIデータの処理、血管中心線の抽出、血管弯曲の定量評価、  
