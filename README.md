@@ -1,8 +1,9 @@
-# 脳動脈座屈（Cerebral Artery Buckling）解析プロジェクト  
+# 脳動脈座屈（Cerebral Artery Buckling）解析
 Cerebral Artery Buckling Project
 
 本リポジトリは、研究  
-**「脳動脈の形態変化と座屈メカニズムの数理解析（仮題）」**  
+**「脳動脈の形態変化と座屈メカニズムの数理解析」**  
+**「Geometric analysis and mechanical buckling model of human cerebral artery tortuosity」**
 で使用したすべての **カスタム Python コード**を含んでいます。
 
 脳 MRA データの処理、血管中心線の抽出、曲率・ねじれ計測、  
@@ -11,7 +12,12 @@ Cerebral Artery Buckling Project
 
 ---
 
-## 📁 ディレクトリ構成（Directory structure）
+## 使用したデータセット
+IXI Dataset(https://brain-development.org/ixi-dataset/)
+
+---
+
+## ディレクトリ構成（Directory structure）
 
 以下はプロジェクトのフォルダ構成です：
 
@@ -115,14 +121,14 @@ Journal.
 
 ## 連絡先（Contacts）
 **筆頭著者（First Author）**  
-秋山 智明 (Tomoaki Akiyama), MD
-Email: akiyama.tomoaki@kyudai.jp
+秋山 智明 (Tomoaki Akiyama), MD  
+Email: akiyama.tomoaki@kyudai.jp  
 所属：  
 ・九州大学大学院医学研究院 脳神経外科  
 ・九州大学大学院医学研究院 系統解剖学分野
 
 **責任著者（Corresponding Author）**  
-三浦 岳 (Prof. Takashi Miura), MD, PhD
-Email: miura.takashi.869@m.kyushu-u.ac.jp
+三浦 岳 (Prof. Takashi Miura), MD, PhD  
+Email: miura.takashi.869@m.kyushu-u.ac.jp  
 所属：  
 ・九州大学大学院医学研究院 系統解剖学分野
