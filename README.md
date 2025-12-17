@@ -1,27 +1,40 @@
-# 脳動脈座屈（Cerebral Artery Buckling）解析
-Cerebral Artery Buckling Project
+# Cerebral Artery Tortuosity and Buckling Analysis
 
-本リポジトリは、研究  
-**「脳動脈の形態変化と座屈メカニズムの数理解析」**  
-**「Geometric analysis and mechanical buckling model of human cerebral artery tortuosity」**
-で使用したすべての **カスタム Python コード**を含んでいます。
+This repository contains all custom Python code used in the study  
+**“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.”**
 
-脳 MRA データの処理、血管中心線の抽出、曲率・ねじれ計測、  
-座屈モデルの数値シミュレーション、統計解析（LMM, GAM, GAMM）など、  
-論文に掲載された解析を再現できるよう構成されています。
+This study aims to quantify age-related changes in cerebral arterial tortuosity  
+and to develop a mathematical model based on a mechanical buckling framework,  
+using head MRI data.
+
+本リポジトリは、以下の研究で使用した **すべてのカスタム Python コード**を収録している。
+- **脳動脈の形態変化と座屈メカニズムの数理解析**  
+- **Geometric analysis and mechanical buckling model of human cerebral artery tortuosity**
+
+本研究では、ヒト脳動脈の加齢に伴う形態変化を対象とし、  
+頭部MRIデータの処理、血管中心線の抽出、血管弯曲の定量評価、  
+座屈モデルに基づく数値シミュレーション、  
+および統計解析を統合的に行っている。
+
+本リポジトリのコードを用いることで、  
+**論文に掲載された主要な解析および図表を再現できる構成**となっている。
 
 ---
 
-## 使用したデータセット
-IXI Dataset (https://brain-development.org/ixi-dataset/)
+## Datasets
+
+All MRI data used in this study are publicly available human datasets,
+including T1-weighted images and MR angiography.
+The IXI Dataset can be downloaded from the following URL:  
+[IXI Dataset](https://brain-development.org/ixi-dataset/)
 
 ---
 
-## ディレクトリ構成（Directory structure）
+## Directory Structure
 
-以下はプロジェクトのフォルダ構成です：
+Below is the directory structure of the project:
 
-    cerebral_artery_buckling_project/
+    cerebral-artery-tortuosity-buckling/
         data/                 # MRA, セグメンテーション, 中心線データ
         notebooks/            # 探索用 Jupyter notebook
         analysis_code/        # 論文用に整理した Python コード
@@ -34,45 +47,52 @@ IXI Dataset (https://brain-development.org/ixi-dataset/)
 
 ---
 
-## インストール手順（Installation）
+## Requirements
 
-1. Anaconda または Miniconda をインストール  
-2. 以下のコマンドを実行：
+VMTK requires an x86_64 (Intel / AMD) Conda environment.
+
+- Windows / Linux with Intel or AMD CPUs are supported.
+- On Apple Silicon (arm64) Macs, VMTK must be run under Rosetta using an x86_64 Conda distribution.
+
+```bash
 conda env create -f environment.yml
-conda activate cerebral-buckling
+conda activate cerebral-tortuosity-buckling
+```
 
 ---
 
-## 解析の再現方法（How to reproduce the analysis）
+## Steps for Analysis
 
-本研究の解析は、以下の Python スクリプトを順に実行することで再現できます。
+The analysis presented in this study can be reproduced by executing the following
+Python scripts in order.
 
-### 1. 画像処理（Image processing）
-analysis_code/preprocessing.py
-analysis_code/segmentation.py
-analysis_code/centerline_extraction.py
+### 1. Image processing
+- `analysis_code/preprocessing.py`
+- `analysis_code/segmentation.py`
+- `analysis_code/centerline_extraction.py`
 
-### 2. 幾何学解析（Geometry analysis）
-analysis_code/curvature_torsion.py
-analysis_code/feature_extraction.py
+### 2. Geometric analysis
+- `analysis_code/curvature_torsion.py`
+- `analysis_code/feature_extraction.py`
 
-### 3. 座屈モデル・シミュレーション（Buckling model）
-simulation/buckling_solver.py
-simulation/amplitude_estimation.py
-simulation/wavelength_radius_scaling.py
+### 3. Buckling model and numerical simulation
+- `simulation/buckling_solver.py`
+- `simulation/amplitude_estimation.py`
+- `simulation/wavelength_radius_scaling.py`
 
-### 4. 統計解析（Statistical analysis）
-statistics/stat_LMM.py     # 線形混合効果モデル
-statistics/stat_GAM.py     # 一般化加法モデル
-statistics/stat_GAMM.py    # R mgcv を用いた GAMM（任意）
+### 4. Statistical analysis
+- `statistics/stat_LMM.py`   (Linear mixed-effects model)
+- `statistics/stat_GAM.py`   (Generalized additive model)
+- `statistics/stat_GAMM.py`  (GAMM using R mgcv; optional)
 
-### 5. 図の作成（Figures）
-analysis_code/plotting.py
-生成された図や表は `figures/` および `results/` に保存されます。
+### 5. Figure generation
+- `analysis_code/plotting.py`
+
+Generated figures and tables are saved in the `figures/` and `results/` directories.
 
 ---
 
-##  統計解析（Statistical analysis）
+##  Statistical Analysis
 
 - LMM（線形混合効果モデル）  
 - GAM（一般化加法モデル）  
@@ -83,9 +103,9 @@ analysis_code/plotting.py
 
 ---
 
-##  座屈モデル（Buckling model）
+##  Mechanical Buckling Model
 
-`simulation/` には以下の解析が含まれます：
+`simulation/` includes the following:
 
 - Euler buckling モデル  
 - 弱非線形近似（amplitude equation）  
@@ -95,40 +115,32 @@ analysis_code/plotting.py
 
 ---
 
-## 依存パッケージ（Dependencies）
+## Dependencies
 
-- Python 3.10+  
-- NumPy / SciPy  
-- pandas  
-- scikit-learn  
-- statsmodels  
-- matplotlib / seaborn  
-- pyvista / VMTK / vtk  
-- optional: rpy2 + R mgcv（GAMM 用）  
-
-詳細は `environment.yml` を参照してください。
+See `environment.yml` for details of the Python/Conda environment used in this study.
 
 ---
 
-## 引用（Citation）
+## Citation
 
-本コードを利用する際は以下を引用してください：
+When using these codes, please cite the following reports: 
 Akiyama T., et al. (2025)
 Geometric analysis and mechanical buckling model of human cerebral artery tortuosity.
 Journal.
 
 ---
 
-## 連絡先（Contacts）
-**筆頭著者（First Author）**  
-秋山 智明 (Tomoaki Akiyama), MD  
-Email: akiyama.tomoaki@kyudai.jp  
-所属：  
-・九州大学大学院医学研究院 脳神経外科  
-・九州大学大学院医学研究院 系統解剖学分野
+## Contacts
 
-**責任著者（Corresponding Author）**  
-三浦 岳 (Prof. Takashi Miura), MD, PhD  
+**First Author**  
+Tomoaki Akiyama (秋山 智明), MD  
+Email: akiyama.tomoaki@kyudai.jp  
+Affiliation:
+- Department of Neurosurgery, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 脳神経外科)
+- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)
+
+**Corresponding Author**  
+Prof. Takashi Miura (三浦 岳), MD, PhD  
 Email: miura.takashi.869@m.kyushu-u.ac.jp  
-所属：  
-・九州大学大学院医学研究院 系統解剖学分野
+Affiliation:
+- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)
