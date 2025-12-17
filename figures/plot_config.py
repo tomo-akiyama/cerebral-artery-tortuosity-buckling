@@ -65,3 +65,7 @@ colors = [
 # subplotごとのラベル "a", "b", "c" を左上に追加（bold & fontsize=12）
 label_fontsize = plt.rcParams["axes.titlesize"]  # タイトルと同じサイズに合わせる
 
+# 図内テキスト用のフォントサイズ
+text_fontsize = 8  # 小さめのテキスト用（8）
+text_fontsize_large = 10  # 大きめのテキスト用（10）
+

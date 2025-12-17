@@ -4,37 +4,37 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from simulation import run_semi_implicit_simulation
-from plot_config import (
+from figures.plot_config import (
     alpha, ms, blue_color, lightblue_color, orange_color, 
     lightorange_color, gray_color
 )
 
 if __name__ == "__main__":
-    # パラメータ設定
+# パラメータ設定
     from parameters import L0, N, dt, t_max, Pi_ks, noise_std, seed, save_interval_t
 
-    # Pi_Pの範囲を設定（分岐点付近を重点的に）
-    # 理論的には、線形安定性解析から分岐点が決まる
-    Pi_P_min = 0.0
-    Pi_P_max = 2.0
+# Pi_Pの範囲を設定（分岐点付近を重点的に）
+# 理論的には、線形安定性解析から分岐点が決まる
+Pi_P_min = 0.0
+Pi_P_max = 2.0
     n_Pi_P = 80  # Pi_Pのサンプル数（計算時間を考慮して調整）
 
-    Pi_P_values = np.linspace(Pi_P_min, Pi_P_max, n_Pi_P)
+Pi_P_values = np.linspace(Pi_P_min, Pi_P_max, n_Pi_P)
 
     # 臨界荷重は Pi_P_cr = 2 * sqrt(Pi_ks)
     Pi_P_cr = 2 * (Pi_ks)**(1/2)
 
-    print(f"Pi_ks = {Pi_ks} を固定して、Pi_P を {Pi_P_min} から {Pi_P_max} まで変化させる...")
+print(f"Pi_ks = {Pi_ks} を固定して、Pi_P を {Pi_P_min} から {Pi_P_max} まで変化させる...")
     print(f"臨界荷重: Pi_P_cr = {Pi_P_cr:.4f}")
-    print(f"シミュレーション回数: {n_Pi_P}")
+print(f"シミュレーション回数: {n_Pi_P}")
 
     # 各Pi_Pでの定常状態の最大変位と波長を記録
-    max_displacements_steady = []
+max_displacements_steady = []
     dominant_wavelengths = []
-    Pi_P_results = []
+Pi_P_results = []
 
-    # 定常状態を判定するための閾値（最後の20%の時間での変動が小さいことを確認）
-    steady_state_threshold = 0.01
+# 定常状態を判定するための閾値（最後の20%の時間での変動が小さいことを確認）
+steady_state_threshold = 0.01
 
     def calculate_dominant_wavelength(x, h):
         """支配的な波長を計算（FFT使用）"""
@@ -60,58 +60,58 @@ if __name__ == "__main__":
         
         return wavelength
 
-    for i, Pi_P in enumerate(Pi_P_values):
-        if (i + 1) % 5 == 0 or i == 0:
-            print(f"Progress: {i+1}/{n_Pi_P}, Pi_P = {Pi_P:.3f}")
-        
-        # シミュレーション実行
-        x, t_saved, h_saved = run_semi_implicit_simulation(
-            Pi_P=Pi_P,
-            Pi_ks=Pi_ks,
-            L0=L0,
-            N=N,
-            t_max=t_max,
-            dt=dt,
-            noise_std=noise_std,
-            seed=seed,
+for i, Pi_P in enumerate(Pi_P_values):
+    if (i + 1) % 5 == 0 or i == 0:
+        print(f"Progress: {i+1}/{n_Pi_P}, Pi_P = {Pi_P:.3f}")
+    
+    # シミュレーション実行
+    x, t_saved, h_saved = run_semi_implicit_simulation(
+        Pi_P=Pi_P,
+        Pi_ks=Pi_ks,
+        L0=L0,
+        N=N,
+        t_max=t_max,
+        dt=dt,
+        noise_std=noise_std,
+        seed=seed,
             save_every=int(save_interval_t / dt),  # 定常状態を確認するための保存間隔
-        )
+    )
+    
+    # 定常状態の最大変位を計算（最後の20%の時間での平均）
+    max_displacements = np.array([np.max(np.abs(h)) for h in h_saved])
+    
+    # 最後の20%の時間での平均と標準偏差
+    n_last = int(len(max_displacements) * 0.2)
+    if n_last > 0:
+        steady_max_disp = np.mean(max_displacements[-n_last:])
+        steady_std = np.std(max_displacements[-n_last:])
         
-        # 定常状態の最大変位を計算（最後の20%の時間での平均）
-        max_displacements = np.array([np.max(np.abs(h)) for h in h_saved])
-        
-        # 最後の20%の時間での平均と標準偏差
-        n_last = int(len(max_displacements) * 0.2)
-        if n_last > 0:
-            steady_max_disp = np.mean(max_displacements[-n_last:])
-            steady_std = np.std(max_displacements[-n_last:])
-            
-            # 定常状態かどうかを確認（変動が小さい）
-            if steady_std < steady_state_threshold:
-                max_displacements_steady.append(steady_max_disp)
-                Pi_P_results.append(Pi_P)
+        # 定常状態かどうかを確認（変動が小さい）
+        if steady_std < steady_state_threshold:
+            max_displacements_steady.append(steady_max_disp)
+            Pi_P_results.append(Pi_P)
                 # 定常状態のパターンから波長を計算
                 h_steady = np.mean(h_saved[-n_last:], axis=0)  # 最後のn_last個の平均
                 wavelength = calculate_dominant_wavelength(x, h_steady)
                 dominant_wavelengths.append(wavelength)
-            else:
-                # 変動が大きい場合は最後の値を採用
-                max_displacements_steady.append(max_displacements[-1])
-                Pi_P_results.append(Pi_P)
+        else:
+            # 変動が大きい場合は最後の値を採用
+            max_displacements_steady.append(max_displacements[-1])
+            Pi_P_results.append(Pi_P)
                 h_steady = h_saved[-1]
                 wavelength = calculate_dominant_wavelength(x, h_steady)
                 dominant_wavelengths.append(wavelength)
-        else:
-            # データが少ない場合は最後の値を使用
-            max_displacements_steady.append(max_displacements[-1])
-            Pi_P_results.append(Pi_P)
+    else:
+        # データが少ない場合は最後の値を使用
+        max_displacements_steady.append(max_displacements[-1])
+        Pi_P_results.append(Pi_P)
             h_steady = h_saved[-1]
             wavelength = calculate_dominant_wavelength(x, h_steady)
             dominant_wavelengths.append(wavelength)
 
-    # 結果をnumpy配列に変換
-    Pi_P_results = np.array(Pi_P_results)
-    max_displacements_steady = np.array(max_displacements_steady)
+# 結果をnumpy配列に変換
+Pi_P_results = np.array(Pi_P_results)
+max_displacements_steady = np.array(max_displacements_steady)
     dominant_wavelengths = np.array(dominant_wavelengths)
 
     # 臨界波数と臨界波長を計算
@@ -176,20 +176,20 @@ if __name__ == "__main__":
     if len(wavelengths_post_critical) > 0:
         ax2.set_ylim(0, max(wavelengths_post_critical) * 1.5)
 
-    # 保存
+# 保存
     output_path = "simulation/buckling_bifurcation_and_wavelength_selection.pdf"
     fig.savefig(output_path, bbox_inches='tight')
-    print(f"\nBifurcation diagram saved to: {output_path}")
+print(f"\nBifurcation diagram saved to: {output_path}")
 
-    plt.show()
+plt.show()
 
-    # 分岐点の推定（最大変位が閾値を超える最初のPi_P）
+# 分岐点の推定（最大変位が閾値を超える最初のPi_P）
     threshold = 0.1
-    above_threshold = max_displacements_steady > threshold
-    if np.any(above_threshold):
-        bifurcation_idx = np.argmax(above_threshold)
-        Pi_P_critical = Pi_P_results[bifurcation_idx]
-        print(f"\nEstimated bifurcation point: Pi_P ≈ {Pi_P_critical:.4f}")
-        print(f"  Maximum displacement at this point: {max_displacements_steady[bifurcation_idx]:.6f}")
-    else:
-        print("\nNo bifurcation point found (adjust the threshold)")
+above_threshold = max_displacements_steady > threshold
+if np.any(above_threshold):
+    bifurcation_idx = np.argmax(above_threshold)
+    Pi_P_critical = Pi_P_results[bifurcation_idx]
+    print(f"\nEstimated bifurcation point: Pi_P ≈ {Pi_P_critical:.4f}")
+    print(f"  Maximum displacement at this point: {max_displacements_steady[bifurcation_idx]:.6f}")
+else:
+    print("\nNo bifurcation point found (adjust the threshold)")

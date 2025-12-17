@@ -7,7 +7,7 @@ import matplotlib.colors as mcolors
 from matplotlib.animation import FuncAnimation, PillowWriter
 from scipy.sparse import diags, eye
 from scipy.sparse.linalg import splu
-from plot_config import (
+from figures.plot_config import (
     alpha, ms, blue_color, lightblue_color, orange_color, 
     lightorange_color, gray_color, colors, label_fontsize
 )
@@ -120,30 +120,30 @@ def run_semi_implicit_simulation(
     return x, np.array(t_saved), np.array(h_saved)
 
 if __name__ == "__main__":
-    # パラメータ設定
+# パラメータ設定
     Pi_P = 1      # 適当な値
     from parameters import L0, N, dt, t_max, Pi_ks, noise_std, seed, save_interval_t
 
     print(f"パラメータ: Pi_P = {Pi_P}, Pi_ks = {Pi_ks}, L0 = {L0}, N = {N}, t_max = {t_max}, dt = {dt}")
     print(f"k_max = (Pi_P / 2)**(1/2) = {(Pi_P / 2)**(1/2)}")
 
-    print("シミュレーション開始...")
-    x, t_saved, h_saved = run_semi_implicit_simulation(
-        Pi_P=Pi_P,
-        Pi_ks=Pi_ks,
-        L0=L0,
-        N=N,
-        t_max=t_max,
-        dt=dt,
+print("シミュレーション開始...")
+x, t_saved, h_saved = run_semi_implicit_simulation(
+    Pi_P=Pi_P,
+    Pi_ks=Pi_ks,
+    L0=L0,
+    N=N,
+    t_max=t_max,
+    dt=dt,
         noise_std=noise_std,
         seed=seed,
         save_every=int(save_interval_t / dt),  # tの保存間隔
-    )
+)
 
-    print(f"シミュレーション完了。保存された時刻数: {len(t_saved)}")
+print(f"シミュレーション完了。保存された時刻数: {len(t_saved)}")
 
-    # 最大変位 max_x |h(x,t)| を計算
-    max_displacements = [np.max(np.abs(h)) for h in h_saved]
+# 最大変位 max_x |h(x,t)| を計算
+max_displacements = [np.max(np.abs(h)) for h in h_saved]
 
     # 初期状態を真っ直ぐに見せるために、初期状態を0にする
     h_saved_vis = h_saved.copy()
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     max_displacements_vis = max_displacements.copy()
     max_displacements_vis[0] = 0.0
 
-    # 2つのプロットを作成
+# 2つのプロットを作成
     fig, (ax1, ax2) = plt.subplots(
         1, 2,
         figsize=(7, 3),
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         constrained_layout=True
     ) # "wspace": 余白を調整
 
-    # 左側: 空間パターンの時間発展
+# 左側: 空間パターンの時間発展
     # 成長を見る代表時刻と、飽和後の代表時刻だけ選ぶ
     times_to_plot = [0, 50, 100, 150, 200]  # 200 でほぼ飽和とわかっている
 
@@ -187,24 +187,24 @@ if __name__ == "__main__":
 
     ax1.set_xlabel(r"Spatial coordinate $x$")
     ax1.set_ylabel(r"Displacement $h(x, t)$")
-    ax1.grid(True, alpha=0.3)
+ax1.grid(True, alpha=0.3)
     ax1.set_ylim(-max(max_displacements_vis) * 1.1,
                   max(max_displacements_vis) * 1.1)
     ax1.set_xlim(0, L0)
 
-    # 右側: 最大変位の時間発展（成長→飽和）
+# 右側: 最大変位の時間発展（成長→飽和）
     ax2.plot(t_saved, max_displacements_vis, 'o-', markersize=ms, color=blue_color)
     ax2.set_xlabel(r"Time $t$")
     ax2.set_ylabel(r"Maximum displacement $\max_x |h(x,t)|$")
     # ax2.set_title("Maximum displacement vs time (growth → saturation)")
-    ax2.grid(True, alpha=0.3)
-    ax2.set_xlim(left=0)
+ax2.grid(True, alpha=0.3)
+ax2.set_xlim(left=0)
 
-    # 画像ファイルとしても保存
+# 画像ファイルとしても保存
     output_path = "simulation/buckling_pattern_evolution.pdf"
     plt.savefig(output_path, bbox_inches='tight')
-    print(f"プロットの保存完了: {output_path}")
-    plt.show()
+print(f"プロットの保存完了: {output_path}")
+plt.show()
 
     plt.show()
 
@@ -332,65 +332,65 @@ if __name__ == "__main__":
     print(f"パワースペクトラムの保存完了: {output_path_fft}")
     plt.show()
 
-    # アニメーションの作成
-    print("アニメーションを作成中...")
+# アニメーションの作成
+print("アニメーションを作成中...")
     fig_anim, (ax_anim1, ax_anim2) = plt.subplots(1, 2, figsize=(7.0, 4.5), constrained_layout=True)
 
-    # y軸の範囲を事前に設定（安定した表示のため）
+# y軸の範囲を事前に設定（安定した表示のため）
     y_min = np.min(h_saved_vis) * 1.1
     y_max = np.max(h_saved_vis) * 1.1
-    ax_anim1.set_xlim(0, L0)
-    ax_anim1.set_ylim(y_min, y_max)
+ax_anim1.set_xlim(0, L0)
+ax_anim1.set_ylim(y_min, y_max)
     ax_anim1.set_xlabel(r"Spatial coordinate $x$")
     ax_anim1.set_ylabel(r"Displacement $h(x, t)$")
-    ax_anim1.set_title("Buckling pattern evolution")
-    ax_anim1.grid(True, alpha=0.3)
+ax_anim1.set_title("Buckling pattern evolution")
+ax_anim1.grid(True, alpha=0.3)
 
-    # 最大変位のプロット用
-    ax_anim2.set_xlim(0, t_max)
+# 最大変位のプロット用
+ax_anim2.set_xlim(0, t_max)
     ax_anim2.set_ylim(0, max(max_displacements_vis) * 1.1)
     ax_anim2.set_xlabel(r"Time $t$")
     ax_anim2.set_ylabel(r"Maximum displacement $\max_x |h(x,t)|$")
-    ax_anim2.set_title("Maximum displacement vs time")
-    ax_anim2.grid(True, alpha=0.3)
+ax_anim2.set_title("Maximum displacement vs time")
+ax_anim2.grid(True, alpha=0.3)
 
-    # 初期化
+# 初期化
     line1, = ax_anim1.plot([], [], color=blue_color, label=r'$h(x,t)$')
-    time_text = ax_anim1.text(0.02, 0.95, '', transform=ax_anim1.transAxes, 
-                              fontsize=label_fontsize, verticalalignment='top',
-                              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-    line2, = ax_anim2.plot([], [], 'o-', markersize=ms, color=blue_color)
-    max_disp_line, = ax_anim2.plot([], [], 'o', markersize=ms, color=orange_color)
+time_text = ax_anim1.text(0.02, 0.95, '', transform=ax_anim1.transAxes, 
+                          fontsize=label_fontsize, verticalalignment='top',
+                          bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+line2, = ax_anim2.plot([], [], 'o-', markersize=ms, color=blue_color)
+max_disp_line, = ax_anim2.plot([], [], 'o', markersize=ms, color=orange_color)
 
-    def animate(frame):
+def animate(frame):
         # アニメーションの各フレームを更新
-        # 左側: 現在のパターン
+    # 左側: 現在のパターン
         line1.set_data(x, h_saved_vis[frame])
-        time_text.set_text(f't = {t_saved[frame]:.2f}')
-        
-        # 右側: 最大変位の時系列（現在時刻まで）
-        t_current = t_saved[frame]
+    time_text.set_text(f't = {t_saved[frame]:.2f}')
+    
+    # 右側: 最大変位の時系列（現在時刻まで）
+    t_current = t_saved[frame]
         max_disp_current = max_displacements_vis[frame]
-        
-        # 時系列プロット（現在時刻まで）
-        t_plot = t_saved[:frame+1]
+    
+    # 時系列プロット（現在時刻まで）
+    t_plot = t_saved[:frame+1]
         max_disp_plot = max_displacements_vis[:frame+1]
-        line2.set_data(t_plot, max_disp_plot)
-        
-        # 現在の点を強調表示
-        max_disp_line.set_data([t_current], [max_disp_current])
-        
-        return line1, time_text, line2, max_disp_line
+    line2.set_data(t_plot, max_disp_plot)
+    
+    # 現在の点を強調表示
+    max_disp_line.set_data([t_current], [max_disp_current])
+    
+    return line1, time_text, line2, max_disp_line
 
-    # アニメーション作成
-    anim = FuncAnimation(fig_anim, animate, frames=len(t_saved), 
-                        interval=200, blit=True, repeat=True)
+# アニメーション作成
+anim = FuncAnimation(fig_anim, animate, frames=len(t_saved), 
+                    interval=200, blit=True, repeat=True)
 
-    # アニメーションをGIFとして保存
+# アニメーションをGIFとして保存
     anim_path = "simulation/fixed_Pi_P_animation.gif"
-    print(f"アニメーションを保存中: {anim_path}")
-    anim.save(anim_path, writer=PillowWriter(fps=5), dpi=600)
-    print(f"アニメーションの保存完了: {anim_path}")
+print(f"アニメーションを保存中: {anim_path}")
+anim.save(anim_path, writer=PillowWriter(fps=5), dpi=600)
+print(f"アニメーションの保存完了: {anim_path}")
 
-    # アニメーションを表示
-    plt.show()
+# アニメーションを表示
+plt.show()
