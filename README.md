@@ -23,13 +23,42 @@ The IXI Dataset can be downloaded from the following URL:  [IXI Dataset](https:/
 Below is the directory structure of the project:
 
     cerebral-artery-tortuosity-buckling/
-        data/                 # MRA, セグメンテーション, 中心線データ
+        data/                 # 生データ・前処理データ (MRA, セグメンテーション, 中心線データ)
+            raw/              # 生データ
+            preprocessed/        # ★ 前処理後データ
+                segmentations/
+                meshes/
+                centerlines/
         notebooks/            # 探索用 Jupyter notebook
         analysis_code/        # 論文用に整理した Python コード
+            preprocessing/    # 生データ → 解析入力 の変換段階
+                mra_preprocess.py
+                segmentation.py
+                mesh_generation.py
+                centerline_extraction.py
+            mesh/　　　　　　　　# メッシュ・中心線処理
+                vessel_mesh_statistics.py      ← ★ここ
+                vessel_mesh_utils.py           ← compute_* 系
+                split_left_right.py            ← 将来切り出してもOK
+            morphometrics/                ← ★segmentごとの形態計測
+                sin_trend_fitting.py
+            utils/         
         simulation/           # 座屈モデル（Euler buckling, 非線形ソルバー）
         statistics/           # LMM, GAM, GAMM の統計解析コード
+            summarize_demographic.py            # Subjects / Demographics
+            summarize_basic_morphometrics.py    # Basic morphometrics
+            regression_*.py                # Statistical analysis
         figures/              # 論文で使用した図
         results/              # 中間・最終解析結果（CSV など）
+            basic_morphometrics/            # 何が計算されたか（解析入力）
+                IXI_HH_subjects.csv
+                per_case/                  ← 任意（症例ごとのログ）
+            morphometrics/
+                sin_trend/
+            tables/                         # 論文に出す最終形
+                IXI_HH_subjects.csv
+                Table1_demographics.csv
+                Table2_basic_morphometrics.csv
         environment.yml       # conda 環境（再現性の確保）
         README.md             # このファイル  
         **日本語部分は修正予定**  
