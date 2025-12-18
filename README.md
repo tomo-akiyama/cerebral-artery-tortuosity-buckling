@@ -32,7 +32,7 @@ Below is the directory structure of the project:
         notebooks/            # 探索用 Jupyter notebook
         analysis_code/        # 論文用に整理した Python コード
             preprocessing/    # 生データ → 解析入力 の変換段階
-                mra_preprocess.py
+                mri_preprocess.py
                 segmentation.py
                 mesh_generation.py
                 centerline_extraction.py
