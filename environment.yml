@@ -21,6 +21,7 @@ dependencies:
 
   # statistics (conda-forge)
   - scikit-learn
+  - scikit-image
   - statsmodels
 
   # pip-managed packages (installed via pip in this project)
