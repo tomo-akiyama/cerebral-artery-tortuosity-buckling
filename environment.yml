@@ -1,4 +1,4 @@
-name: cerebral-buckling
+name: cerebral-tortuosity-buckling
 
 channels:
   - conda-forge
@@ -29,3 +29,4 @@ dependencies:
       - antspyx==0.5.4
       - nibabel==5.3.2
       - pymeshlab==2023.12.post3
+      - brainextractor==0.2.2
