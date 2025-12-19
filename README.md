@@ -23,9 +23,9 @@ The IXI Dataset can be downloaded from the following URL:  [IXI Dataset](https:/
 Below is the directory structure of the project:
 
     cerebral-artery-tortuosity-buckling/
-        data/                 # 生データ・前処理データ (MRA, セグメンテーション, 中心線データ)
-            raw/              # 生データ
-            preprocessed/        # ★ 前処理後データ
+        data/
+            raw/                               # raw MRI data (nii.gz files)
+            preprocessed/                      # preprocessed MRI data
                 MRA_preprocessed/
                     segmentations/
                     vessel_meshes/
@@ -34,31 +34,39 @@ Below is the directory structure of the project:
                     post_cat12/
                     brain_meshes/
 
-        notebooks/            # 探索用 Jupyter notebook
-        
-        analysis_code/        # 論文用に整理した Python コード
-            preprocessing/    # 生データ → 解析入力 の変換段階
-                run_mri_preprocessing.py        # pipeline
-                preprocessing.py                # function modules
-            mesh/　　　　　　　　# メッシュ・中心線処理
-                run_mesh_generation.py          # pipeline
-                mesh_generation.py              # function modules
+        notebooks/            # 探索用 Jupyter notebook (最終的には不要)
 
-                run_centerline_extraction.py    # pipeline 
-                centerline_extraction.py        # function modules
+        analysis_code/
+            preprocessing/
+                run_mri_preprocessing.py        # Pipeline for preprocessing
+                preprocessing.py                # Function modules
+            mesh/
+                run_mesh_generation.py          # Pipeline for mesh generation
+                mesh_generation.py              # Function modules
 
-                run_vessel_mesh_statistics.py   # meshの基本統計量のpipeline
+                run_centerline_extraction.py    # Pipeline for centerline extraction
+                centerline_extraction.py        # Function modules
+
+                run_vessel_mesh_statistics.py   # Pipeline for calculating the statistics of vessel mesh
                 run_vessel_mesh_statistics.py   # compute_* 系
                 split_left_right.py             # 左右分割ロジック
-            morphometrics/                ← ★segmentごとの形態計測
-                sin_trend_fitting.py
-            utils/         
-        simulation/           # 座屈モデル（Euler buckling, 非線形ソルバー）
+
+            morphometrics/                      # Segmentごとの形態計測
+                run_sin_trend_fitting.py
+                utils/
+                         
+        simulation/
+            run_buckling_simulation_semi_implicit.py    # Semi-implicit Euler simulation of cerebral artery buckling dynamics
+            run_bifurcation_and_wavelength_selection.py # Pi_P sweep for bifurcation and wavelength selection
+            parameters.py                               # Parameters for buckling simulations
+
         statistics/           # LMM, GAM, GAMM の統計解析コード
             summarize_demographic.py            # Subjects / Demographics
             summarize_basic_morphometrics.py    # Basic morphometrics
             regression_*.py                # Statistical analysis
+
         figures/              # 論文で使用した図
+
         results/              # 中間・最終解析結果（CSV など）
             basic_morphometrics/            # 何が計算されたか（解析入力）
                 IXI_HH_subjects.csv
@@ -66,9 +74,9 @@ Below is the directory structure of the project:
             morphometrics/
                 sin_trend/
             tables/                         # 論文に出す最終形
-                IXI_HH_subjects.csv
                 Table1_demographics.csv
                 Table2_basic_morphometrics.csv
+
         environment.yml       # conda 環境（再現性の確保）
         README.md             # このファイル  
         **日本語部分は修正予定**  
