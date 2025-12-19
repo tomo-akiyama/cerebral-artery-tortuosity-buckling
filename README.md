@@ -24,8 +24,8 @@ Below is the directory structure of the project:
 
     cerebral-artery-tortuosity-buckling/
         data/
-            raw/                               # raw MRI data (nii.gz files)
-            preprocessed/                      # preprocessed MRI data
+            raw/                               # Raw MRI data (nii.gz files)
+            preprocessed/                      # Preprocessed MRI data
                 MRA_preprocessed/
                     segmentations/
                     vessel_meshes/
@@ -54,7 +54,7 @@ Below is the directory structure of the project:
             morphometrics/                      # Segmentごとの形態計測
                 run_sin_trend_fitting.py
                 utils/
-                         
+
         simulation/
             run_buckling_simulation_semi_implicit.py    # Semi-implicit Euler simulation of cerebral artery buckling dynamics
             run_bifurcation_and_wavelength_selection.py # Pi_P sweep for bifurcation and wavelength selection
