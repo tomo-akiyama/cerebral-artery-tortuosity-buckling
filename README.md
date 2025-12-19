@@ -85,7 +85,7 @@ Below is the directory structure of the project:
 
 ## Requirements
 
-VMTK requires an x86_64 (Intel / AMD) Conda environment.
+The Vascular Modeling Toolkit (VMTK, http://www.vmtk.org/) requires an x86_64 (Intel / AMD) Conda environment.
 
 - Windows / Linux with Intel or AMD CPUs are supported.
 - On Apple Silicon (arm64) Macs, VMTK must be run under Rosetta using an x86_64 Conda distribution.
