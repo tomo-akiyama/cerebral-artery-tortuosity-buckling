@@ -26,20 +26,30 @@ Below is the directory structure of the project:
         data/                 # 生データ・前処理データ (MRA, セグメンテーション, 中心線データ)
             raw/              # 生データ
             preprocessed/        # ★ 前処理後データ
-                segmentations/
-                meshes/
-                centerlines/
+                MRA_preprocessed/
+                    segmentations/
+                    vessel_meshes/
+                    vessel_centerlines/
+                T1_preprocessed/
+                    post_cat12/
+                    brain_meshes/
+
         notebooks/            # 探索用 Jupyter notebook
+        
         analysis_code/        # 論文用に整理した Python コード
             preprocessing/    # 生データ → 解析入力 の変換段階
-                mri_preprocess.py
-                segmentation.py
-                mesh_generation.py
-                centerline_extraction.py
+                run_mri_preprocessing.py        # pipeline
+                preprocessing.py                # function modules
             mesh/　　　　　　　　# メッシュ・中心線処理
-                vessel_mesh_statistics.py      ← ★ここ
-                vessel_mesh_utils.py           ← compute_* 系
-                split_left_right.py            ← 将来切り出してもOK
+                run_mesh_generation.py          # pipeline
+                mesh_generation.py              # function modules
+
+                run_centerline_extraction.py    # pipeline 
+                centerline_extraction.py        # function modules
+
+                run_vessel_mesh_statistics.py   # meshの基本統計量のpipeline
+                run_vessel_mesh_statistics.py   # compute_* 系
+                split_left_right.py             # 左右分割ロジック
             morphometrics/                ← ★segmentごとの形態計測
                 sin_trend_fitting.py
             utils/         
