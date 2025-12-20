@@ -24,8 +24,8 @@ Below is the directory structure of the project:
 
     cerebral-artery-tortuosity-buckling/
         data/
-            raw/                               # Raw MRI data (nii.gz files)
-            preprocessed/                      # Preprocessed MRI data
+            raw/                               # raw MRI data (nii.gz files)
+            preprocessed/                      # preprocessed MRI data
                 MRA_preprocessed/
                     segmentations/
                     vessel_meshes/
@@ -38,39 +38,44 @@ Below is the directory structure of the project:
 
         analysis_code/
             preprocessing/
-                run_mri_preprocessing.py        # Pipeline for preprocessing
-                preprocessing.py                # Function modules
+                run_mri_preprocessing.py        # pipeline for preprocessing
+                preprocessing.py                # function modules
             mesh/
-                run_mesh_generation.py          # Pipeline for mesh generation
-                mesh_generation.py              # Function modules
+                run_mesh_generation.py          # pipeline for mesh generation
+                mesh_generation.py              # function modules
 
-                run_centerline_extraction.py    # Pipeline for centerline extraction
-                centerline_extraction.py        # Function modules
+                run_centerline_extraction.py    # pipeline for centerline extraction
+                centerline_extraction.py        # function modules
 
-                run_vessel_mesh_statistics.py   # Pipeline for calculating the statistics of vessel mesh
-                run_vessel_mesh_statistics.py   # compute_* 系
+                run_vessel_mesh_statistics.py   # pipeline for calculating the statistics of vessel mesh
+                compute_mesh_statistics.py   # compute_* 系
                 split_left_right.py             # 左右分割ロジック
 
-            morphometrics/                      # Segmentごとの形態計測
+            morphometrics/                      # segmentごとの形態計測
                 run_sin_trend_fitting.py
-                utils/
+                compute_sin_trend_metrics.py
+                sin_trend_utils.py
+            
+            utils/                              # common utility
 
         simulation/
-            run_buckling_simulation_semi_implicit.py    # Semi-implicit Euler simulation of cerebral artery buckling dynamics
+            run_buckling_simulation_semi_implicit.py    # semi-implicit Euler simulation of cerebral artery buckling dynamics
             run_bifurcation_and_wavelength_selection.py # Pi_P sweep for bifurcation and wavelength selection
-            parameters.py                               # Parameters for buckling simulations
+            parameters.py                               # parameters for buckling simulations
 
         statistics/           # LMM, GAM, GAMM の統計解析コード
-            summarize_demographic.py            # Subjects / Demographics
-            summarize_basic_morphometrics.py    # Basic morphometrics
+            summarize_demographic.py            # subjects / Demographics
+            summarize_basic_morphometrics.py    # basic morphometrics
             regression_*.py                # Statistical analysis
 
         figures/              # 論文で使用した図
 
         results/              # 中間・最終解析結果（CSV など）
+            participants/
+                IXI_HH_subjects.csv         # participant-level integrated analysis table
             basic_morphometrics/            # 何が計算されたか（解析入力）
-                IXI_HH_subjects.csv
-                per_case/                  ← 任意（症例ごとのログ）
+                basic_morphometrics.csv
+                per_case/                   # 症例ごとのログ）
             morphometrics/
                 sin_trend/
             tables/                         # 論文に出す最終形
