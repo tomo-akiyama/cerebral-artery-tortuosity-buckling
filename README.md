@@ -29,32 +29,39 @@ Below is the directory structure of the project:
                 MRA_preprocessed/
                     segmentations/
                     vessel_meshes/
-                    vessel_centerlines/
+                    
                 T1_preprocessed/
                     post_cat12/
                     brain_meshes/
+                    
+            derived/
+                vessel_centerlines/             # centerline extraction
+                morphometrics/                  # 解析で生成される中間表現（array, per-segment outputs）
+                    m1_features/
 
         notebooks/            # 探索用 Jupyter notebook (最終的には不要)
 
         analysis_code/
             preprocessing/
-                run_mri_preprocessing.py        # pipeline for preprocessing
-                preprocessing.py                # function modules
+                run_mri_preprocessing.py            # pipeline for preprocessing
+                preprocessing.py                    # function modules
             mesh/
-                run_mesh_generation.py          # pipeline for mesh generation
-                mesh_generation.py              # function modules
+                run_mesh_generation.py             # pipeline for mesh generation
+                mesh_generation.py                 # function modules
+                m1_definition.py                   # function modules (defining distal M1 end)
 
-                run_centerline_extraction.py    # pipeline for centerline extraction
-                centerline_extraction.py        # function modules
+                run_centerline_extraction.py       # pipeline for centerline extraction
+                centerline_extraction.py           # function modules
 
-                run_vessel_mesh_statistics.py   # pipeline for calculating the statistics of vessel mesh
-                compute_mesh_statistics.py   # compute_* 系
-                split_left_right.py             # 左右分割ロジック
+                run_vessel_mesh_statistics.py      # pipeline for calculating the statistics of vessel mesh
+                compute_vessel_mesh_statistics.py   # function modules
 
             morphometrics/                      # segmentごとの形態計測
-                run_sin_trend_fitting.py
-                compute_sin_trend_metrics.py
-                sin_trend_utils.py
+                run_extract_m1_features.py      # 
+
+                *run_sin_trend_fitting.py
+                *compute_sin_trend_metrics.py
+                *sin_trend_utils.py
             
             utils/                              # common utility
 

@@ -32,43 +32,45 @@ from skimage.morphology import remove_small_objects
 import os
 import sys
 
-# Add the path to make the utils module importable (for file_utils)
+# Add the path to make the utils module importable
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 utils_path = os.path.join(project_root, 'analysis_code', 'utils')
+sys.path.insert(0, os.path.join(project_root, 'analysis_code'))  # Add analysis_code to path for package imports
 sys.path.append(utils_path)
 
 # Import function modules from the same directory
 import preprocessing
 
 # Import from utils
-from file_utils import ensure_file_available, ensure_directory_exists
+import utils
+import tool
 
 
 ########################################################
 # ===== USER SETTINGS =====
-case_id = "IXI012-HH-1211"
+directory_id = "IXI013-HH-1212"
 
 voxel_size = 0.5  # mm
-volume_threshold = 5000; print(f"Volume_threshold when removing small islands = {volume_threshold} voxels, {voxel_size**3 * volume_threshold} mm^3")
+volume_threshold = 5000; print(f"Volume threshold when removing small islands: {volume_threshold} voxels, {voxel_size**3 * volume_threshold} mm^3")
 ########################################################
 
-case_number = case_id[3:6].lstrip("0")
-case_number = int(case_number)
+case_id = directory_id[3:6].lstrip("0")
+case_id = int(case_id)
+print("directory_id", directory_id)
 print("case_id", case_id)
-print("case_number", case_number)
 
 # Load the images
 data_raw_dir = os.path.join(project_root, 'data', 'raw')
-input_T1_path = os.path.join(data_raw_dir, 'T1_HH', f'{case_id}-T1.nii.gz')
-input_MRA_path = os.path.join(data_raw_dir, 'MRA_HH', f'{case_id}-MRA.nii.gz')
+input_T1_path = os.path.join(data_raw_dir, 'T1_HH', f'{directory_id}-T1.nii.gz')
+input_MRA_path = os.path.join(data_raw_dir, 'MRA_HH', f'{directory_id}-MRA.nii.gz')
 
 # Ensure files are available (download from Dropbox if online-only)
 print("Checking T1 image availability...")
-if not ensure_file_available(input_T1_path, max_wait_time=120):
+if not utils.ensure_file_available(input_T1_path, max_wait_time=120):
     raise FileNotFoundError(f"T1 image is not available: {input_T1_path}")
 
 print("Checking MRA image availability...")
-if not ensure_file_available(input_MRA_path, max_wait_time=120):
+if not utils.ensure_file_available(input_MRA_path, max_wait_time=120):
     raise FileNotFoundError(f"MRA image is not available: {input_MRA_path}")
 
 # Load the images
@@ -90,9 +92,9 @@ print("T1 image header after resampling", resampled_img_T1)
 resampled_img_T1[resampled_img_T1.numpy() < 0] = 0
 
 # Save the resampled T1 image
-resampled_T1_dir = os.path.join(project_root, 'data', 'preprocessed', 'T1_preprocessed', 'resampled')
-ensure_directory_exists(resampled_T1_dir, verbose=True) # Create the directory if it does not exist
-resampled_img_T1_path = os.path.join(resampled_T1_dir, f'{case_id}_T1_resampled.nii.gz')
+resampled_T1_dir = os.path.join(project_root, 'data', 'preprocessed', 'T1_preprocessed', 'resampled', directory_id)
+utils.ensure_directory_exists(resampled_T1_dir, verbose=True) # Create the directory if it does not exist
+resampled_img_T1_path = os.path.join(resampled_T1_dir, f'{directory_id}_T1_resampled.nii.gz')
 ants.image_write(resampled_img_T1, resampled_img_T1_path, ri=False) # 1_2: This image is sent to CAT12 for automatic segmentation and surface reconstruction
 ########################################################################################################################################################
 
@@ -116,9 +118,9 @@ print("MRA image header after resampling and padding", resampled_img_MRA)
 resampled_img_MRA[resampled_img_MRA.numpy() < 0] = 0
 
 # Save the resampled MRA image (temporary directory for segmentation)
-temporary_MRA_dir = os.path.join(project_root, 'data', 'preprocessed', 'MRA_preprocessed', 'temporary', case_id)
-ensure_directory_exists(temporary_MRA_dir, verbose=True) # Create the directory if it does not exist
-resampled_img_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_resampled.nii.gz')
+temporary_MRA_dir = os.path.join(project_root, 'data', 'preprocessed', 'MRA_preprocessed', 'temporary', directory_id)
+utils.ensure_directory_exists(temporary_MRA_dir, verbose=True) # Create the directory if it does not exist
+resampled_img_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_resampled.nii.gz')
 ants.image_write(resampled_img_MRA, resampled_img_MRA_path, ri=False)
 
 # 2_2 Denoising (noise reduction) - ANLM, Gaussian
@@ -131,7 +133,7 @@ denoised_img_MRA = ants.denoise_image(resampled_img_MRA,
                                     noise_model='Gaussian', v=0)
 print("Denoised MRA image header", denoised_img_MRA)
 # Save the denoised MRA image (temporary directory for segmentation)
-denoised_img_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_denoised.nii.gz')
+denoised_img_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_denoised.nii.gz')
 ants.image_write(denoised_img_MRA, denoised_img_MRA_path, ri=False)
 
 # 2_3 N4 bias field correction - ANTsPy
@@ -142,7 +144,7 @@ bias_corrected_img_MRA = ants.n4_bias_field_correction(denoised_img_MRA,
 print("Bias corrected MRA image header", bias_corrected_img_MRA)
 
 # Save the corrected MRA image (temporary directory for segmentation)
-bias_corrected_img_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_bias_corrected.nii.gz')
+bias_corrected_img_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_bias_corrected.nii.gz')
 ants.image_write(bias_corrected_img_MRA, bias_corrected_img_MRA_path, ri=False)
 
 # 2_4 Skull stripping - FSL-BET
@@ -152,7 +154,7 @@ bet_mask = BrainExtractor(img=preprocessed_img_MRA, bt=0.45)
 bet_mask.run()
 
 # Save the bet mask image (temporary directory for segmentation)
-bet_mask_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_bet_mask.nii.gz')
+bet_mask_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_bet_mask.nii.gz')
 bet_mask.save_mask(bet_mask_MRA_path)
 
 # Brain extraction modifies the image origin; restore the original origin to maintain spatial consistency
@@ -166,7 +168,7 @@ print("Bet mask MRA image header", bet_mask_MRA)
 bet_mask_MRA_arr = bet_mask_MRA.numpy()
 brain_MRA = bias_corrected_img_MRA * bet_mask_MRA_arr
 # Save the brain MRA image (temporary directory for segmentation)   
-brain_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_brain.nii.gz')
+brain_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_brain.nii.gz')
 ants.image_write(brain_MRA, brain_MRA_path, ri=False)
 print("Brain MRA image header", brain_MRA)
 ########################################################################################################################################################
@@ -180,7 +182,7 @@ print("Brain MRA image header", brain_MRA)
 moving_mask = bet_mask_MRA 
 
 # Use the CAT12 "p" image (skull- and face-stripped anatomical image) as the fixed mask for registration
-post_cat12_T1_dir = os.path.join(project_root, 'data', 'preprocessed', 'T1_preprocessed', 'post_cat12', case_id+"_cat12", "mri")
+post_cat12_T1_dir = os.path.join(project_root, 'data', 'preprocessed', 'T1_preprocessed', 'post_cat12', directory_id+"_cat12", "mri")
 preprocessed_img_T1_path = os.path.join(post_cat12_T1_dir, 'm1_1_resampled_T1.nii')
 segmented_brain_T1_path = os.path.join(post_cat12_T1_dir, 'p01_1_resampled_T1.nii')
 if not (os.path.exists(preprocessed_img_T1_path) and os.path.exists(segmented_brain_T1_path)): # Check if the CAT12 output files exist
@@ -226,7 +228,7 @@ TRSAA_registration = ants.registration(
 # TRSAA registered MRA image
 TRSAA_moving_img_MRA = TRSAA_registration['warpedmovout']
 # Save the TRSAA registered MRA image (temporary directory for segmentation)
-TRSAA_moving_img_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_TRSAA_registered.nii.gz')
+TRSAA_moving_img_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_TRSAA_registered.nii.gz')
 ants.image_write(TRSAA_moving_img_MRA, TRSAA_moving_img_MRA_path, ri=False)
 print("TRSAA registered MRA image header", TRSAA_moving_img_MRA)
 
@@ -249,7 +251,7 @@ TRSAA_SyNOnly_registration = ants.registration(
 # TRSAA SyNOnly registered MRA image
 TRSAA_SyNOnly_moving_img_MRA = TRSAA_SyNOnly_registration['warpedmovout']
 # Save the TRSAA SyNOnly registered MRA image (temporary directory for segmentation)
-TRSAA_SyNOnly_moving_img_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_TRSAA_SyNOnly_registered.nii.gz')
+TRSAA_SyNOnly_moving_img_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_TRSAA_SyNOnly_registered.nii.gz')
 ants.image_write(TRSAA_SyNOnly_moving_img_MRA, TRSAA_SyNOnly_moving_img_MRA_path)
 print("TRSAA and SyNOnly registered MRA image header after TRSAA registration", TRSAA_SyNOnly_moving_img_MRA)
 
@@ -261,7 +263,7 @@ mapped_TRSAA_SyNOnly_bet_mask_MRA = ants.apply_transforms(
     interpolator='nearestNeighbor', 
     verbose=False)
 # Save the mapped SyNOnly-registered brain mask image (temporary directory for segmentation)
-mapped_TRSAA_SyNOnly_bet_mask_MRA_path = os.path.join(temporary_MRA_dir, f'{case_id}_MRA_TRSAA_SyNOnly_mapped_bet_mask.nii.gz')
+mapped_TRSAA_SyNOnly_bet_mask_MRA_path = os.path.join(temporary_MRA_dir, f'{directory_id}_MRA_TRSAA_SyNOnly_mapped_bet_mask.nii.gz')
 ants.image_write(mapped_TRSAA_SyNOnly_bet_mask_MRA, mapped_TRSAA_SyNOnly_bet_mask_MRA_path, ri=False)
 
 # Restrict the MRA to the brain region
@@ -336,9 +338,9 @@ plt.show()
 
 
 # Save the vessel hysteresis thresholding image
-segmented_MRA_dir = os.path.join(project_root, 'data', 'preprocessed', 'MRA_preprocessed', 'segmentations')
-ensure_directory_exists(segmented_MRA_dir, verbose=True) # Create the directory if it does not exist
-vessel_segmentation_path = os.path.join(segmented_MRA_dir, f'{case_id}_MRA_vessel_hysterisis.nii.gz')
+segmented_MRA_dir = os.path.join(project_root, 'data', 'preprocessed', 'MRA_preprocessed', 'segmentations', directory_id)
+utils.ensure_directory_exists(segmented_MRA_dir, verbose=True) # Create the directory if it does not exist
+vessel_segmentation_path = os.path.join(segmented_MRA_dir, f'{directory_id}_MRA_vessel_hysterisis.nii.gz')
 vessel_seg_origin = TRSAA_SyNOnly_moving_img_MRA.origin
 vessel_seg_spacing = TRSAA_SyNOnly_moving_img_MRA.spacing
 vessel_seg_direction = TRSAA_SyNOnly_moving_img_MRA.direction
