@@ -20,7 +20,7 @@ sys.path.append(mesh_path)
 import utils
 import mesh_generation
 import centerline_extraction
-import compute_vessel_mesh_statistics
+import vessel_mesh_features
 
 
 ########################################################
@@ -46,11 +46,16 @@ targets_on_mesh = centerline_extraction.load_markups_positions(targets_on_mesh_p
 # Extract centerlines
 print("Extracting M1 centerlines...")
 centerlines = centerline_extraction.vmtk_extract_centerline(m1_mesh_path, sources_on_mesh, targets_on_mesh);
+# Compute centerline attributes and geometric features
 centerlines = centerline_extraction.vmtk_centerline_attributes(centerlines)
 centerlines = centerline_extraction.vmtk_compute_geometry(centerlines)
+
 centerlines_path = os.path.join(project_root, 'data', 'derived', 'vessel_centerlines', directory_id, f"{directory_id}_M1_centerlines.vtp")
 utils.ensure_directory_exists(os.path.dirname(centerlines_path), verbose=True)
 mesh_generation.save_vtp(centerlines, centerlines_path)
+
+
+
 
 # Check the centerlines
 vessel_mesh = mesh_generation.load_ply_to_polydata(os.path.join(vessel_mesh_dir, f"{directory_id}_vessel_mesh.ply"))
@@ -71,12 +76,12 @@ pl.show()
 # Extract features from the M1 mesh
 celldata, pointids, points, pointdata = centerline_extraction.vmtk_convert2numpy(centerlines)
 
-# Classify left/right using K-means
-is_right_cell, right_cells, left_cells, threshold_x, centers = compute_vessel_mesh_statistics.classify_left_right_by_kmeans(
+# Classify left/right using K-means (centerline用)
+right_cells, left_cells, threshold_x, is_right_point, is_left_point = vessel_mesh_features.classify_centerline_left_right_by_kmeans(
     points, pointids, n_iter=100, verbose=True
 )
 # Split mesh left/right
-right_vessel, left_vessel, right_center_x, left_center_x = compute_vessel_mesh_statistics.split_mesh_left_right(
+right_vessel, left_vessel, right_center_x, left_center_x = vessel_mesh_features.split_mesh_left_right(
     m1_mesh, threshold_x, verbose=True
     )
 
@@ -203,7 +208,7 @@ for idx, cell_idx in enumerate(left_cells):
 df_features = pd.DataFrame([features_dict])
 
 # Ensure output directory exists
-output_dir = os.path.join(project_root, 'data', 'derived', 'morphometrics', 'm1_features')
+output_dir = os.path.join(project_root, 'basic_morphometrics', directory_id)
 utils.ensure_directory_exists(output_dir, verbose=True)
 
 # Save to CSV
