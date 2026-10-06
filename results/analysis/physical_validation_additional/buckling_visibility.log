@@ -1,0 +1,680 @@
+================================================================================
+12_buckling_visibility: segment fractions + length-weighted burden vs AGE (univariate + adjusted; histograms)
+================================================================================
+入力:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/analysis/sin_trend_mca_classification/IXI_HH_sin_trend_analysis_dataset.csv
+出力（保存）: あり
+実行ログ:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/analysis/physical_validation_additional/buckling_visibility.log
+（ターミナルの表示は長いと先頭が消えます。全文は上記ログファイルを参照）
+
+================================================================================
+COVERAGE_HAT_CORE_MIN = 1.5
+================================================================================
+  被験者数: 154
+  N_total（セグメント数）/ 被験者: median=76, min=29, max=112
+  N_core / 被験者: median=8, min=2, max=18
+  R = N_periodic/N_total (Core+Secondary): mean=0.3600, median=0.3576
+  R_core = N_core/N_total: mean=0.1084, median=0.1038
+  N_core_inplane / 被験者: median=1, min=0, max=4
+  R_core_inplane = N_core_inplane/N_total: mean=0.0184, median=0.0153
+  N_core_outofplane / 被験者: median=5, min=0, max=14
+  R_core_outofplane = N_core_outofplane/N_total: mean=0.0697, median=0.0690
+
+  ratio: mean=0.3600, median=0.3576
+  Spearman(AGE, ratio): rho=-0.2277, p=0.004519
+  Pearson(AGE, ratio):  r=-0.1753, p=0.02969
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  アウトカムの種類: Core + Secondary（周期的と判定されたセグメントのうち Secondary 含む）
+  目的変数 (endog, 二項の標本比率): ratio_y = (N_Core + N_Secondary) / N_total （分子: 上記 periodicity 列が Core または Secondary のセグメント数、分母: 同列が非欠損の当該被験者の全セグメント数）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の N_total（セグメント数）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=Core+Secondary | periodicity_coverage_1.5）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -5110.2
+Date:                Mon, 06 Jul 2026   Deviance:                       153.97
+Time:                        10:10:24   Pearson chi2:                     154.
+No. Iterations:                     4   Pseudo R-squ. (CS):            0.03383
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.4552      0.056     -8.157      0.000      -0.565      -0.346
+AGE           -0.0027      0.001     -2.301      0.021      -0.005      -0.000
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 0.99729 (95% CI: 0.99499 – 0.99960)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/periodic_fraction_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  アウトカムの種類: Core + Secondary（Secondary を分子に含む）
+  目的変数 (endog): ratio_y = (N_Core + N_Secondary) / N_total （分子: 上記 periodicity 列が Core または Secondary のセグメント数、分母: 同列が非欠損の当該被験者の全セグメント数）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の N_total
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=Core+Secondary | periodicity_coverage_1.5 | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -5107.0
+Date:                Mon, 06 Jul 2026   Deviance:                       147.56
+Time:                        10:10:30   Pearson chi2:                     148.
+No. Iterations:                     4   Pseudo R-squ. (CS):            0.07325
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -0.5812      0.032    -18.280      0.000      -0.643      -0.519
+C(sex, Treatment(reference='female'))[T.male]                              -0.0403      0.056     -0.722      0.470      -0.150       0.069
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                   0.1139      0.060      1.907      0.056      -0.003       0.231
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.0036      0.063     -0.057      0.954      -0.126       0.119
+AGE_c                                                                      -0.0012      0.001     -0.834      0.404      -0.004       0.002
+TIV_c                                                                       0.0002      0.000      0.852      0.394      -0.000       0.001
+total_vessel_length_c                                                    8.841e-05   7.21e-05      1.226      0.220   -5.29e-05       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 0.99875 (95% CI: 0.99583 – 1.00169)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/periodic_fraction_vs_age_adjusted_coverage_1p5.png
+
+  ratio_core: mean=0.1084, median=0.1038
+  Spearman(AGE, ratio_core): rho=-0.1051, p=0.1944
+  Pearson(AGE, ratio_core):  r=-0.1031, p=0.2034
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  アウトカムの種類: Core のみ（Secondary は分子に含めない）
+  目的変数 (endog, 二項の標本比率): ratio_y = N_Core / N_total （分子: 上記 periodicity 列が Core のセグメント数のみ、分母は ratio と同じ N_total）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の N_total（セグメント数）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=Coreのみ | periodicity_coverage_1.5）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -2935.1
+Date:                Mon, 06 Jul 2026   Deviance:                       165.02
+Time:                        10:10:36   Pearson chi2:                     166.
+No. Iterations:                     5   Pseudo R-squ. (CS):            0.01570
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -1.9849      0.086    -23.132      0.000      -2.153      -1.817
+AGE           -0.0029      0.002     -1.559      0.119      -0.006       0.001
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 0.99715 (95% CI: 0.99359 – 1.00073)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/periodic_fraction_core_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  アウトカムの種類: Core のみ
+  目的変数 (endog): ratio_y = N_Core / N_total （分子: 上記 periodicity 列が Core のセグメント数のみ、分母は ratio と同じ N_total）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の N_total
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=Coreのみ | periodicity_coverage_1.5 | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -2933.4
+Date:                Mon, 06 Jul 2026   Deviance:                       161.62
+Time:                        10:10:40   Pearson chi2:                     163.
+No. Iterations:                     5   Pseudo R-squ. (CS):            0.03720
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -2.1411      0.050    -43.095      0.000      -2.239      -2.044
+C(sex, Treatment(reference='female'))[T.male]                               0.0510      0.087      0.588      0.556      -0.119       0.221
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.0340      0.093     -0.367      0.714      -0.216       0.148
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.0169      0.096     -0.176      0.861      -0.205       0.172
+AGE_c                                                                      -0.0017      0.002     -0.745      0.456      -0.006       0.003
+TIV_c                                                                      -0.0004      0.000     -1.406      0.160      -0.001       0.000
+total_vessel_length_c                                                       0.0001      0.000      1.313      0.189   -7.22e-05       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 0.99828 (95% CI: 0.99376 – 1.00281)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/periodic_fraction_core_vs_age_adjusted_coverage_1p5.png
+
+  ratio_core_inplane: mean=0.0184, median=0.0153
+  Spearman(AGE, ratio_core_inplane): rho=0.1614, p=0.04546
+  Pearson(AGE, ratio_core_inplane):  r=0.1219, p=0.1321
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  母集団（分母）: periodicity_coverage_1.5 非欠損セグメント | 分子カウント: core_inplane_coverage_1.5
+  アウトカムの種類: N_core_inplane / N_all（core_inplane_coverage_* の真セグメント数）
+  目的変数 (endog, 二項の標本比率): ratio_y = N_core_inplane / N_total （分子: 列 core_inplane_coverage_1.5 が真のセグメント数、分母: periodicity_coverage_1.5 が非欠損の当該被験者の全セグメント数＝他アウトカムと同一）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の N_total（セグメント数）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=core_inplane/N_all | periodicity_coverage_1.5 | core_inplane_coverage_1.5）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -856.38
+Date:                Mon, 06 Jul 2026   Deviance:                       162.28
+Time:                        10:10:49   Pearson chi2:                     138.
+No. Iterations:                     7   Pseudo R-squ. (CS):            0.01235
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -4.2675      0.207    -20.603      0.000      -4.673      -3.862
+AGE            0.0059      0.004      1.385      0.166      -0.002       0.014
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 1.00588 (95% CI: 0.99757 – 1.01426)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/core_inplane_fraction_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  母集団: periodicity_coverage_1.5 非欠損 | 分子: core_inplane_coverage_1.5
+  アウトカムの種類: N_core_inplane / N_all
+  目的変数 (endog): ratio_y = N_core_inplane / N_total （分子: 列 core_inplane_coverage_1.5 が真のセグメント数、分母: periodicity_coverage_1.5 が非欠損の当該被験者の全セグメント数＝他アウトカムと同一）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の N_total
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=core_inplane/N_all | periodicity_coverage_1.5 | core_inplane_coverage_1.5 | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -852.85
+Date:                Mon, 06 Jul 2026   Deviance:                       155.21
+Time:                        10:10:51   Pearson chi2:                     135.
+No. Iterations:                     7   Pseudo R-squ. (CS):            0.05661
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -4.1208      0.122    -33.806      0.000      -4.360      -3.882
+C(sex, Treatment(reference='female'))[T.male]                               0.4046      0.205      1.972      0.049       0.002       0.807
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.2367      0.223     -1.061      0.289      -0.674       0.201
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.4502      0.250     -1.798      0.072      -0.941       0.041
+AGE_c                                                                       0.0084      0.005      1.541      0.123      -0.002       0.019
+TIV_c                                                                      -0.0014      0.001     -2.039      0.041      -0.003   -5.61e-05
+total_vessel_length_c                                                       0.0003      0.000      1.105      0.269      -0.000       0.001
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 1.00843 (95% CI: 0.99772 – 1.01925)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/core_inplane_fraction_vs_age_adjusted_coverage_1p5.png
+
+  ratio_core_outofplane: mean=0.0697, median=0.0690
+  Spearman(AGE, ratio_core_outofplane): rho=-0.0253, p=0.7559
+  Pearson(AGE, ratio_core_outofplane):  r=-0.0188, p=0.8166
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  母集団（分母）: periodicity_coverage_1.5 非欠損セグメント | 分子カウント: core_outofplane_coverage_1.5
+  アウトカムの種類: N_core_outofplane / N_all（core_outofplane_coverage_* の真セグメント数）
+  目的変数 (endog, 二項の標本比率): ratio_y = N_core_outofplane / N_total （分子: 列 core_outofplane_coverage_1.5 が真のセグメント数、分母: periodicity_coverage_1.5 が非欠損の当該被験者の全セグメント数＝他アウトカムと同一）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の N_total（セグメント数）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=core_outofplane/N_all | periodicity_coverage_1.5 | core_outofplane_coverage_1.5）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -2237.2
+Date:                Mon, 06 Jul 2026   Deviance:                       182.52
+Time:                        10:11:47   Pearson chi2:                     173.
+No. Iterations:                     6   Pseudo R-squ. (CS):           0.001369
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -2.5469      0.105    -24.223      0.000      -2.753      -2.341
+AGE           -0.0010      0.002     -0.459      0.646      -0.005       0.003
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 0.99898 (95% CI: 0.99463 – 1.00334)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/core_outofplane_fraction_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  母集団: periodicity_coverage_1.5 非欠損 | 分子: core_outofplane_coverage_1.5
+  アウトカムの種類: N_core_outofplane / N_all
+  目的変数 (endog): ratio_y = N_core_outofplane / N_total （分子: 列 core_outofplane_coverage_1.5 が真のセグメント数、分母: periodicity_coverage_1.5 が非欠損の当該被験者の全セグメント数＝他アウトカムと同一）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の N_total
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=core_outofplane/N_all | periodicity_coverage_1.5 | core_outofplane_coverage_1.5 | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -2233.4
+Date:                Mon, 06 Jul 2026   Deviance:                       174.93
+Time:                        10:11:49   Pearson chi2:                     169.
+No. Iterations:                     6   Pseudo R-squ. (CS):            0.04941
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -2.5910      0.060    -43.118      0.000      -2.709      -2.473
+C(sex, Treatment(reference='female'))[T.male]                              -0.0304      0.106     -0.287      0.774      -0.238       0.177
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.0634      0.115     -0.550      0.582      -0.289       0.162
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]     0.0189      0.116      0.163      0.870      -0.208       0.246
+AGE_c                                                                       0.0016      0.003      0.553      0.580      -0.004       0.007
+TIV_c                                                                      -0.0003      0.000     -0.795      0.427      -0.001       0.000
+total_vessel_length_c                                                       0.0003      0.000      2.141      0.032    2.47e-05       0.001
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 1.00156 (95% CI: 0.99605 – 1.00710)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/core_outofplane_fraction_vs_age_adjusted_coverage_1p5.png
+
+  --- Length-weighted burden（L = L_trimmed_mm [mm]）---
+  調整二項GLM（burden_L_*）: sex / ethnicity_group / TIV に加え total_vessel_length を共変量に含めます（セグメント割合の調整モデルと同一）。
+  ΣL_all / 被験者: median=1893.13, min=733.09, max=2659.72
+  burden_L_core = ΣL_Core/ΣL_all: mean=0.2234, median=0.2208
+  burden_L_core_inplane = ΣL_ci/ΣL_all: mean=0.0335, median=0.0268
+  burden_L_core_outofplane = ΣL_co/ΣL_all: mean=0.1484, median=0.1447
+
+  burden_L_core: mean=0.2234, median=0.2208
+  Spearman(AGE, burden_L_core): rho=-0.0858, p=0.2902
+  Pearson(AGE, burden_L_core):  r=-0.1033, p=0.2023
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_Core / ΣL_all（length-weighted burden）
+  目的変数 (endog, 二項の標本比率): ratio_y = (Σ_{j∈Core} L_j) / (Σ_{all} L_j) （L は列 L_trimmed_mm [mm]；Core は periodicity_coverage_1.5=='Core'；分母の all は periodicity_coverage_1.5 非欠損の全セグメント）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の Σ L_j（母集団内セグメント長の合計 [mm]）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=ΣL_Core/ΣL_all | periodicity_coverage_1.5 | length-weighted L）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:            -1.0619e+05
+Date:                Mon, 06 Jul 2026   Deviance:                       9162.5
+Time:                        10:11:51   Pearson chi2:                 9.10e+03
+No. Iterations:                     5   Pseudo R-squ. (CS):             0.4951
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -1.1110      0.013    -85.967      0.000      -1.136      -1.086
+AGE           -0.0028      0.000    -10.249      0.000      -0.003      -0.002
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 0.99720 (95% CI: 0.99667 – 0.99774)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_Core / ΣL_all
+  目的変数 (endog): ratio_y = (Σ_{j∈Core} L_j) / (Σ_{all} L_j) （L は列 L_trimmed_mm [mm]；Core は periodicity_coverage_1.5=='Core'；分母の all は periodicity_coverage_1.5 非欠損の全セグメント）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の Σ L_j（mm）
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=ΣL_Core/ΣL_all | periodicity_coverage_1.5 | length-weighted L | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:            -1.0605e+05
+Date:                Mon, 06 Jul 2026   Deviance:                       8869.6
+Time:                        10:11:52   Pearson chi2:                 8.86e+03
+No. Iterations:                     5   Pseudo R-squ. (CS):             0.9246
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -1.2386      0.007   -166.402      0.000      -1.253      -1.224
+C(sex, Treatment(reference='female'))[T.male]                              -0.0012      0.013     -0.094      0.925      -0.027       0.024
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.0827      0.014     -5.852      0.000      -0.110      -0.055
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]     0.0312      0.014      2.163      0.031       0.003       0.059
+AGE_c                                                                      -0.0029      0.000     -8.377      0.000      -0.004      -0.002
+TIV_c                                                                      -0.0005   4.44e-05    -11.119      0.000      -0.001      -0.000
+total_vessel_length_c                                                    9.636e-05   1.68e-05      5.736      0.000    6.34e-05       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 0.99709 (95% CI: 0.99641 – 0.99777)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_vs_age_adjusted_coverage_1p5.png
+
+  burden_L_core_inplane: mean=0.0335, median=0.0268
+  Spearman(AGE, burden_L_core_inplane): rho=0.1445, p=0.07382
+  Pearson(AGE, burden_L_core_inplane):  r=0.0876, p=0.2801
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_core_inplane / ΣL_all（length-weighted burden）
+  目的変数 (endog, 二項の標本比率): ratio_y = (Σ L_j | core-inplane) / (Σ L_j | all) （L は列 L_trimmed_mm [mm]；分子は core_inplane_coverage_1.5 が真のセグメントのみ；分母の all は burden_L_core と同一）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の Σ L_j（母集団内セグメント長の合計 [mm]）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=ΣL_ci/ΣL_all | periodicity_coverage_1.5 | length-weighted L）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -33041.
+Date:                Mon, 06 Jul 2026   Deviance:                       8297.1
+Time:                        10:11:55   Pearson chi2:                 7.62e+03
+No. Iterations:                     7   Pseudo R-squ. (CS):             0.2877
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -3.5785      0.031   -116.000      0.000      -3.639      -3.518
+AGE            0.0046      0.001      7.238      0.000       0.003       0.006
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 1.00458 (95% CI: 1.00334 – 1.00583)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_inplane_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_core_inplane / ΣL_all
+  目的変数 (endog): ratio_y = (Σ L_j | core-inplane) / (Σ L_j | all) （L は列 L_trimmed_mm [mm]；分子は core_inplane_coverage_1.5 が真のセグメントのみ；分母の all は burden_L_core と同一）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の Σ L_j（mm）
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=ΣL_ci/ΣL_all | periodicity_coverage_1.5 | length-weighted L | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -32909.
+Date:                Mon, 06 Jul 2026   Deviance:                       8031.4
+Time:                        10:11:56   Pearson chi2:                 7.42e+03
+No. Iterations:                     7   Pseudo R-squ. (CS):             0.8731
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -3.4419      0.018   -191.758      0.000      -3.477      -3.407
+C(sex, Treatment(reference='female'))[T.male]                               0.3128      0.031     10.210      0.000       0.253       0.373
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.2214      0.033     -6.617      0.000      -0.287      -0.156
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.4724      0.038    -12.322      0.000      -0.548      -0.397
+AGE_c                                                                       0.0059      0.001      7.186      0.000       0.004       0.007
+TIV_c                                                                      -0.0012      0.000    -11.235      0.000      -0.001      -0.001
+total_vessel_length_c                                                       0.0002   3.85e-05      4.243      0.000    8.78e-05       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 1.00588 (95% CI: 1.00427 – 1.00749)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_inplane_vs_age_adjusted_coverage_1p5.png
+
+  burden_L_core_outofplane: mean=0.1484, median=0.1447
+  Spearman(AGE, burden_L_core_outofplane): rho=0.0033, p=0.9678
+  Pearson(AGE, burden_L_core_outofplane):  r=0.0100, p=0.9024
+
+--------------------------------------------------------------------------------
+[GLM Binomial 単変量] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_core_outofplane / ΣL_all（length-weighted burden）
+  目的変数 (endog, 二項の標本比率): ratio_y = (Σ L_j | core-outofplane) / (Σ L_j | all) （L は列 L_trimmed_mm [mm]；分子は core_outofplane_coverage_1.5 が真のセグメントのみ；分母の all は burden_L_core と同一）
+  説明変数 (exog): AGE [years] のみ
+  試行回数の重み: var_weights = 各被験者の Σ L_j（母集団内セグメント長の合計 [mm]）
+  statsmodels 式: ratio_y ~ AGE  （family=Binomial）
+--------------------------------------------------------------------------------
+
+--- GLM 推定結果サマリ（単変量 | アウトカム=ΣL_co/ΣL_all | periodicity_coverage_1.5 | length-weighted L）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      152
+Model Family:                Binomial   Df Model:                            1
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -87161.
+Date:                Mon, 06 Jul 2026   Deviance:                       10947.
+Time:                        10:11:58   Pearson chi2:                 1.03e+04
+No. Iterations:                     5   Pseudo R-squ. (CS):           0.006669
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -1.7476      0.015   -114.913      0.000      -1.777      -1.718
+AGE            0.0003      0.000      1.015      0.310      -0.000       0.001
+==============================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE): 1.00032 (95% CI: 0.99970 – 1.00095)
+
+  Pearson dispersion (scale): 1.0000
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_outofplane_vs_age_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[GLM Binomial 多変量（調整）] 目的変数・説明変数の対応
+--------------------------------------------------------------------------------
+  COVERAGE_HAT_CORE_MIN = 1.5  →  分類に使う列: periodicity_coverage_1.5
+  セグメント長 L [mm]: 列 L_trimmed_mm
+  アウトカムの種類: ΣL_core_outofplane / ΣL_all
+  目的変数 (endog): ratio_y = (Σ L_j | core-outofplane) / (Σ L_j | all) （L は列 L_trimmed_mm [mm]；分子は core_outofplane_coverage_1.5 が真のセグメントのみ；分母の all は burden_L_core と同一）
+  説明変数 (exog): AGE_c（年齢）+ sex + ethnicity_group + TIV + total_vessel_length （存在する列のみ；カテゴリは Treatment 参照）
+    年齢の列名: AGE_c （平均からの偏差；中心化あり）
+  試行回数の重み: var_weights = 各被験者の Σ L_j（mm）
+  調整モデル式: ratio_y ~ AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+  同一完全症例での年齢単独モデル（図の破線比較用）: ratio_y ~ AGE_c
+  完全症例の被験者数: N = 154
+--------------------------------------------------------------------------------
+    patsy 右辺（調整モデル）: AGE_c + C(sex, Treatment(reference='female')) + C(ethnicity_group, Treatment(reference='white')) + TIV_c + total_vessel_length_c
+
+--- GLM 推定結果サマリ（多変量調整 | アウトカム=ΣL_co/ΣL_all | periodicity_coverage_1.5 | length-weighted L | N=154）---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:                ratio_y   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      147
+Model Family:                Binomial   Df Model:                            6
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -86845.
+Date:                Mon, 06 Jul 2026   Deviance:                       10315.
+Time:                        10:12:33   Pearson chi2:                 9.88e+03
+No. Iterations:                     5   Pseudo R-squ. (CS):             0.9836
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -1.7141      0.009   -197.529      0.000      -1.731      -1.697
+C(sex, Treatment(reference='female'))[T.male]                              -0.0558      0.015     -3.630      0.000      -0.086      -0.026
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.1424      0.017     -8.417      0.000      -0.176      -0.109
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]     0.0651      0.017      3.927      0.000       0.033       0.098
+AGE_c                                                                       0.0018      0.000      4.374      0.000       0.001       0.003
+TIV_c                                                                      -0.0005   5.21e-05    -10.014      0.000      -0.001      -0.000
+total_vessel_length_c                                                       0.0003   1.97e-05     13.950      0.000       0.000       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(beta_AGE_c): 1.00177 (95% CI: 1.00098 – 1.00257)
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/burden_L_core_outofplane_vs_age_adjusted_coverage_1p5.png
+
+--------------------------------------------------------------------------------
+[Model1] Poisson / NB2 GLM — core-inplane density per observed vessel length
+--------------------------------------------------------------------------------
+  log E[N_core_inplane] = log(ΣL_all) + β0 + β1·AGE + sex + ethnicity_group + TIV （total_vessel_length は Model1 では入れません）。
+  ΣL_all [mm] はセグメント列 L_trimmed_mm からの被験者内合算（periodicity 非欠損母集団）。
+  層別: periodicity_coverage_1.5 | core_inplane_coverage_1.5
+
+--- Poisson GLM | N=154 | offset = log(ΣL_all) ---
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:      n_core_inplane_ct   No. Observations:                  154
+Model:                            GLM   Df Residuals:                      148
+Model Family:                 Poisson   Df Model:                            5
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -218.17
+Date:                Mon, 06 Jul 2026   Deviance:                       149.41
+Time:                        10:12:34   Pearson chi2:                     126.
+No. Iterations:                     4   Pseudo R-squ. (CS):            0.04907
+Covariance Type:            nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -7.2954      0.114    -64.177      0.000      -7.518      -7.073
+C(sex, Treatment(reference='female'))[T.male]                               0.3254      0.189      1.719      0.086      -0.046       0.696
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.2295      0.221     -1.039      0.299      -0.662       0.203
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.3795      0.244     -1.557      0.120      -0.857       0.098
+AGE_c                                                                       0.0039      0.004      0.891      0.373      -0.005       0.013
+TIV_c                                                                      -0.0013      0.001     -2.003      0.045      -0.003   -2.86e-05
+===========================================================================================================================================
+
+  Pearson χ² / df = 0.8512（>1 付近なら過分散の兆候）
+  1 歳増加あたりの率比 RR = exp(β_AGE)（同一 ΣL_all・同一共変量下）: 1.00391 (95% CI: 0.99532 – 1.01258)
+
+  NB2 はスキップ（Pearson/df が大きくないため）。
+
+--------------------------------------------------------------------------------
+[Model2] Binomial GLM — P(in-plane | Core) with vessel-length offset
+--------------------------------------------------------------------------------
+  N_core_inplane ~ Binomial(N_core, p); logit(p) = β0 + β1·AGE + sex + ethnicity + TIV + total_vessel_length + offset(log ΣL_all) （共変量は列があれば；offset は glm の offset 引数）。
+  ΣL_all [mm] は列 L_trimmed_mm からの合算。層別: periodicity_coverage_1.5
+
+--- Binomial GLM | N=154 | var_weights=N_core | offset=log(ΣL_all) ---
+                    Generalized Linear Model Regression Results                     
+====================================================================================
+Dep. Variable:     ratio_inplane_given_core   No. Observations:                  154
+Model:                                  GLM   Df Residuals:                      147
+Model Family:                      Binomial   Df Model:                            6
+Link Function:                        Logit   Scale:                          1.0000
+Method:                                IRLS   Log-Likelihood:                -413.74
+Date:                      Mon, 06 Jul 2026   Deviance:                       153.47
+Time:                              10:12:34   Pearson chi2:                     130.
+No. Iterations:                           5   Pseudo R-squ. (CS):                nan
+Covariance Type:                  nonrobust                                         
+===========================================================================================================================================
+                                                                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------------------------------------------------
+Intercept                                                                  -9.2407      0.131    -70.332      0.000      -9.498      -8.983
+C(sex, Treatment(reference='female'))[T.male]                               0.4492      0.225      1.998      0.046       0.009       0.890
+C(ethnicity_group, Treatment(reference='white'))[T.asian]                  -0.2734      0.241     -1.133      0.257      -0.746       0.199
+C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]    -0.5371      0.268     -2.005      0.045      -1.062      -0.012
+AGE_c                                                                       0.0123      0.006      2.036      0.042       0.000       0.024
+TIV_c                                                                      -0.0013      0.001     -1.701      0.089      -0.003       0.000
+total_vessel_length_c                                                      -0.0003      0.000     -1.089      0.276      -0.001       0.000
+===========================================================================================================================================
+
+  1 歳増加あたりのオッズ比 OR = exp(β_AGE)（同一 ΣL_all・同一共変量下）: 1.01235 (95% CI: 1.00046 – 1.02438)
+
+  total_vessel_length vs AGE（被験者 N=154）: Spearman rho=-0.5625, p=3.151e-14; Pearson r=-0.5843, p=1.792e-15
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/total_vessel_length_vs_age_coverage_1p5.png
+
+  n_segment vs AGE（被験者 N=154）: Spearman rho=-0.5646, p=2.422e-14; Pearson r=-0.5752, p=6.059e-15
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/n_segment_vs_age_coverage_1p5.png
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/segment_counts_hist_by_age_coverage_1p5.png
+  Saved figure:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/figures/physical_validation_additional/length_sums_hist_by_age_coverage_1p5.png
+  Saved table:  系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/analysis/physical_validation_additional/subject_level_periodic_fraction_coverage_1p5.csv
+
+================================================================================
+完了
+================================================================================

@@ -1,0 +1,25 @@
+coverage,cohort,model,variable,coefficient,SE,p_value,method,n_obs
+1.5,core_inplane_coverage_1.5,model1_log_lambda,Intercept,3.5867939086574383,0.11076204113311142,4.781401924609319e-230,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda,log_r,0.6684580896578028,0.12210596669095068,4.389723864395079e-08,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda,AGE,-0.0011314217863520768,0.0018190815976244403,0.5339588456312246,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model2_log_lambda_over_r,Intercept,3.750943216395233,0.08901076925912964,0.0,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model2_log_lambda_over_r,AGE,-0.001113935871676081,0.0017938200505600087,0.5346092991031445,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda_site,Intercept,3.5707453245715106,0.1109792959445418,3.9649095466209887e-227,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda_site,C(mca_segment)[T.M4],0.08553229154709546,0.05495941971350737,0.11964132690969621,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda_site,log_r,0.7392304483576285,0.1287357212720581,9.343638540323301e-09,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model1_log_lambda_site,AGE,-0.0009561208466777988,0.0017844370744458942,0.5920892436037757,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model2_log_lambda_over_r_site,Intercept,3.6786652655672913,0.09326097314943878,0.0,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model2_log_lambda_over_r_site,C(mca_segment)[T.M4],0.12100740384273675,0.052571318499472525,0.021347802708277925,OLS (Cluster-Robust),212
+1.5,core_inplane_coverage_1.5,model2_log_lambda_over_r_site,AGE,-0.0008712083968687419,0.0017479368593216712,0.6181873546231502,OLS (Cluster-Robust),212
+1.0,core_inplane_coverage_1.0,model1_log_lambda,Intercept,3.3083570951399732,0.05916424902871564,0.0,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda,log_r,0.3569428893417923,0.06359759937641929,1.9939950733257592e-08,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda,AGE,0.0008792733600495355,0.0009828324426364892,0.3709838365278364,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model2_log_lambda_over_r,Intercept,3.6033917073303354,0.053415628221847755,0.0,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model2_log_lambda_over_r,AGE,0.00121807671968509,0.0010581696059517463,0.24968422273884028,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda_site,Intercept,3.3073839317024554,0.060138313891470604,0.0,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda_site,C(mca_segment)[T.M4],0.0038439485547602653,0.03344179865094868,0.9084891667348077,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda_site,log_r,0.35940342982996804,0.06706553860278727,8.368932159496239e-08,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model1_log_lambda_site,AGE,0.0008886109901715861,0.000988137807032286,0.36850438741598257,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model2_log_lambda_over_r_site,Intercept,3.5487112688526685,0.057733110785040245,0.0,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model2_log_lambda_over_r_site,C(mca_segment)[T.M4],0.09999184036698866,0.033679008448453326,0.002988033854464505,OLS (Cluster-Robust),588
+1.0,core_inplane_coverage_1.0,model2_log_lambda_over_r_site,AGE,0.0014272523824810526,0.001045314018054729,0.17213318722855042,OLS (Cluster-Robust),588
