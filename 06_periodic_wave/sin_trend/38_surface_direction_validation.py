@@ -754,7 +754,7 @@ def run_clinical_sensitivity(out_dir: Path, targets_csv: Path, cfg: Dict[str, An
             reason="targets_csv_missing",
             path=str(targets_csv),
             clinical_mesh_eval_implemented=True,
-            message="対象CSVが無い。形式を用意すれば実メッシュ評価は実行可能。",
+            message="Targets CSV missing. Provide the expected format to run real-mesh evaluation.",
         )
         _write_json(guide, out_dir / "clinical_sensitivity_status.json")
         return guide
@@ -784,9 +784,9 @@ def run_clinical_sensitivity(out_dir: Path, targets_csv: Path, cfg: Dict[str, An
             n_targets=int(len(df)),
             clinical_mesh_eval_implemented=True,
             message=(
-                "対象が EXAMPLE_/プレースホルダのみのため実メッシュ評価は未実施。"
-                "実 directory_id/segment_id の CSV を --targets-csv で渡せば評価する。"
-                "リスト読込のみで評価しない実装不足ではない。"
+                "Targets are EXAMPLE_/placeholders only, so real-mesh evaluation was not run. "
+                "Pass a CSV with real directory_id/segment_id via --targets-csv to evaluate. "
+                "List loading without evaluation is intentional, not a missing implementation."
             ),
             primary_settings=dict(bridge_max_gap_mm=5.0, bridge_axis_max_deg=45.0, R_out_thresh=0.25),
         )
@@ -803,7 +803,7 @@ def run_clinical_sensitivity(out_dir: Path, targets_csv: Path, cfg: Dict[str, An
             status="error_import",
             reason=str(exc),
             clinical_mesh_eval_implemented=True,
-            message="臨床評価に必要な centerline_extraction / vessel_mesh_features を import できない。",
+            message="Cannot import centerline_extraction / vessel_mesh_features required for clinical evaluation.",
         )
         _write_json(guide, out_dir / "clinical_sensitivity_status.json")
         return guide
@@ -1212,11 +1212,11 @@ def run_clinical_sensitivity(out_dir: Path, targets_csv: Path, cfg: Dict[str, An
         clinical_mesh_eval_implemented=True,
         primary_settings=dict(bridge_max_gap_mm=5.0, bridge_axis_max_deg=45.0, R_out_thresh=0.25),
         message=(
-            "指定対象のみ評価。欠測・曖昧 GroupId は置換していない。"
-            "patch は本番と同様 measure_interval の trim 半径中央値由来。"
-            "表面は本番 run_surface_evaluation（mesh切出・法線）を共用。"
-            "半径は MaximumInscribedSphereRadius、ds は ds_median_vox。"
-            "感度完了まで status=ok にしない。少数例の感度確認であり全データ代表ではない。"
+            "Evaluate listed targets only; missing/ambiguous GroupIds were not substituted. "
+            "Patch radius follows production: median trim radius from measure_interval. "
+            "Surface uses production run_surface_evaluation (mesh crop + normals). "
+            "Radius from MaximumInscribedSphereRadius; ds from ds_median_vox. "
+            "Do not set status=ok until sensitivity finishes. Small-n sensitivity only; not cohort-representative."
         ),
     )
     _write_json(guide, out_dir / "clinical_sensitivity_status.json")
@@ -1298,13 +1298,13 @@ def write_clinical_pyvista_plots(
     stem = f"{directory_id}_sid{segment_id}"
 
     legend_text = (
-        "矢印ラベル\n"
-        "赤矢印: d_latent = 周期変位（フィットしたsin成分）\n"
-        "緑矢印: n_eval = 評価用脳表法線（GOOD/BRIDGED）\n"
-        "黒線: 観測中心線 / 灰点: 評価不能(NONE)"
+        "Arrow legend\n"
+        "Red: d_latent = periodic displacement (fitted sin component)\n"
+        "Green: n_eval = evaluation cortex normal (GOOD/BRIDGED)\n"
+        "Black: observed centerline / gray: inevaluable (NONE)"
     )
     if arrows_n is None:
-        legend_text += "\n※この症例では評価用法線なし（緑矢印なし）"
+        legend_text += "\nNote: no evaluation normals in this case (no green arrows)"
 
     def _add_common_actors(pl, *, with_coherence_points: bool = False) -> None:
         pl.add_mesh(cropped, color="lightgray", opacity=0.35, smooth_shading=True, label="brain surface (clip)")
@@ -1378,11 +1378,11 @@ def write_clinical_pyvista_plots(
 <div id="arrow-legend-panel" style="position:fixed;left:12px;bottom:12px;z-index:9999;
 background:rgba(255,255,255,0.92);border:1px solid #333;border-radius:8px;padding:10px 12px;
 font:13px/1.45 sans-serif;color:#111;max-width:420px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
-<strong>矢印の意味</strong><br>
-<span style="color:#d62728">■ 赤矢印</span>：<code>d_latent</code>＝周期変位（フィットした正弦成分の3D方向）<br>
-<span style="color:#2ca02c">■ 緑矢印</span>：<code>n_eval</code>＝評価用脳表法線（GOOD/BRIDGED のみ）<br>
-<span style="color:#000">■ 黒線</span>：観測中心線<br>
-<span style="color:#888">■ 灰点</span>：評価不能（NONE）／表色点は coherence
+<strong>Arrow meaning</strong><br>
+<span style="color:#d62728">■ Red</span>: <code>d_latent</code> = periodic displacement (3D direction of fitted sine)<br>
+<span style="color:#2ca02c">■ Green</span>: <code>n_eval</code> = evaluation cortex normal (GOOD/BRIDGED only)<br>
+<span style="color:#000">■ Black</span>: observed centerline<br>
+<span style="color:#888">■ Gray</span>: inevaluable (NONE); colored points show coherence
 </div>
 """
             if "</body>" in html:
@@ -1510,28 +1510,28 @@ def write_japanese_report(
     overall: Dict[str, Any],
 ) -> None:
     lines = []
-    lines.append("# 脳表方向評価 validation 結果説明\n")
-    lines.append(f"- 出力: `{out_dir}`\n")
+    lines.append("# Surface-direction validation report\n")
+    lines.append(f"- Output: `{out_dir}`\n")
     lines.append(f"- MEASUREMENT_REVISION: `{MEASUREMENT_REVISION}`\n")
     lines.append(f"- SURFACE_METHOD_REVISION: `{SURFACE_METHOD_REVISION}`\n")
     lines.append(f"- overall_status: `{overall.get('status')}`\n")
-    lines.append("\n## 許容誤差（実行前固定）\n")
-    lines.append(f"- 平面・既知変位直接: |ΔR| ≤ {TOL_PLANE_DIRECT_ABS}, 法線軸中央値 ≤ {TOL_NORMAL_AXIS_DEG}°、加えて期待分類(pass_class)\n")
-    lines.append(f"- フィット経由: |ΔR| ≤ {TOL_PLANE_FIT_ABS}\n")
-    lines.append(f"- 幾何学 T 確認: 解析 |Δ| ≤ {TOL_GEOM_ABS} かつ数値平均も判定\n")
-    lines.append("\n## 本番閾値との関係\n")
-    lines.append(f"- 本番 R_out_thresh: {thresh_cmp.get('production_R_out_thresh')}\n")
-    lines.append(f"- 検証 R_out_thresh: {thresh_cmp.get('validation_R_out_thresh')}（R_tan > {thresh_cmp.get('validation_R_tan_thresh')}）\n")
-    lines.append(f"- 差異あり: {thresh_cmp.get('differs')}\n")
-    lines.append("\n## 仕様との差（判明分）\n")
-    lines.append("- 本番列名の一括置換は未実施（検証出力に R_tan を併記）。\n")
-    lines.append("- evaluated_tangential_fraction は全区間分母×R_tan であり R_tan 本体とは別。\n")
-    lines.append("- 谷メッシュは x 方向に峰→谷→峰。欠落を強制マスクしていない。\n")
-    lines.append("- 谷の変位は θ=30°（z 成分あり）。図の高さは計算メッシュと同一の surface_height_mm。\n")
-    lines.append("- 総合判定は空表・ok=False・必須ケース欠落も fail（pass=False のみではない）。\n")
-    lines.append("- 実データ patch は measure_interval の trim 半径由来。半径欠測は補完せず invalid_radius。\n")
-    lines.append("- 橋渡し距離は累積弧長（本番 estimate_n_eff）。\n")
-    lines.append("\n## 平面・既知変位直接\n")
+    lines.append("\n## Tolerances (fixed before run)\n")
+    lines.append(f"- Plane + known displacement (direct): |ΔR| ≤ {TOL_PLANE_DIRECT_ABS}, normal-axis median ≤ {TOL_NORMAL_AXIS_DEG}°, plus expected class (pass_class)\n")
+    lines.append(f"- Via fit: |ΔR| ≤ {TOL_PLANE_FIT_ABS}\n")
+    lines.append(f"- Geometric T check: analytic |Δ| ≤ {TOL_GEOM_ABS} and numerical mean check\n")
+    lines.append("\n## Relation to production thresholds\n")
+    lines.append(f"- Production R_out_thresh: {thresh_cmp.get('production_R_out_thresh')}\n")
+    lines.append(f"- Validation R_out_thresh: {thresh_cmp.get('validation_R_out_thresh')} (R_tan > {thresh_cmp.get('validation_R_tan_thresh')})\n")
+    lines.append(f"- Differs: {thresh_cmp.get('differs')}\n")
+    lines.append("\n## Known deviations from the written spec\n")
+    lines.append("- Production column rename not applied globally (validation outputs also report R_tan).\n")
+    lines.append("- evaluated_tangential_fraction uses all-interval denominator × R_tan; it is not R_tan itself.\n")
+    lines.append("- Valley mesh is peak→valley→peak along x; missing regions are not force-masked.\n")
+    lines.append("- Valley displacement uses θ=30° (includes z). Figure height matches compute mesh surface_height_mm.\n")
+    lines.append("- Overall verdict fails on empty tables, ok=False, or missing required cases (not only pass=False).\n")
+    lines.append("- Real-data patch from measure_interval trim radius; missing radius → invalid_radius (no imputation).\n")
+    lines.append("- Bridging distance uses cumulative arc length (production estimate_n_eff).\n")
+    lines.append("\n## Plane + known displacement (direct)\n")
     if len(plane_direct):
         cols = [
             c
@@ -1557,10 +1557,10 @@ def write_japanese_report(
         lines.append(sub[cols].to_string(index=False))
         lines.append("\n")
         lines.append(
-            "\n（baseline 接線 T0 を evaluate に渡し、|T0·n| と R_out_upper_bound を R_tan と併記。"
-            " 直線×平面では |T0·n|≈0、上限≈1。R_out ≤ 上限を pass_R_out_le_upper_bound で確認。）\n"
+            "\n(Pass baseline tangent T0 into evaluate; report |T0·n| and R_out_upper_bound alongside R_tan. "
+            " For straight×plane, |T0·n|≈0 and upper bound≈1. Confirm R_out ≤ bound via pass_R_out_le_upper_bound.)\n"
         )
-    lines.append("\n## 平面・フィット経由（別表）\n")
+    lines.append("\n## Plane via fit (separate table)\n")
     if len(plane_fit):
         cols = [
             c
@@ -1582,24 +1582,24 @@ def write_japanese_report(
         ]
         lines.append(plane_fit[cols].to_string(index=False))
         lines.append("\n")
-    lines.append("\n## 幾何学 T 確認（既知法線・帰無分布ではない）\n")
+    lines.append("\n## Geometric T check (known normals; not a null distribution)\n")
     lines.append(geom.to_string(index=False) if len(geom) else "(empty)")
-    lines.append("\n\n## 谷・橋渡し観察\n")
-    lines.append(f"行数: {len(valley)}（詳細は valley_bridge_observation.csv）\n")
+    lines.append("\n\n## Valley / bridging observation\n")
+    lines.append(f"Rows: {len(valley)} (details in valley_bridge_observation.csv)\n")
     if len(valley) and "n_eval_bridged" in valley.columns:
         n_bridge = int(np.nansum(pd.to_numeric(valley["n_eval_bridged"], errors="coerce").fillna(0) > 0))
-        lines.append(f"- BRIDGED>0 の条件数: {n_bridge} / {len(valley)}\n")
-    lines.append("\n## 実データ感度\n")
+        lines.append(f"- Conditions with BRIDGED>0: {n_bridge} / {len(valley)}\n")
+    lines.append("\n## Real-data sensitivity\n")
     lines.append(json.dumps(clinical, ensure_ascii=False, indent=2))
-    lines.append("\n\n## 既存テスト\n")
+    lines.append("\n\n## Existing tests\n")
     lines.append(json.dumps(existing_tests, ensure_ascii=False, indent=2))
-    lines.append("\n\n## 総合判定\n")
+    lines.append("\n\n## Overall verdict\n")
     lines.append(json.dumps(overall, ensure_ascii=False, indent=2))
-    lines.append("\n\n## 結論の区別\n")
-    lines.append("1. 計算の正しさ: 既知変位×平面メッシュの R_out/R_tan 誤差と境界分類（direct）。\n")
-    lines.append("2. 既知方向の回復: フィット経由は別許容誤差で報告（fit_through）。真値列は生成変位。\n")
-    lines.append("3. 実データ安定性: 実ID未提供なら未実施。実装はあるがプレースホルダでは走らない。\n")
-    lines.append("\n本結果をもって「0.25が最適」「力学的拘束が証明された」とは記載しない。\n")
+    lines.append("\n\n## How to read the conclusions\n")
+    lines.append("1. Numerical correctness: R_out/R_tan error and boundary class for known displacement × plane mesh (direct).\n")
+    lines.append("2. Recovery of known direction: via-fit reported with separate tolerances (fit_through); truth columns are generated displacements.\n")
+    lines.append("3. Real-data stability: skipped if no real IDs provided. Implementation exists but placeholders do not run.\n")
+    lines.append("\nDo not claim from these results that "0.25 is optimal" or that mechanical constraint is proven.\n")
     (out_dir / "REPORT_JA.md").write_text("\n".join(str(x) for x in lines), encoding="utf-8")
 
 
@@ -1801,13 +1801,13 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         "--out-dir",
         type=Path,
         default=None,
-        help="出力ディレクトリ（省略時は results/analysis/sin_trend/surface_direction_validation/surface_direction_<timestamp>）",
+        help="output directory (default: results/analysis/sin_trend/surface_direction_validation/surface_direction_<timestamp>)",
     )
     p.add_argument(
         "--targets-csv",
         type=Path,
         default=_HERE / "surface_direction_validation_targets.example.csv",
-        help="実データ対象リスト（directory_id,segment_id[,geometry_note]）",
+        help="real-data target list (directory_id,segment_id[,geometry_note])",
     )
     p.add_argument("--skip-existing-tests", action="store_true")
     p.add_argument("--skip-fit-through", action="store_true")

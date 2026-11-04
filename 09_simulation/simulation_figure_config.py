@@ -91,11 +91,11 @@ def run_all_figures() -> None:
 
     path = npz_path_for_active_run()
     print(f"ACTIVE_NPZ_PATH: {ACTIVE_NPZ_PATH}")
-    tag = "あり" if os.path.isfile(path) else "なし"
+    tag = "present" if os.path.isfile(path) else "missing"
     print(f"  {path}: {tag}")
     out_dir = figures_subdir(OUTPUT_SUBDIR)
-    print(f"図の保存先: {out_dir}")
-    print("生成する図:")
+    print(f"Figures saved to: {out_dir}")
+    print("Figures to generate:")
     for name in SELECTED_FIGURES:
         print(f"  - {name}")
 

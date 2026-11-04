@@ -36,14 +36,14 @@ def _fit_and_print(mod, agg, *, model_id: str, y_col: str, include_vessel_length
     terms = mod.covariate_terms(agg, include_vessel_length=include_vessel_length)
     for label, cov_terms in (("univariable", []), ("multivariable", terms)):
         res, work = mod.fit_age_ols(agg, y_col, cov_terms)
-        covariates = ", ".join(cov_terms) if cov_terms else "(なし)"
+        covariates = ", ".join(cov_terms) if cov_terms else "(none)"
         print(f"{model_id} {label}")
         print(f"  outcome: {y_col}")
-        print(f"  共変量: {covariates}")
+        print(f"  Covariates: {covariates}")
         print(f"  formula: {res.model.formula}")
         _print_age(res, n_participants=len(work))
         if not np.isfinite(float(res.params["AGE"])):
-            raise RuntimeError(f"{model_id} {label}: AGE 係数が得られない")
+            raise RuntimeError(f"{model_id} {label}: AGE coefficient unavailable")
 
 
 def main() -> None:

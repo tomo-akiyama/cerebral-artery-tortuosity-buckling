@@ -18,8 +18,8 @@ def ensure_file_available(file_path, max_wait_time=120):
         except:
             pass
     
-    print(f"  ファイルがオンラインのみの可能性がある: {os.path.basename(file_path)}")
-    print(f"  Dropboxにダウンロードを要求している...")
+    print(f"  File may be online-only: {os.path.basename(file_path)}")
+    print(f"  Requesting download from Dropbox...")
     
                                                           
     try:
@@ -48,7 +48,7 @@ def ensure_file_available(file_path, max_wait_time=120):
             with open(file_path, 'rb') as f:
                 _ = f.read(1)                 
             if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-                print(f"  ✓ ファイルが利用可能になりました")
+                print(f"  ✓ File is now available")
                 return True
         except (FileNotFoundError, PermissionError, OSError):
             pass
@@ -63,7 +63,7 @@ def ensure_file_available(file_path, max_wait_time=120):
                 try:
                     file_size = os.path.getsize(file_path)
                     if file_size > 0:
-                        print(f"  ✓ ファイルがダウンロードされました (サイズ: {file_size:,} bytes)")
+                        print(f"  ✓ File downloaded (size: {file_size:,} bytes)")
                         return True
                 except:
                     pass
@@ -71,7 +71,7 @@ def ensure_file_available(file_path, max_wait_time=120):
             elapsed = int(time.time() - start_time)
                          
             if time.time() - last_progress_time >= 10:
-                print(f"  待機中... ({elapsed}/{max_wait_time}秒) - ファイルにアクセスを試みている...")
+                print(f"  Waiting... ({elapsed}/{max_wait_time}s) - retrying file access...")
                 last_progress_time = time.time()
                 
                                    
@@ -83,12 +83,12 @@ def ensure_file_available(file_path, max_wait_time=120):
             
             time.sleep(check_interval)
         
-        print(f"  ⚠ タイムアウト: {max_wait_time}秒以内にファイルがダウンロードされなかった")
-        print(f"  手動でDropboxアプリからファイルをダウンロードすること: {file_path}")
+        print(f"  ⚠ Timeout: file was not downloaded within {max_wait_time}s")
+        print(f"  Please download manually via the Dropbox app: {file_path}")
         return False
         
     except Exception as e:
-        print(f"  エラー: {str(e)}")
+        print(f"  Error: {str(e)}")
         return False
 
 

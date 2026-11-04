@@ -21,29 +21,29 @@ PLOT_WINDOW = (1600, 1000)
 
 # (label_ja, color_css, kind)  kind: point | arrow | mesh
 BUCKLING_LEGEND_ITEMS: List[Tuple[str, str, str]] = [
-    ("観測中心線（Original centerline）", "#32CD32", "point"),
-    ("二次 baseline P0", "#FF00FF", "point"),
-    ("sin+trend フィット曲線（水色線）", "#00BFFF", "line"),
-    ("周期成分のみ P0+d_sin（白線）", "#FFFFFF", "line"),
-    ("周期変位 d_sin（橙矢印）", "#FFA500", "arrow"),
-    ("変位の主成分方向 g1（黄矢印）", "#FFFF00", "arrow"),
-    ("脳表メッシュ（cropped）", "#FAFAE1", "mesh"),
-    ("脳表メッシュ法線 Normals（紺矢印）", "#000080", "arrow"),
+    ("Observed centerline (original)", "#32CD32", "point"),
+    ("Quadratic baseline P0", "#FF00FF", "point"),
+    ("sin+trend fit curve (deep-sky-blue line)", "#00BFFF", "line"),
+    ("Periodic component only P0+d_sin (white line)", "#FFFFFF", "line"),
+    ("Periodic displacement d_sin (orange arrows)", "#FFA500", "arrow"),
+    ("Principal displacement direction g1 (yellow arrows)", "#FFFF00", "arrow"),
+    ("Cortex mesh (cropped)", "#FAFAE1", "mesh"),
+    ("Cortex mesh normals (navy arrows)", "#000080", "arrow"),
 ]
 
 SURFACE_LEGEND_ITEMS: List[Tuple[str, str, str]] = [
-    ("観測中心線 trim 後", "#32CD32", "point"),
-    ("二次 baseline P0", "#FF00FF", "point"),
-    ("sin+trend フィット曲線（水色線）", "#00BFFF", "line"),
-    ("周期成分のみ P0+d_sin（白線）", "#FFFFFF", "line"),
-    ("変位後の点 P + d_sin（参考）", "#FF0000", "point"),
-    ("周期変位 d_sin（橙矢印）", "#FFA500", "arrow"),
-    ("変位の主成分方向 g1（黄矢印）", "#FFFF00", "arrow"),
-    ("有効脳表法線 n_eff（シアン矢印）", "#00FFFF", "arrow"),
-    ("法線推定アンカー", "#008000", "point"),
-    ("拘束ありアンカー（constraint）", "#FF0000", "point_large"),
-    ("拘束なしアンカー（not constraint）", "#0000FF", "point_large"),
-    ("脳表メッシュ（cropped）", "#FAFAE1", "mesh"),
+    ("Observed centerline after trim", "#32CD32", "point"),
+    ("Quadratic baseline P0", "#FF00FF", "point"),
+    ("sin+trend fit curve (deep-sky-blue line)", "#00BFFF", "line"),
+    ("Periodic component only P0+d_sin (white line)", "#FFFFFF", "line"),
+    ("Displaced points P + d_sin (reference)", "#FF0000", "point"),
+    ("Periodic displacement d_sin (orange arrows)", "#FFA500", "arrow"),
+    ("Principal displacement direction g1 (yellow arrows)", "#FFFF00", "arrow"),
+    ("Effective cortex normal n_eff (cyan arrows)", "#00FFFF", "arrow"),
+    ("Normal-estimation anchors", "#008000", "point"),
+    ("Anchors with constraint", "#FF0000", "point_large"),
+    ("Anchors without constraint", "#0000FF", "point_large"),
+    ("Cortex mesh (cropped)", "#FAFAE1", "mesh"),
 ]
 
 
@@ -61,8 +61,8 @@ def _legend_plain_text(items: Sequence[Tuple[str, str, str]], *, title: str) -> 
     return "\n".join(lines)
 
 
-BUCKLING_LEGEND_JA = _legend_plain_text(BUCKLING_LEGEND_ITEMS, title="【凡例】Buckling Visualization")
-SURFACE_LEGEND_JA = _legend_plain_text(SURFACE_LEGEND_ITEMS, title="【凡例】Surface Constraint Visualization")
+BUCKLING_LEGEND_JA = _legend_plain_text(BUCKLING_LEGEND_ITEMS, title="Legend — Buckling Visualization")
+SURFACE_LEGEND_JA = _legend_plain_text(SURFACE_LEGEND_ITEMS, title="Legend — Surface Constraint Visualization")
 
 
 def _add_legend_panel(pl, text: str, *, font_size: int = 12) -> None:
@@ -142,11 +142,11 @@ def _add_fitted_curve_actors(pl, pv, curves: Dict[str, np.ndarray]) -> None:
     if "P_fit_full" in curves:
         line = _polyline_mesh(pv, curves["P_fit_full"])
         if line is not None:
-            pl.add_mesh(line, color="#00BFFF", line_width=4, label="水色線: sin+trend フィット")
+            pl.add_mesh(line, color="#00BFFF", line_width=4, label="deep-sky-blue: sin+trend fit")
     if "P_fit_sin" in curves:
         line = _polyline_mesh(pv, curves["P_fit_sin"])
         if line is not None:
-            pl.add_mesh(line, color="white", line_width=3, label="白線: 周期成分 P0+d_sin")
+            pl.add_mesh(line, color="white", line_width=3, label="white: periodic component P0+d_sin")
 
 
 def inject_html_legend_overlay(
@@ -190,11 +190,11 @@ def inject_html_legend_overlay(
         "<div id='sin-trend-legend-overlay'>\n"
         f"<h3>{html_lib.escape(title)}</h3>\n"
         + "".join(rows)
-        + "<div class='hint'>水色線: sin+trend のフィット曲線（baseline 上）。"
-        "白線: 周期成分のみ P0+d_sin。"
-        "橙矢印: 周期変位ベクトル。"
-        "黄矢印: 変位主方向 g1。"
-        "シアン/紺: 脳表法線。</div>\n"
+        + "<div class='hint'>Deep-sky-blue: sin+trend fit on baseline. "
+        "White: periodic component only P0+d_sin. "
+        "Orange arrows: periodic displacement. "
+        "Yellow arrows: principal direction g1. "
+        "Cyan/navy: cortex normals.</div>\n"
         "</div>\n"
         "<!-- /sin-trend-legend-overlay -->\n"
     )
@@ -409,14 +409,14 @@ def save_buckling_html(
             color="lime",
             point_size=5,
             render_points_as_spheres=True,
-            label="黄緑: 観測中心線",
+            label="lime: observed centerline",
         )
         pl.add_points(
             np.asarray(P0_full, float),
             color="magenta",
             point_size=5,
             render_points_as_spheres=True,
-            label="マゼンタ: baseline P0",
+            label="magenta: baseline P0",
         )
         P0t = np.asarray(P0_trim if P0_trim is not None else P_trim, float)
         curves = _fitted_curves_on_baseline(P0t, U, V, fit_U, fit_V, d_sin)
@@ -426,7 +426,7 @@ def save_buckling_html(
             np.asarray(d_sin, float),
             color="orange",
             mag=1,
-            label="橙矢印: 周期変位 d_sin",
+            label="orange arrows: periodic displacement d_sin",
         )
         if g1_3d is not None:
             pl.add_arrows(
@@ -434,15 +434,15 @@ def save_buckling_html(
                 np.asarray(g1_3d, float),
                 mag=1,
                 color="yellow",
-                label="黄矢印: 主成分方向 g1",
+                label="yellow arrows: principal direction g1",
             )
-        pl.add_mesh(cropped, color="#fafae1", opacity=0.5, label="象牙: 脳表メッシュ")
+        pl.add_mesh(cropped, color="#fafae1", opacity=0.5, label="ivory: cortex mesh")
         if "Normals" in cropped.point_data:
             pl.add_mesh(
                 cropped.glyph(orient="Normals", scale=False, factor=0.5),
                 color="navy",
                 opacity=0.7,
-                label="紺矢印: 脳表法線",
+                label="navy arrows: cortex normals",
             )
         pl.camera_position = "xy"
         pl.camera.azimuth = 180
@@ -456,7 +456,7 @@ def save_buckling_html(
         inject_html_legend_overlay(
             out_path,
             BUCKLING_LEGEND_ITEMS,
-            title="凡例 — Buckling Visualization",
+            title="Legend — Buckling Visualization",
         )
         _safe_close(pl)
         return "ok"
@@ -498,29 +498,29 @@ def save_surface_constraint_html(
         d_sin = np.asarray(d_sin, float)
         Psin = P_trim + d_sin
         pl = pv.Plotter(off_screen=True, window_size=PLOT_WINDOW)
-        pl.add_points(P_trim, color="lime", point_size=5, label="黄緑: 観測中心線 (trim後)")
-        pl.add_points(np.asarray(P0_full, float), color="magenta", point_size=5, label="マゼンタ: baseline P0")
+        pl.add_points(P_trim, color="lime", point_size=5, label="lime: observed centerline (after trim)")
+        pl.add_points(np.asarray(P0_full, float), color="magenta", point_size=5, label="magenta: baseline P0")
         P0t = np.asarray(P0_trim if P0_trim is not None else P_trim, float)
         curves = _fitted_curves_on_baseline(P0t, U, V, fit_U, fit_V, d_sin)
         _add_fitted_curve_actors(pl, pv, curves)
-        pl.add_mesh(cropped, color="#fafae1", opacity=0.5, label="象牙: 脳表メッシュ")
-        pl.add_points(Psin, color="red", point_size=5, label="赤点: P + d_sin（参考）")
-        pl.add_arrows(P_trim, d_sin, color="orange", mag=1, label="橙矢印: 周期変位 d_sin")
+        pl.add_mesh(cropped, color="#fafae1", opacity=0.5, label="ivory: cortex mesh")
+        pl.add_points(Psin, color="red", point_size=5, label="red: P + d_sin (reference)")
+        pl.add_arrows(P_trim, d_sin, color="orange", mag=1, label="orange arrows: periodic displacement d_sin")
         if g1_3d is not None:
-            pl.add_arrows(P_trim, np.asarray(g1_3d, float), mag=1.0, color="yellow", label="黄矢印: 主成分方向 g1")
+            pl.add_arrows(P_trim, np.asarray(g1_3d, float), mag=1.0, color="yellow", label="yellow arrows: principal direction g1")
         if n_eff is not None:
-            pl.add_arrows(P_trim, np.asarray(n_eff, float), mag=1.0, color="cyan", label="シアン矢印: 有効脳表法線 n_eff")
+            pl.add_arrows(P_trim, np.asarray(n_eff, float), mag=1.0, color="cyan", label="cyan arrows: effective cortex normal n_eff")
         if anchor_indices is not None and len(anchor_indices):
             aidx = np.asarray(anchor_indices, int)
             aidx = aidx[(aidx >= 0) & (aidx < len(P_trim))]
             anchors = P_trim[aidx]
-            pl.add_points(anchors, color="green", point_size=10, label="緑点: 法線推定アンカー")
+            pl.add_points(anchors, color="green", point_size=10, label="green: normal-estimation anchors")
             if anchor_constraint is not None and len(anchor_constraint) == len(aidx):
                 ac = np.asarray(anchor_constraint, bool)
                 if np.any(ac):
-                    pl.add_points(anchors[ac], color="red", point_size=20, label="赤大点: 拘束ありアンカー")
+                    pl.add_points(anchors[ac], color="red", point_size=20, label="large red: constrained anchors")
                 if np.any(~ac):
-                    pl.add_points(anchors[~ac], color="blue", point_size=20, label="青大点: 拘束なしアンカー")
+                    pl.add_points(anchors[~ac], color="blue", point_size=20, label="large blue: unconstrained anchors")
         pl.add_legend(bcolor=(1.0, 1.0, 1.0), border=True, size=(0.30, 0.32))
         _add_legend_panel(pl, SURFACE_LEGEND_JA, font_size=10)
         pl.add_title(
@@ -536,7 +536,7 @@ def save_surface_constraint_html(
         inject_html_legend_overlay(
             out_path,
             SURFACE_LEGEND_ITEMS,
-            title="凡例 — Surface Constraint Visualization",
+            title="Legend — Surface Constraint Visualization",
         )
         _safe_close(pl)
         return "ok"

@@ -10,7 +10,7 @@
 - Acceptance still requires estimated cycles `coverage_hat >= 1.5` via production `classify_row`.
 
 - Elapsed: 3598.7 s; rows: 120000
-- Config: [local-path-removed] 系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/analysis_code/sin_trend/configs/length_selection_validation_default.json
+- Config: [local path removed]
 - Config sha256: f7c72e031bd83aeeb06c3b80da4410ec09aac1dca61ea870b93e612659d3b088
 
 ## Length definitions
@@ -23,7 +23,7 @@
 
 ## Clinical D/L pool (Suite B inputs)
 
-- CSV: `[local-path-removed] 系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/results/analysis/sin_trend/run_154_baseline_v2_r0/baseline/IXI_HH_sin_trend_analysis_dataset.csv`
+- CSV: `[local path removed]
 - sha256: `185eea914ea61c5c32376d7c49fab90b249616d7188df682e3398bc15aed4d0f`
 - n_total=11808, n_usable=11368
 - drop_reasons: {'radius_missing': 440, 'L_base_missing': 440, 'radius_nonpositive': 0, 'L_base_nonpositive': 0}

@@ -129,12 +129,12 @@ def classify_centerline_left_right_by_kmeans(points, pointids, n_iter=100, verbo
     left_cells = np.where(is_left_cell)[0]
     
     if verbose:
-        print(f"右クラスタ中心 ≈ {centers[right_label]:.2f} / 左クラスタ中心 ≈ {centers[left_label]:.2f}")
-        print(f"K-meansしきい値（左右判定用）≈ {threshold_x:.2f}")
-        print(f"右セル数: {is_right_cell.sum()}, 左セル数: {is_left_cell.sum()}")
-        print(f"右ポイント数: {is_right_point.sum()}, 左ポイント数: {is_left_point.sum()}")
-        print(f"右セルID（{right_cells.size}本）: {right_cells.tolist()}")
-        print(f"左セルID（{left_cells.size}本）: {left_cells.tolist()}")
+        print(f"Right cluster center ≈ {centers[right_label]:.2f} / left cluster center ≈ {centers[left_label]:.2f}")
+        print(f"K-means threshold (L/R assignment) ≈ {threshold_x:.2f}")
+        print(f"Right cells: {is_right_cell.sum()}, left cells: {is_left_cell.sum()}")
+        print(f"Right points: {is_right_point.sum()}, left points: {is_left_point.sum()}")
+        print(f"Right cell IDs ({right_cells.size}): {right_cells.tolist()}")
+        print(f"Left cell IDs ({left_cells.size}): {left_cells.tolist()}")
     
     return right_cells, left_cells, threshold_x, is_right_point, is_left_point
 
@@ -158,7 +158,7 @@ def split_mesh_left_right(polydata, threshold_x, verbose=True):
         print("n_regions =", n_regions)
     
     if n_regions < 2:
-        raise ValueError(f"連結成分数が2個未満（{n_regions}個）。左右分離に失敗した。")
+        raise ValueError(f"Fewer than 2 connected components ({n_regions}). L/R separation failed.")
     
     labeled = conn.GetOutput()
     
@@ -217,10 +217,10 @@ def split_mesh_left_right(polydata, threshold_x, verbose=True):
             print(f"Region {region_id}: mean_x = {mean_x:.2f}, {'right' if mean_x > threshold_x else 'left'}")
     
     if verbose:
-        print(f"右側の連結成分数: {len(right_regions)}, 左側の連結成分数: {len(left_regions)}")
+        print(f"Right connected components: {len(right_regions)}, left: {len(left_regions)}")
     
     if len(right_regions) == 0 or len(left_regions) == 0:
-        raise ValueError(f"左右の分類に失敗しました。右側: {len(right_regions)}個, 左側: {len(left_regions)}個")
+        raise ValueError(f"L/R classification failed. Right: {len(right_regions)}, left: {len(left_regions)}")
     
                  
     if len(right_regions) == 1:
@@ -247,7 +247,7 @@ def split_mesh_left_right(polydata, threshold_x, verbose=True):
     left_center_x = np.mean(left_center_x_list) if left_center_x_list else 0.0
     
     if verbose:
-        print(f"右側の平均中心x座標: {right_center_x:.2f}, 左側の平均中心x座標: {left_center_x:.2f}")
+        print(f"Right mean center x: {right_center_x:.2f}, left mean center x: {left_center_x:.2f}")
     
     return right_vessel, left_vessel, right_center_x, left_center_x
 

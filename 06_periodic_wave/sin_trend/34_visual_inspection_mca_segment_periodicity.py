@@ -92,12 +92,12 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     p.add_argument(
         "--include-surface-unevaluable",
         action="store_true",
-        help="周期 Core だが surface 評価不能の区間も解剖確認対象に含める（既定は surface 評価可能のみ）",
+        help="also include Core-periodic intervals that are surface-inevaluable (default: surface-evaluable only)",
     )
     p.add_argument(
         "--core-inplane-only",
         action="store_true",
-        help="core_inplane（Predominantly tangential）のみを解剖確認対象にする",
+        help="restrict anatomical review to core_inplane (Predominantly tangential) only",
     )
     p.add_argument("--start-directory-id", default=None)
     p.add_argument("--start-segment-id", type=int, default=None)
@@ -420,7 +420,7 @@ def visualize_and_update_mca_segment(
     print("\n" + "=" * 80)
     print(f"Processing directory_id: {directory_id}, segment_id: {segment_id}, segment_index: {cell_index}")
     print(f"periodicity: {row.get(periodicity_col, 'N/A')}")
-    print(f"現在のMCA分類: {current_mca_segment}")
+    print(f"Current MCA label: {current_mca_segment}")
     print("=" * 80)
 
     pointids_dict = case_context["pointids_dict"]
@@ -486,7 +486,7 @@ def visualize_and_update_mca_segment(
         nonlocal mca_segment, user_acted
         mca_segment = current_mca_segment
         user_acted = True
-        print(f"変更なし（現在の値: {current_mca_segment}）")
+        print(f"No change (current value: {current_mca_segment})")
         _close_plotter()
 
     pl = pv.Plotter(shape=(1, 2), window_size=PLOTTER_WINDOW_SIZE)
@@ -548,10 +548,10 @@ def visualize_and_update_mca_segment(
         mode=mode,
     )
     if action == "abort_missing":
-        print("Error: mca_segment 未設定（add では 1/2/3/4 必須）")
+        print("Error: mca_segment unset (add mode requires 1/2/3/4)")
         return False, False, False
     if action == "dismissed":
-        print("  画面を閉じたのみ（確認・変更なし）")
+        print("  Window closed only (no confirm/change)")
         return True, False, False
 
     old_label = str(current_mca_segment).strip() if _mca_is_set(current_mca_segment) else ""
@@ -570,7 +570,7 @@ def visualize_and_update_mca_segment(
         P_vox=P_vox_3darr,
         voxel_size_mm=voxel_mm,
     ):
-        print(f"Error: セグメントが見つからない: {key}")
+        print(f"Error: segment not found: {key}")
         return False, False, False
 
     _save_work(df_all, work_csv)
@@ -680,11 +680,11 @@ def run_interactive_gui(args: argparse.Namespace) -> int:
     total_confirmed = 0
     total_failed = 0
 
-    print("\nキー操作: 1→M1, 2/3→M2-3, 4→M4", end="")
+    print("\nKeys: 1→M1, 2/3→M2-3, 4→M4", end="")
     if args.mode == "recheck":
-        print(", space→変更なし（同一ラベルでも確認済みとして保存）")
+        print(", space→no change (save as reviewed even if label unchanged)")
     else:
-        print(" (add では space 無効)")
+        print(" (space disabled in add mode)")
 
     for directory_id in directory_ids:
         df_dir = targets[targets["directory_id"] == directory_id]

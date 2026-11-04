@@ -231,7 +231,7 @@ def vmtk_branch_splitting(centerlines):
     branch_splitting = vmtkscripts.vmtkBranchExtractor()
     branch_splitting.Centerlines = centerlines
     
-    """ # 先に'Radius'を"MaximumInscribedSphereRadius"という名前に変更しておくと、エラーが出ない
+    """ # Renaming Radius to MaximumInscribedSphereRadius beforehand avoids errors
     # Check for 'Radius' or 'MaximumInscribedSphereRadius' in centerlines
     point_data = centerlines.GetPointData()
     array_names = [point_data.GetArrayName(i) for i in range(point_data.GetNumberOfArrays())]
@@ -266,16 +266,16 @@ def vmtk_branch_splitting(centerlines):
     array_names = [point_data.GetArrayName(i) for i in range(point_data.GetNumberOfArrays())]
 
     if 'Radius' in array_names:
-        radiusArrayName = 'Radius' # 3d slicerを使うとRadius (そのほか、EdgeArray、EdgePCoordArray、SPACEが格納されている)
+        radiusArrayName = 'Radius' # 3D Slicer uses Radius (also stores EdgeArray, EdgePCoordArray, SPACE)
     elif 'MaximumInscribedSphereRadius' in array_names:
-        radiusArrayName = 'MaximumInscribedSphereRadius' # python vmtkを使うと'MaximumInscribedSphereRadius' (そのほか、EdgeArrayとEdgePCoordArrayが格納されている)
+        radiusArrayName = 'MaximumInscribedSphereRadius' # Python VMTK uses MaximumInscribedSphereRadius (also stores EdgeArray, EdgePCoordArray)
     else:
         raise ValueError("No appropriate radius array found in centerlines")
 
     branch_splitting.RadiusArrayName = radiusArrayName
     branch_splitting.Execute()
     splitted_centerlines = branch_splitting.Centerlines
-    return splitted_centerlines # 3d slicer: EdgeArray, EdgePCoordArray, Radius, Blanking, CenterlineIds, TractIds, GroupIdsが格納
+    return splitted_centerlines # 3D Slicer stores: EdgeArray, EdgePCoordArray, Radius, Blanking, CenterlineIds, TractIds, GroupIds
 """
 
 def access_cell_data(splitted_centerlines):

@@ -73,7 +73,7 @@ def aggregate_subject_level(df: pd.DataFrame) -> pd.DataFrame:
     required = ["IXI_ID", "AGE", "core_inplane"]
     missing = [c for c in required if c not in df.columns]
     if missing:
-        raise ValueError(f"列がない: {missing}")
+        raise ValueError(f"Missing columns: {missing}")
 
     sub = df.copy()
     sub["IXI_ID"] = sub["IXI_ID"].astype(str)
@@ -188,7 +188,7 @@ def make_age_burden_figure(agg: pd.DataFrame) -> plt.Figure:
     required = {"AGE", "n_total", "total_vessel_length"}
     missing = sorted(required - set(agg.columns))
     if missing:
-        raise ValueError(f"集計列が不足している: {missing}")
+        raise ValueError(f"Missing summary columns: {missing}")
 
     work = agg.copy()
     work["AGE"] = pd.to_numeric(work["AGE"], errors="coerce")
@@ -243,7 +243,7 @@ def main() -> None:
     if not csv_path.is_file():
         csv_path = PROJECT_ROOT / 'data' / 'periodic_wave' / 'IXI_HH_sin_trend_analysis_dataset.csv'
     if not csv_path.is_file():
-        raise FileNotFoundError(f"正式解析 CSV がない: {csv_path}")
+        raise FileNotFoundError(f"Formal analysis CSV not found: {csv_path}")
     df = pd.read_csv(csv_path, low_memory=False)
     agg = aggregate_subject_level(df)
     n_core = int(pd.to_numeric(agg["n_core_inplane"], errors="coerce").sum())

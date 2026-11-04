@@ -21,7 +21,7 @@ def measure_time(func, *args, **kwargs):
     minutes, seconds = divmod(remainder, 60)
 
                   
-    print("処理時間: {:02}時間{:02}分{:02}秒".format(int(hours), int(minutes), int(seconds)))
+    print("Elapsed: {:02}h {:02}m {:02}s".format(int(hours), int(minutes), int(seconds)))
     return result                
     
 
@@ -73,22 +73,22 @@ def remove_outliers_iqr(data):
     
 """
 def remove_outliers_iqr(data):
-    # 第1四分位数（Q1）と第3四分位数（Q3）を計算
+    # Compute Q1 and Q3
     Q1 = np.percentile(data, 25)
     Q3 = np.percentile(data, 75)
     IQR = Q3 - Q1
     
-    # 外れ値のしきい値を計算
+    # Compute outlier thresholds
     lower_bound = Q1 - 1.5 * IQR
     upper_bound = Q3 + 1.5 * IQR
     
     print(f'Lower bound: {lower_bound:.5f}')
     print(f'Upper bound: {upper_bound:.5f}')
     
-    # 外れ値を除去
+    # Remove outliers
     filtered_data = data[(data >= lower_bound) & (data <= upper_bound)]
     
-    # 除去されたものの割合を計算
+    # Fraction removed
     count = np.sum((data < lower_bound) | (data > upper_bound))
     percentage = (count / len(data)) * 100
     print(f'Percentage of outliers: {percentage:.5f}%')
@@ -190,7 +190,7 @@ def measure_time(func, *args, **kwargs):
     minutes, seconds = divmod(remainder, 60)
 
                   
-    print("処理時間: {:02}時間{:02}分{:02}秒".format(int(hours), int(minutes), int(seconds)))
+    print("Elapsed: {:02}h {:02}m {:02}s".format(int(hours), int(minutes), int(seconds)))
     return result                
 
 def lines_from_points(points):

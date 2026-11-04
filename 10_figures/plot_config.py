@@ -103,7 +103,7 @@ def save_figure_and_show(
     **kwargs,
 ) -> None:
     save_figure(fig, fname, **kwargs)
-    print(f"保存: {fname}")
+    print(f"Saved: {fname}")
     if show:
         show_figure(fig, auto_close_seconds=auto_close_seconds)
     if close:

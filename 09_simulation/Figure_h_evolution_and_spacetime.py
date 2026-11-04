@@ -864,7 +864,7 @@ def make_horizontal_h_evolution_figure(
 
 def main() -> None:
     print("Loading simulation results...")
-    print(f"図の保存先: {get_figures_dir()}")
+    print(f"Figures saved to: {get_figures_dir()}")
     x, t_saved, h_saved, _P_saved, meta = load_simulation_run()
     age_offset = age_offset_from_meta(meta)
     t_saved = np.asarray(t_saved, dtype=float)

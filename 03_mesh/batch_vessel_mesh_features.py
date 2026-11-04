@@ -18,8 +18,8 @@ df = pd.read_csv(csv_path)
 
                   
 directory_ids = df['directory_id'].dropna().unique()
-print(f"抽出されたdirectory_id数: {len(directory_ids)}")
-print(f"directory_id一覧: {directory_ids.tolist()}")
+print(f"Extracted directory_id count: {len(directory_ids)}")
+print(f"directory_id list: {directory_ids.tolist()}")
 
                 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,7 +45,7 @@ failed_cases = []
 
 for idx, directory_id in enumerate(directory_ids, 1):
     print(f"\n{'='*60}")
-    print(f"処理中 ({idx}/{len(directory_ids)}): {directory_id}")
+    print(f"Processing ({idx}/{len(directory_ids)}): {directory_id}")
     print(f"{'='*60}")
     
     try:
@@ -83,19 +83,19 @@ for idx, directory_id in enumerate(directory_ids, 1):
                                         
         required_files = [vessel_vtk_mc_taubin_butterfly_path, merged_splitted_centerlines_path]
         if not utils.ensure_files_available(required_files, max_wait_time=120):
-            print("警告: 必要なファイルが利用できない")
-            failed_cases.append({"directory_id": directory_id, "reason": "必要なファイルがオンラインのみで、ダウンロードできなかった"})
+            print("Warning: required files unavailable")
+            failed_cases.append({"directory_id": directory_id, "reason": "Required files online-only and could not be downloaded"})
             continue
         
                          
         if not os.path.exists(vessel_vtk_mc_taubin_butterfly_path):
-            print(f"警告: ファイルが見つからない: {vessel_vtk_mc_taubin_butterfly_path}")
-            failed_cases.append({"directory_id": directory_id, "reason": f"ファイルが見つからない: {vessel_vtk_mc_taubin_butterfly_path}"})
+            print(f"Warning: file not found: {vessel_vtk_mc_taubin_butterfly_path}")
+            failed_cases.append({"directory_id": directory_id, "reason": f"File not found: {vessel_vtk_mc_taubin_butterfly_path}"})
             continue
             
         if not os.path.exists(merged_splitted_centerlines_path):
-            print(f"警告: ファイルが見つからない: {merged_splitted_centerlines_path}")
-            failed_cases.append({"directory_id": directory_id, "reason": f"ファイルが見つからない: {merged_splitted_centerlines_path}"})
+            print(f"Warning: file not found: {merged_splitted_centerlines_path}")
+            failed_cases.append({"directory_id": directory_id, "reason": f"File not found: {merged_splitted_centerlines_path}"})
             continue
         
                   
@@ -113,26 +113,26 @@ for idx, directory_id in enumerate(directory_ids, 1):
         )
         
         results.append({"directory_id": directory_id, "status": "success", "data": df_vessel_mesh_features})
-        print(f"✓ 完了: {directory_id}")
+        print(f"✓ Done: {directory_id}")
         
     except Exception as e:
-        print(f"✗ エラー: {directory_id}")
-        print(f"  エラー内容: {str(e)}")
+        print(f"✗ Error: {directory_id}")
+        print(f"  Error details: {str(e)}")
         import traceback
         traceback.print_exc()
         failed_cases.append({"directory_id": directory_id, "reason": str(e)})
 
          
 print(f"\n{'='*60}")
-print("処理完了")
+print("Processing complete")
 print(f"{'='*60}")
-print(f"成功: {len(results)}件")
-print(f"失敗: {len(failed_cases)}件")
+print(f"Succeeded: {len(results)}")
+print(f"Failed: {len(failed_cases)}")
 
 if failed_cases:
-    print("\n失敗したケース:")
+    print("\nFailed cases:")
     for fc in failed_cases:
         print(f"  - {fc['directory_id']}: {fc['reason']}")
 
-print(f"\n結果は各ケースの vessel_meshes/{{id}}/{{id}}_vessel_mesh_features.csv に保存した")
+print(f"\nResults saved under each case as vessel_meshes/{{id}}/{{id}}_vessel_mesh_features.csv")
 

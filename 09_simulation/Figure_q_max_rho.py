@@ -209,7 +209,7 @@ def make_q_max_rho_figure(
 
 
 def main() -> None:
-    print(f"図の保存先: {get_figures_dir()}")
+    print(f"Figures saved to: {get_figures_dir()}")
     print("Loading simulation results...")
     print(f"  L0 (straight reference) = {L0:.1f} mm")
 

@@ -390,7 +390,7 @@ def find_dispersion_three_stage_snapshot_indices(
     )
     if not rise_sim["ok"]:
         raise RuntimeError(
-            f"t_rise_simをH(t)>{_DEFAULT_H_RISE:g} mm の初回 crossing から推定できなかった。"
+            f"Could not estimate t_rise_sim from first H(t)>{_DEFAULT_H_RISE:g} mm crossing."
         )
     idx_rise = int(rise_sim["idx_cross"])
 
@@ -747,7 +747,7 @@ def main():
     P_cr = 2.0 * (k_s * EI) ** 0.5
 
     fig_dir = get_figures_dir()
-    print(f"図の保存先: {fig_dir}")
+    print(f"Figures saved to: {fig_dir}")
 
     mu = mu_from_meta(meta)
 

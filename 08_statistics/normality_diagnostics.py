@@ -23,7 +23,7 @@ def show_shapiro_diagnostic_plots(
         .dropna()
     )
     if s.size < 3:
-        print(f"Warning: 正規性プロットを描けない（n < 3）: {label}")
+        print(f"Warning: cannot plot normality diagnostics (n < 3): {label}")
         return
 
     x = s.to_numpy(dtype=float)

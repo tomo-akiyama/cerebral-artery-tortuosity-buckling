@@ -51,49 +51,49 @@ from sin_trend_synthetic import (  # noqa: E402
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Synthetic validation (frame_reference=baseline only)")
-    p.add_argument("--run-id", default=None, help="共有 run_id（省略時は validation 専用の新 run_id）")
-    p.add_argument("--out-dir", type=Path, default=None, help="出力 directory（既定: run の synthetic_validation/）")
+    p.add_argument("--run-id", default=None, help="shared run_id (default: new validation-only run_id)")
+    p.add_argument("--out-dir", type=Path, default=None, help="output directory (default: run synthetic_validation/)")
     p.add_argument(
         "--n-cycles",
         nargs="+",
         type=float,
         default=None,
-        help="基本平面の trim 後目標残存周期（既定 3.0; 例: 1.5 2 3 4）",
+        help="target remaining periods after trim on base planes (default 3.0; e.g. 1.5 2 3 4)",
     )
-    p.add_argument("--extra", action="store_true", help="背景曲線・面外波・ノイズ・剛体回転の任意検証を追加")
+    p.add_argument("--extra", action="store_true", help="add optional checks: background curve, out-of-plane wave, noise, rigid rotation")
     p.add_argument(
         "--curved-baseline",
         action="store_true",
-        help="曲がった二次 baseline に周期偏位を載せた条件を追加（または --stress-only で単独）",
+        help="add curved quadratic-baseline + periodic deflection cases (or alone with --stress-only)",
     )
     p.add_argument(
         "--short-coverage",
         action="store_true",
-        help="trim 後に約 1.5〜2 周期残る条件を追加",
+        help="add cases with ~1.5–2 periods remaining after trim",
     )
     p.add_argument(
         "--stress",
         action="store_true",
-        help="--curved-baseline + --short-coverage + 曲がり×短周期の交差をまとめて追加",
+        help="add --curved-baseline + --short-coverage and their crossed stress set",
     )
     p.add_argument(
         "--stress-only",
         action="store_true",
-        help="基本平面を走らず stress 系のみ（--stress / --curved-baseline / --short-coverage と併用）",
+        help="skip base planes; run stress sets only (with --stress / --curved-baseline / --short-coverage)",
     )
-    p.add_argument("--q-fine", type=int, default=None, help="診断用の波数 grid 細分（既定は臨床既定 8 を変更しない）")
+    p.add_argument("--q-fine", type=int, default=None, help="wavenumber grid refinement for diagnostics (default keeps clinical default 8)")
     p.add_argument("--search-band-mode", default=BAND_GEOMETRY_2D, choices=[BAND_GEOMETRY_2D, BAND_LEGACY_FIXED_10MM])
     p.add_argument(
         "--diameter-mm",
         type=float,
         nargs="*",
         default=None,
-        help=f"人工血管径 D [mm]（省略時 {VALIDATION_DIAMETERS_MM}）",
+        help=f"synthetic vessel diameter D [mm] (default {VALIDATION_DIAMETERS_MM})",
     )
     p.add_argument(
         "--no-plots",
         action="store_true",
-        help="中心線プロット（original vs estimated baseline）を保存しない",
+        help="do not save centerline plots (original vs estimated baseline)",
     )
     p.add_argument("--quiet", action="store_true")
     return p.parse_args(argv)

@@ -101,8 +101,8 @@ def main() -> None:
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     save_figure_and_show(fig, OUT_PATH)
-    print(f"有効データ: {len(plot_df):,}/{len(df):,}")
-    print(f"保存: {OUT_PATH}")
+    print(f"Valid data: {len(plot_df):,}/{len(df):,}")
+    print(f"Saved: {OUT_PATH}")
 
 
 if __name__ == "__main__":

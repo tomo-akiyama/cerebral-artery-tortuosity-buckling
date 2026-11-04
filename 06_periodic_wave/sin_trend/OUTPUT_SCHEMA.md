@@ -1,66 +1,66 @@
-# OUTPUT_SCHEMA（sin_trend）
+# OUTPUT_SCHEMA (sin_trend)
 
-正式全表: `IXI_HH_sin_trend_analysis_dataset.csv`
+Canonical full table: `IXI_HH_sin_trend_analysis_dataset.csv`
 
-## 波長–半径 / 規格化波長–年齢 / 振幅–年齢に必要な列
+## Columns needed for wavelength–radius / normalized wavelength–age / amplitude–age
 
-| 用途 | 列 |
+| Use | Columns |
 |---|---|
 | ID | directory_id, segment_id, segment_index, IXI_ID, side |
-| 年齢 | AGE/age（raw）, age_years |
-| 半径（主=trim 後） | radius_median_mm, diameter_ref_mm (=2×trim 中央値) |
-| 半径（full 参照） | radius_median_full_mm, radius_mean_full_mm, radius_std_full_mm |
-| 波長 | lambda_hat_mm（baseline 弧長位相から直接推定）。lambda_hat_s_mm / lambda_baseline_eff_mm は互換 alias |
-| 区間長 | L_base_mm（trim 対応 baseline 弧長）、L_trimmed_mm / L_full_mm（観測） |
-| 細長比 | slenderness = lambda_hat_mm / (2 * radius_median_mm) |
-| 座標 metadata | fitting/phase/trend=baseline_arclength; quadratic_detrend=observed_arclength; grid_length_basis=trimmed_baseline_arclength（行・run_config·NPZ scalars_json） |
-| 規格化 | lambda_s_over_r, lambda_base_eff_over_r, amp_comb_over_L, amp_comb_over_r, log_* |
-| 振幅 | amp_comb_mm, amp_major_mm (=sigma1_mm), amp_minor_mm (=sigma2_mm) |
-| 部位 | mca_segment, label_status, mca_label_conflict |
-| 採否 | core_periodic, core_all(=alias), core_inplane, reject_reasons |
-| 適合 | R2, partial_R2, SSE_*_mm2, fit_status, fit_method |
+| Age | AGE/age (raw), age_years |
+| Radius (primary = after trim) | radius_median_mm, diameter_ref_mm (=2× post-trim median) |
+| Radius (full reference) | radius_median_full_mm, radius_mean_full_mm, radius_std_full_mm |
+| Wavelength | lambda_hat_mm (estimated directly from baseline arc-length phase). lambda_hat_s_mm / lambda_baseline_eff_mm are compatibility aliases |
+| Interval length | L_base_mm (trim-matched baseline arc length), L_trimmed_mm / L_full_mm (observed) |
+| Slenderness | slenderness = lambda_hat_mm / (2 * radius_median_mm) |
+| Coordinate metadata | fitting/phase/trend=baseline_arclength; quadratic_detrend=observed_arclength; grid_length_basis=trimmed_baseline_arclength (row / run_config / NPZ scalars_json) |
+| Normalization | lambda_s_over_r, lambda_base_eff_over_r, amp_comb_over_L, amp_comb_over_r, log_* |
+| Amplitude | amp_comb_mm, amp_major_mm (=sigma1_mm), amp_minor_mm (=sigma2_mm) |
+| Anatomy | mca_segment, label_status, mca_label_conflict |
+| Acceptance | core_periodic, core_all(=alias), core_inplane, reject_reasons |
+| Fit | R2, partial_R2, SSE_*_mm2, fit_status, fit_method |
 
-## 部分表
+## Partial tables
 
 - `MCA_M2M4_core_periodic.csv` / `MCA_M2M4_core_inplane.csv`
 - `paired_wavelength_coordinate_intervals.csv`
 - `paired_amplitude_definition_intervals.csv`
 
-## 欠測・bool
+## Missing values / bools
 
-- `"False"`/`"0"` は False（`sin_trend_dataset.parse_bool_series`）
-- 対数は正の有限値のみ（0/負は NaN）
+- `"False"`/`"0"` are False (`sin_trend_dataset.parse_bool_series`)
+- Logs use positive finite values only (0/negative → NaN)
 
-## 測定成果と tag 別表面成果
+## Measurement products and tag-specific surface products
 
-以下で `M = results/morphometrics/sin_trend/<run-id>`、`F = M/<frame-reference>`、`A = results/analysis/sin_trend/<run-id>/<frame-reference>` とする。
+Let `M = results/morphometrics/sin_trend/<run-id>`, `F = M/<frame-reference>`, `A = results/analysis/sin_trend/<run-id>/<frame-reference>`.
 
-| 成果 | 保存先 |
+| Product | Location |
 |---|---|
-| 測定設定 / manifest | `M/run_config.json`, `M/run_manifest.json` |
-| 測定 CSV | `F/per_case/<directory_id>_vessel_segmentdata.csv` |
-| 測定 pointwise 配列 | `F/pointwise/<directory_id>_seg<segment_id>_idx<segment_index>_pointwise.npz` |
-| tag の固定設定と hash | `M/surface_config_<tag>.json` |
-| 表面 CSV（primary も別保存） | `F/surface/<tag>/per_case/<directory_id>_vessel_segmentdata.csv` |
-| 表面 status | `F/surface/<tag>/per_case/<directory_id>/<directory_id>_surface_status.json` |
-| 表面法線 cache NPZ | `M/normals_cache/<directory_id>/<tag>/` |
-| 表面 HTML | `F/surface/<tag>/figures/<directory_id>/` |
-| 測定または primary の long CSV | `F/IXI_HH_sin_trend_morphometrics_long.csv` |
-| 非 primary の long CSV | `F/surface/<tag>/IXI_HH_sin_trend_morphometrics_long.csv` |
-| primary の解析出力 | `A/` |
-| 非 primary の解析出力 | `A/surface/<tag>/` |
+| Measurement config / manifest | `M/run_config.json`, `M/run_manifest.json` |
+| Measurement CSV | `F/per_case/<directory_id>_vessel_segmentdata.csv` |
+| Measurement pointwise arrays | `F/pointwise/<directory_id>_seg<segment_id>_idx<segment_index>_pointwise.npz` |
+| Fixed tag settings and hashes | `M/surface_config_<tag>.json` |
+| Surface CSV (primary also stored separately) | `F/surface/<tag>/per_case/<directory_id>_vessel_segmentdata.csv` |
+| Surface status | `F/surface/<tag>/per_case/<directory_id>/<directory_id>_surface_status.json` |
+| Surface normals cache NPZ | `M/normals_cache/<directory_id>/<tag>/` |
+| Surface HTML | `F/surface/<tag>/figures/<directory_id>/` |
+| Measurement or primary long CSV | `F/IXI_HH_sin_trend_morphometrics_long.csv` |
+| Non-primary long CSV | `F/surface/<tag>/IXI_HH_sin_trend_morphometrics_long.csv` |
+| Primary analysis outputs | `A/` |
+| Non-primary analysis outputs | `A/surface/<tag>/` |
 
-表面 stage は測定 CSV / NPZ / config / status / manifest を上書きしない。表面 CSV は測定列を保持し、以下を追加・更新する。`core_periodic` / `core_all` は測定値を保持し、`core_inplane` は tag ごとの方向判定を反映する。
+The surface stage does not overwrite measurement CSV / NPZ / config / status / manifest. Surface CSV keeps measurement columns and adds/updates the fields below. `core_periodic` / `core_all` keep measurement values; `core_inplane` reflects tag-specific direction decisions.
 
-| 種類 | 主要列・項目 |
+| Kind | Key columns / fields |
 |---|---|
-| 表面の出典 | `surface_tag`, `surface_config_hash`, `surface_code_hash` |
-| 生成元の照合 | `surface_source_measurement_csv_sha256`, `surface_source_pointwise_path`, `surface_source_pointwise_sha256` |
-| 表面処理状態 | `surface_evaluation_status`, `surface_evaluation_reason`, `surface_evaluable`, `surface_constraint` |
-| 方向と評価範囲 | `R_out_surface`, `R_tan_surface`, `constraint_coverage`, `squared_displacement_coverage` |
-| GOOD / BRIDGED の内訳 | `n_eval_good`, `n_eval_bridged`, `good_coverage`, `bridged_coverage`, `squared_displacement_coverage_good`, `squared_displacement_coverage_bridged` |
-| baseline 接線との関係 | `abs_T0_dot_n_mean`, `abs_T0_dot_n_median`, `R_out_upper_bound`, `R_out_within_upper_bound` |
+| Surface provenance | `surface_tag`, `surface_config_hash`, `surface_code_hash` |
+| Source verification | `surface_source_measurement_csv_sha256`, `surface_source_pointwise_path`, `surface_source_pointwise_sha256` |
+| Surface processing state | `surface_evaluation_status`, `surface_evaluation_reason`, `surface_evaluable`, `surface_constraint` |
+| Direction and evaluable span | `R_out_surface`, `R_tan_surface`, `constraint_coverage`, `squared_displacement_coverage` |
+| GOOD / BRIDGED breakdown | `n_eval_good`, `n_eval_bridged`, `good_coverage`, `bridged_coverage`, `squared_displacement_coverage_good`, `squared_displacement_coverage_bridged` |
+| Relation to baseline tangent | `abs_T0_dot_n_mean`, `abs_T0_dot_n_median`, `R_out_upper_bound`, `R_out_within_upper_bound` |
 
-`eval_normal_source`（NONE / GOOD / BRIDGED）と評価用法線・マスクは tag 別法線 cache NPZ に保存する。表面 status の `per_case_csv_sha256` は表面 CSV の hash を表し、`measurement_csv_sha256` は生成元測定 CSV の hash を表す。
+`eval_normal_source` (NONE / GOOD / BRIDGED) and evaluation normals/masks are stored in the tag-specific normals cache NPZ. Surface status `per_case_csv_sha256` is the surface CSV hash; `measurement_csv_sha256` is the source measurement CSV hash.
 
-`long_format_metadata.json` は long CSV と同じディレクトリに保存し、`aggregation_stage`、`surface_tag`、`surface_config_hash`、未完了の有無を記録する。32 は表面 CSV / status / 現測定 CSV の hash を照合し、古い成果を拒否する。primary が一部だけ存在する場合も、欠測対象を測定行で埋めず未完了を記録する。33 は実際の入力 long CSV に対応する metadata を使用する。
+`long_format_metadata.json` is stored beside the long CSV and records `aggregation_stage`, `surface_tag`, `surface_config_hash`, and whether anything is incomplete. Script 32 compares hashes of surface CSV/status/current measurement CSV and rejects stale products. If primary is only partially present, missing targets are not filled from measurement rows; incompleteness is recorded. Script 33 uses metadata that matches the actual input long CSV.

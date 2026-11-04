@@ -716,14 +716,14 @@ def print_P_peak_time_and_H(
     P_arr = np.asarray(P_saved, dtype=float)
     H_arr = compute_H_series(h_saved)
     if P_arr.size == 0:
-        print("P(t) のピーク（保存系列上）")
-        print("  保存系列が空のため計算できない。")
+        print("P(t) peak (on saved series)")
+        print("  Cannot compute: saved series is empty.")
         return {}
     idx = int(np.argmax(P_arr))
     t_peak = float(t_arr[idx])
     P_peak = float(P_arr[idx])
     H_peak = float(H_arr[idx])
-    print("P(t) のピーク（保存系列上）")
+    print("P(t) peak (on saved series)")
     print(f"  t_peak = {t_peak:.4f} year")
     print(f"  P_peak = {P_peak:.6f}")
     print(f"  H_peak = max_x|h - hbar| = {H_peak:.6e} mm")
@@ -983,9 +983,9 @@ def save_buckling_animation(x, t_saved, h_saved, P_saved, filename="buckling_evo
     ani = animation.FuncAnimation(fig, update, frames=len(t_saved), interval=30, blit=True)
     try:
         ani.save(filename, writer="pillow", fps=30, dpi=150)
-        print(f"動画を保存した: {os.path.abspath(filename)}")
+        print(f"Saved movie: {os.path.abspath(filename)}")
     except Exception as e:
-        print(f"保存に失敗した（Pillow が必要）: {e}")
+        print(f"Save failed (Pillow required): {e}")
     plt.close()
 
 
@@ -1079,9 +1079,9 @@ def save_dispersion_animation(t_saved, P_saved, EI, k_s, L0, mu, filename="buckl
     )
     try:
         ani.save(filename, writer="pillow", fps=20, dpi=150)
-        print(f"dispersion アニメーションを保存した: {filename}")
+        print(f"Saved dispersion animation: {filename}")
     except Exception as e:
-        print(f"dispersion アニメーション保存に失敗した（Pillow が必要）: {e}")
+        print(f"Failed to save dispersion animation (Pillow required): {e}")
     plt.close(fig)
 
 
@@ -1299,7 +1299,7 @@ if __name__ == "__main__":
 
     print("================================================================================================")
     print("================================================================================================")
-    print("線形安定性解析, 解析解:")
+    print("Linear stability analysis, analytical solution:")
     k_cr = (k_s / EI) ** (1 / 4) if EI > 0 else 0.0
     lambda_cr = 2 * np.pi / k_cr if k_cr > 0 else np.nan
     P_cr = P_cr_theory_linear(EI, k_s)
@@ -1307,10 +1307,10 @@ if __name__ == "__main__":
         ES=ES, L0=L0, P_cr=P_cr, natural_elongation_rate=natural_elongation_rate
     )
 
-    print(f"    臨界波数 k_cr (theory) = {k_cr:.4f}")
-    print(f"    臨界波長 λ_cr (theory) = {lambda_cr:.4f}")
-    print(f"    臨界荷重 P_cr (theory) = {P_cr:.6f}  (2√(k_s·EI); axial load の線形臨界値)")
-    print(f"    臨界時刻 t_cr (theory) = {t_cr:.4f}  (theory, P=ES/(L0+g t)*g t, shortening ignored)")
+    print(f"    Critical wavenumber k_cr (theory) = {k_cr:.4f}")
+    print(f"    Critical wavelength λ_cr (theory) = {lambda_cr:.4f}")
+    print(f"    Critical load P_cr (theory) = {P_cr:.6f}  (2√(k_s·EI); linear critical axial load)")
+    print(f"    Critical time t_cr (theory) = {t_cr:.4f}  (theory, P=ES/(L0+g t)*g t, shortening ignored)")
 
     print("================================================================================================")
     print("================================================================================================")
@@ -1392,8 +1392,8 @@ if __name__ == "__main__":
         initial_delta_L_arc_over_L0=initial_delta_L_arc_over_L0,
     )
 
-    print(f"完了。保存時刻数: {len(t_saved)}")
-    print(f"P(t) の範囲 (simulation) = [{P_saved.min():.4f}, {P_saved.max():.4f}]")
+    print(f"Done. Saved time points: {len(t_saved)}")
+    print(f"P(t) range (simulation) = [{P_saved.min():.4f}, {P_saved.max():.4f}]")
     print("Initial modal amplitudes |â_n(0)|:")
     for n_mode in range(1, 7):
         a0_n = modal_amplitude_rfft(h_saved[0], n_mode, N)
@@ -1416,7 +1416,7 @@ if __name__ == "__main__":
         t_max=t_max,
     )
     npz_path = os.path.join(run_dir, RESULT_FILENAME)
-    print(f"結果 (.npz) の保存先: {os.path.abspath(run_dir)}")
+    print(f"Results (.npz) saved to: {os.path.abspath(run_dir)}")
     save_simulation_run(
         npz_path,
         x,
@@ -1486,7 +1486,7 @@ if __name__ == "__main__":
 
         print(
             f"  H_min = {H_min:.6e} mm"
-            f"  t_cr_sim = {t_cr_sim:.4f} year （保存系列上）"
+            f"  t_cr_sim = {t_cr_sim:.4f} year (on saved series)"
         )
         if np.isfinite(P_cr_sim):
             print(f"  P(t_cr_sim) = {P_cr_sim:.6f} N")
@@ -1519,7 +1519,7 @@ if __name__ == "__main__":
     if rise["ok"]:
         t_rise_sim = float(rise["t_rise_sim"])
         idx_rise_sim = int(rise["idx_cross"])
-        print(f"  t_rise_sim = {t_rise_sim:.4f} year （保存系列上）")
+        print(f"  t_rise_sim = {t_rise_sim:.4f} year (on saved series)")
         print(f"  delay = t_rise_sim - t_cr_sim = {t_rise_sim - t_cr_sim:+.4f} year")
         
         print("  modal amplitudes |â_n| at t_rise_sim (rFFT, DC removed):")
@@ -1534,7 +1534,7 @@ if __name__ == "__main__":
             f"in saved series; extend t_max or lower H_rise)"
         )
 
-    print("※線形安定性解析で示される t_rise との整合性を確認:")
+    print("Check consistency with t_rise from linear stability analysis:")
     if cr_sim["ok"] and np.isfinite(H_min) and H_min > 0 and H_rise > H_min:
         R_eff = H_rise / H_min
         beta_cr = (ES * natural_elongation_rate * L0 * k_cr**2) / (mu * (L0 + natural_elongation_rate * t_cr)**2)
@@ -1569,7 +1569,7 @@ if __name__ == "__main__":
         if slow_sim["ok"]:
             t_slow_sim = float(slow_sim["t_slow_sim"])
             idx_slow_sim = int(slow_sim["idx_slow"])
-            print(f"  t_slow_sim = {t_slow_sim:.4f} year （保存系列上）")
+            print(f"  t_slow_sim = {t_slow_sim:.4f} year (on saved series)")
             print(
                 f"  d(log H)/dt at t_slow_sim = "
                 f"{float(slow_sim['relative_growth_rate']):.6f} /year"
@@ -1633,7 +1633,7 @@ if __name__ == "__main__":
     print("Figures:")    
                                                          
     sim_dir = run_dir
-    print(f"図・GIF の保存先: {os.path.abspath(sim_dir)}")
+    print(f"Figures/GIFs saved to: {os.path.abspath(sim_dir)}")
 
     # Fig1: h(x,t) profiles
     fig1, ax1 = plt.subplots(figsize=(8, 4.5), constrained_layout=True)
@@ -1668,7 +1668,7 @@ if __name__ == "__main__":
     ax1.grid(True, alpha=0.3)
     _out_fig1 = os.path.join(sim_dir, "Fig1_h_evolution.pdf")
     fig1.savefig(_out_fig1, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig1)}")
+    print(f"Saved: {os.path.abspath(_out_fig1)}")
     show_figure(fig1, auto_close_seconds=figure_show_seconds)
 
                                                                          
@@ -1786,7 +1786,7 @@ if __name__ == "__main__":
     ax2.set_title(r"Time evolution of dispersion relation $\sigma(k,t)$")
     _out_fig2 = os.path.join(sim_dir, "Fig2_dispersion_evolution.pdf")
     fig2.savefig(_out_fig2, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig2)}")
+    print(f"Saved: {os.path.abspath(_out_fig2)}")
     show_figure(fig2, auto_close_seconds=figure_show_seconds)
 
                                          
@@ -1801,7 +1801,7 @@ if __name__ == "__main__":
     cbar = fig3.colorbar(pc, ax=ax3, label=r"Displacement $h(x,t)$ (mm)")
     _out_fig3 = os.path.join(sim_dir, "Fig3_h_spacetime.pdf")
     fig3.savefig(_out_fig3, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig3)}")
+    print(f"Saved: {os.path.abspath(_out_fig3)}")
     show_figure(fig3, auto_close_seconds=figure_show_seconds)
 
     # Fig4: global deformation H(t) + P(t)
@@ -1872,7 +1872,7 @@ if __name__ == "__main__":
     ax4.set_xlim(t_min_plot, t_max_plot)
     _out_fig4 = os.path.join(sim_dir, "Fig4_max_disp_and_P.pdf")
     fig4.savefig(_out_fig4, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig4)}")
+    print(f"Saved: {os.path.abspath(_out_fig4)}")
     show_figure(fig4, auto_close_seconds=figure_show_seconds)
 
     # Fig5: H(t) + rho(t)
@@ -1891,7 +1891,7 @@ if __name__ == "__main__":
     ax5.set_xlim(t_min_plot, t_max_plot)
     _out_fig5 = os.path.join(sim_dir, "Fig5_max_disp_and_rho.pdf")
     fig5.savefig(_out_fig5, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig5)}")
+    print(f"Saved: {os.path.abspath(_out_fig5)}")
     show_figure(fig5, auto_close_seconds=figure_show_seconds)
 
                                                    
@@ -1907,7 +1907,7 @@ if __name__ == "__main__":
     ax6.grid(True, alpha=0.3, which="both")
     _out_fig6 = os.path.join(sim_dir, "Fig6_max_disp_vs_time_logy.pdf")
     fig6.savefig(_out_fig6, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig6)}")
+    print(f"Saved: {os.path.abspath(_out_fig6)}")
     show_figure(fig6, auto_close_seconds=figure_show_seconds)
 
                                                             
@@ -1970,7 +1970,7 @@ if __name__ == "__main__":
         ax7.set_ylim(0, np.max(all_valid) * 1.5)
     _out_fig7 = os.path.join(sim_dir, "Fig7_dominant_wavelength.pdf")
     fig7.savefig(_out_fig7, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig7)}")
+    print(f"Saved: {os.path.abspath(_out_fig7)}")
     show_figure(fig7, auto_close_seconds=figure_show_seconds)
 
 
@@ -1997,7 +1997,7 @@ if __name__ == "__main__":
     ax8.grid(True, alpha=0.3)
     _out_fig8 = os.path.join(sim_dir, "Fig8_modal_amplitude.pdf")
     fig8.savefig(_out_fig8, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig8)}")
+    print(f"Saved: {os.path.abspath(_out_fig8)}")
     show_figure(fig8, auto_close_seconds=figure_show_seconds)
 
                                                            
@@ -2015,7 +2015,7 @@ if __name__ == "__main__":
     ax9.grid(True, alpha=0.3)
     _out_fig9 = os.path.join(sim_dir, "Fig9_P_vs_deltaL.pdf")
     fig9.savefig(_out_fig9, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig9)}")
+    print(f"Saved: {os.path.abspath(_out_fig9)}")
     show_figure(fig9, auto_close_seconds=figure_show_seconds)
 
     # Fig10: axial strain ε(t)
@@ -2037,7 +2037,7 @@ if __name__ == "__main__":
     ax10.grid(True, alpha=0.3)
     _out_fig10 = os.path.join(sim_dir, "Fig10_epsilon_vs_time.pdf")
     fig10.savefig(_out_fig10, bbox_inches="tight")
-    print(f"保存: {os.path.abspath(_out_fig10)}")
+    print(f"Saved: {os.path.abspath(_out_fig10)}")
     show_figure(fig10, auto_close_seconds=figure_show_seconds)
 
     if make_gifs:

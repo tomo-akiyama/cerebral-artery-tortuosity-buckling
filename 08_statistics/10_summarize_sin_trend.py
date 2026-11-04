@@ -36,16 +36,16 @@ def combine_count_and_percentage(count_df, pct_df):
                               
     for idx in pct_df.index:
         for col in pct_df.columns:
-            if col == '合計':
+            if col == 'Total':
                                                          
                                    
                 if 'All' not in count_df.columns:
                     pct_val = get_value(pct_df, idx, col)
                     if pd.notna(pct_val):
                         if idx in result_df.index:
-                            if '合計' not in result_df.columns:
-                                result_df['合計'] = ''
-                            result_df.loc[idx, '合計'] = f"({pct_val:.2f}%)"
+                            if 'Total' not in result_df.columns:
+                                result_df['Total'] = ''
+                            result_df.loc[idx, 'Total'] = f"({pct_val:.2f}%)"
             else:
                                
                 if idx in count_df.index and col in count_df.columns:
@@ -63,7 +63,7 @@ def combine_count_and_percentage(count_df, pct_df):
         total_all = get_value(count_df, 'All', 'All')
         if pd.notna(total_all) and total_all > 0:
             for col in count_df.columns:
-                if col != '合計' and col != 'All':               
+                if col != 'Total' and col != 'All':               
                     count_val = get_value(count_df, 'All', col)
                     if pd.notna(count_val):
                         pct_val = (count_val / total_all) * 100
@@ -86,8 +86,8 @@ def combine_count_and_percentage(count_df, pct_df):
                         result_df.loc[idx, 'All'] = f"{int(count_val)} ({pct_val:.2f}%)"
     
                       
-    if 'All' in result_df.columns and '合計' in result_df.columns:
-        result_df = result_df.drop('合計', axis=1)
+    if 'All' in result_df.columns and 'Total' in result_df.columns:
+        result_df = result_df.drop('Total', axis=1)
     
     return result_df
 
@@ -127,45 +127,45 @@ csv_path = os.path.join(project_root, "data", "periodic_wave", "IXI_HH_sin_trend
 
               
 if not os.path.exists(csv_path):
-    print(f"Error: CSVファイルが見つからない: {csv_path}")
+    print(f"Error: CSV file not found: {csv_path}")
     sys.exit(1)
 
 print("="*80)
 print(csv_path)
-print("を読み込み中...")
+print("Loading...")
 print("="*80)
 df = pd.read_csv(csv_path)
 
-print(f"総レコード数: {len(df)}")
-print(f"列数: {len(df.columns)}")
-print(f"\n列名:")
+print(f"Total records: {len(df)}")
+print(f"Column count: {len(df.columns)}")
+print(f"\nColumn names:")
 print(df.columns.tolist())
 print("\n" + "="*80)
-print("データの先頭5行:")
+print("First 5 rows:")
 print("="*80)
 print(df.head())
 print("\n" + "="*80)
-print("データの基本統計:")
+print("Basic statistics:")
 print("="*80)
 print(df.describe())
 print("\n" + "="*80)
-print("欠損値の確認:")
+print("Missing-value check:")
 print("="*80)
 missing = df.isnull().sum()
 if missing.sum() > 0:
     print(missing[missing > 0])
 else:
-    print("欠損値なし")
+    print("No missing values")
 
                                                                         
 print("\n" + "="*80)
-print("分類列の確認（periodicity, surface_constraint）")
+print("Checking classification columns (periodicity, surface_constraint)")
 print("="*80)
 
 required = ["periodicity", "surface_constraint"]
 missing_cols = [c for c in required if c not in df.columns]
 if missing_cols:
-    print(f"Error: 次の列がデータセットにない: {missing_cols}")
+    print(f"Error: columns missing from dataset: {missing_cols}")
     sys.exit(1)
 
 tag = COVERAGE_HAT_CORE_MIN_VALUES[0]
@@ -180,7 +180,7 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
 default_coverage_min = COVERAGE_HAT_CORE_MIN_VALUES[0]
 df["periodicity"] = df[f"periodicity_coverage_{default_coverage_min}"]
 df["surface_constraint"] = df[f"surface_constraint_coverage_{default_coverage_min}"]
-print(f"\n  参照列: periodicity / surface_constraint（タグ {default_coverage_min}）")
+print(f"\n  Reference columns: periodicity / surface_constraint (tag {default_coverage_min})")
 
                                               
 _pt_mask = df["periodicity"].astype(str).eq("Core") & df["surface_constraint"].astype(str).eq(
@@ -192,19 +192,19 @@ print("\n" + "=" * 80)
 print("Predominantly tangential（Core）")
 print("=" * 80)
 print(
-    f"  区間数: {len(_pt)}, 参加者数: {_pt[_pt_id].nunique() if len(_pt) else 0}"
+    f"  Segments: {len(_pt)}, participants: {_pt[_pt_id].nunique() if len(_pt) else 0}"
 )
 
 
 def _print_median_iqr(label: str, series: pd.Series) -> None:
     values = pd.to_numeric(series, errors="coerce").replace([np.inf, -np.inf], np.nan).dropna()
     if len(values) == 0:
-        print(f"  {label}: 非欠損なし")
+        print(f"  {label}: no non-missing values")
         return
     q1, q3 = values.quantile([0.25, 0.75])
     print(
         f"  {label}: N={len(values)}, "
-        f"中央値={float(values.median()):.4f}, "
+        f"median={float(values.median()):.4f}, "
         f"IQR=[{float(q1):.4f}, {float(q3):.4f}]"
     )
 
@@ -212,7 +212,7 @@ def _print_median_iqr(label: str, series: pd.Series) -> None:
 if "sigma2_over_sigma1" in _pt.columns:
     _print_median_iqr("sigma2_over_sigma1", _pt["sigma2_over_sigma1"])
 else:
-    print("  sigma2_over_sigma1: 列がない")
+    print("  sigma2_over_sigma1: column missing")
 
 _lambda_col = "lambda_hat_mm" if "lambda_hat_mm" in _pt.columns else "lambda_hat_s_mm"
 if _lambda_col in _pt.columns and "radius_median_mm" in _pt.columns:
@@ -220,12 +220,12 @@ if _lambda_col in _pt.columns and "radius_median_mm" in _pt.columns:
     _rad = pd.to_numeric(_pt["radius_median_mm"], errors="coerce")
     _print_median_iqr("lambda/(2*radius)", _lam / (2.0 * _rad))
 else:
-    print("  lambda/(2*radius): lambda または radius_median_mm 列がない")
+    print("  lambda/(2*radius): lambda or radius_median_mm column missing")
 
                                                        
 if 'age_group' not in df.columns:
     df['age_group'] = None
-    print("Warning: 'age_group'列がデータセットにない。年齢帯別の集計はスキップする。")
+    print("Warning: 'age_group' column missing; skipping age-band summaries.")
 elif df['age_group'].notna().any():
     print(f"  age_group: {df['age_group'].value_counts(dropna=False).sort_index().to_dict()}")
 
@@ -233,10 +233,10 @@ elif df['age_group'].notna().any():
 if 'mca_segment' in df.columns:
     mca_segment_missing = df['mca_segment'].isna().sum()
     if mca_segment_missing > 0:
-        print(f"  mca_segment: 欠測 {mca_segment_missing} 件")
-    print(f"  mca_segmentの値: {df['mca_segment'].value_counts(dropna=False).to_dict()}")
+        print(f"  mca_segment: missing {mca_segment_missing}")
+    print(f"  mca_segment values: {df['mca_segment'].value_counts(dropna=False).to_dict()}")
 else:
-    print("Warning: 'mca_segment'列が見つからない。部位別の集計はスキップする。")
+    print("Warning: 'mca_segment' column not found; skipping segment summaries.")
 
                                            
                      
@@ -245,7 +245,7 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
     col_name_surface = f'surface_constraint_coverage_{coverage_min}'
     
     print("\n" + "="*80)
-    print(f"A. Periodicity（sin+trend）側の統計 (COVERAGE_HAT_CORE_MIN={coverage_min})")
+    print(f"A. Periodicity (sin+trend) stats (COVERAGE_HAT_CORE_MIN={coverage_min})")
     print("="*80)
     
     periodicities_coverage = df[col_name_periodicity].tolist()
@@ -261,7 +261,7 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
         percentage = periodicity_percentages.get(periodicity, 0.0)
         print(f"  {periodicity:20s}: {count:6d} ({percentage:6.2f}%)")
 
-    print(f"\n  合計: {len(periodicities_coverage)}")
+    print(f"\n  Total: {len(periodicities_coverage)}")
 
                                  
     if 'age_group' in df.columns and df['age_group'].notna().any():
@@ -281,14 +281,14 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
         periodicity_by_age_a_pct = periodicity_by_age_a_pct.div(periodicity_by_age_a_pct.sum(axis=1), axis=0) * 100
         if 'All' not in periodicity_by_age_a.columns:
             row_sums = periodicity_by_age_a_pct.sum(axis=1)
-            periodicity_by_age_a_pct['合計'] = row_sums.round(2)
+            periodicity_by_age_a_pct['Total'] = row_sums.round(2)
         periodicity_by_age_a_combined = combine_count_and_percentage(periodicity_by_age_a, periodicity_by_age_a_pct)
-        print("件数 (割合%):")
+        print("Counts (pct%):")
         print(periodicity_by_age_a_combined)
 
                                                  
     print("\n" + "="*80)
-    print(f"B. Surface constraint（脳表拘束）側の統計 (COVERAGE_HAT_CORE_MIN={coverage_min})")
+    print(f"B. Surface constraint stats (COVERAGE_HAT_CORE_MIN={coverage_min})")
     print("="*80)
 
             
@@ -296,7 +296,7 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
     core_categories = df.loc[core_mask, col_name_surface].tolist()
 
     if len(core_categories) > 0:
-        print("\n【Coreのみ】")
+        print("\n[Core only]")
         category_counts = pd.Series(core_categories).value_counts()
         category_percentages = (category_counts / len(core_categories) * 100).round(2)
         
@@ -306,12 +306,12 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
             percentage = category_percentages.get(category, 0.0)
             print(f"  {category:25s}: {count:6d} ({percentage:6.2f}%)")
         
-        print(f"  合計: {len(core_categories)}")
+        print(f"  Total: {len(core_categories)}")
                                                                                                
         if 'age_group' in df.columns and df['age_group'].notna().any():
             core_df_b = df[df[col_name_periodicity] == "Core"].copy()
             if len(core_df_b) > 0:
-                print("\n【Coreのみ: age_group × In-plane/Out-of-plane/Surface-NotEvaluable】")
+                print("\n[Core only: age_group × In-plane/Out-of-plane/Surface-NotEvaluable]")
                 surface_by_age_core_b = pd.crosstab(
                     core_df_b['age_group'],
                     core_df_b[col_name_surface],
@@ -327,24 +327,24 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
                 surface_by_age_core_b_pct = surface_by_age_core_b_pct.div(surface_by_age_core_b_pct.sum(axis=1), axis=0) * 100
                 if 'All' not in surface_by_age_core_b.columns:
                     row_sums = surface_by_age_core_b_pct.sum(axis=1)
-                    surface_by_age_core_b_pct['合計'] = row_sums.round(2)
+                    surface_by_age_core_b_pct['Total'] = row_sums.round(2)
                 surface_by_age_core_b_combined = combine_count_and_percentage(surface_by_age_core_b, surface_by_age_core_b_pct)
-                print("件数 (割合%):")
+                print("Counts (pct%):")
                 print(surface_by_age_core_b_combined)
     else:
-        print("\n【Coreのみ】")
-        print("  Coreが存在しないため、脳表拘束判定はない")
+        print("\n[Core only]")
+        print("  No Core rows; no surface-constraint labels")
 
                                                                                            
     if 'mca_segment' in df.columns:
         print("\n" + "="*80)
-        print(f"C. 部位別（mca_segment）の統計 (COVERAGE_HAT_CORE_MIN={coverage_min})")
+        print(f"C. By segment (mca_segment) stats (COVERAGE_HAT_CORE_MIN={coverage_min})")
         print("="*80)
-        print("（mca_segment は Core にのみ設定しているため、Core のみの脳表拘束別集計のみ出力する）")
+        print("(mca_segment is Core-only; reporting Core-only surface-constraint summaries)")
         
         core_df = df[df[col_name_periodicity] == "Core"].copy()
         if len(core_df) > 0:
-            print("\n【Coreのみ: mca_segment × 脳表拘束】")
+            print("\n[Core only: mca_segment × surface constraint]")
             surface_by_segment_core = pd.crosstab(
                 core_df['mca_segment'],
                 core_df[col_name_surface],
@@ -360,23 +360,23 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
             surface_by_segment_core_pct = surface_by_segment_core_pct.div(surface_by_segment_core_pct.sum(axis=1), axis=0) * 100
             if 'All' not in surface_by_segment_core.columns:
                 row_sums = surface_by_segment_core_pct.sum(axis=1)
-                surface_by_segment_core_pct['合計'] = row_sums.round(2)
+                surface_by_segment_core_pct['Total'] = row_sums.round(2)
             
             surface_by_segment_core_combined = combine_count_and_percentage(surface_by_segment_core, surface_by_segment_core_pct)
-            print("件数 (割合%):")
+            print("Counts (pct%):")
             print(surface_by_segment_core_combined)
         else:
-            print("\n【Coreのみ】")
-            print("Coreが存在しないため、部位別の集計はない")
+            print("\n[Core only]")
+            print("No Core rows; no by-segment summary")
 
                             
     if 'age_group' in df.columns and df['age_group'].notna().any():
         print("\n" + "="*80)
-        print(f"D. 年齢帯別の統計 (COVERAGE_HAT_CORE_MIN={coverage_min})")
+        print(f"D. By age-band stats (COVERAGE_HAT_CORE_MIN={coverage_min})")
         print("="*80)
         
                          
-        print("\n【Periodicity（sin+trend）側】")
+        print("\n[Periodicity (sin+trend)]")
         periodicity_by_age = pd.crosstab(
             df['age_group'],
             df[col_name_periodicity],
@@ -396,20 +396,20 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
                                      
         if 'All' not in periodicity_by_age.columns:
             row_sums = periodicity_by_age_pct.sum(axis=1)
-            periodicity_by_age_pct['合計'] = row_sums.round(2)
+            periodicity_by_age_pct['Total'] = row_sums.round(2)
         
                         
         periodicity_by_age_combined = combine_count_and_percentage(periodicity_by_age, periodicity_by_age_pct)
-        print("\n件数 (割合%):")
+        print("\nCounts (pct%):")
         print(periodicity_by_age_combined)
         
                                 
-        print("\n【Surface constraint（脳表拘束）側】")
+        print("\n[Surface constraint]")
         
                 
         core_df = df[df[col_name_periodicity] == "Core"].copy()
         if len(core_df) > 0:
-            print("\n【Coreのみ】")
+            print("\n[Core only]")
             surface_by_age_core = pd.crosstab(
                 core_df['age_group'],
                 core_df[col_name_surface],
@@ -426,26 +426,26 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
                                          
             if 'All' not in surface_by_age_core.columns:
                 row_sums = surface_by_age_core_pct.sum(axis=1)
-                surface_by_age_core_pct['合計'] = row_sums.round(2)
+                surface_by_age_core_pct['Total'] = row_sums.round(2)
             
                             
             surface_by_age_core_combined = combine_count_and_percentage(surface_by_age_core, surface_by_age_core_pct)
-            print("件数 (割合%):")
+            print("Counts (pct%):")
             print(surface_by_age_core_combined)
         else:
-            print("\n【Coreのみ】")
-            print("Coreが存在しないため、脳表拘束判定の集計はない")
+            print("\n[Core only]")
+            print("No Core rows; no surface-constraint summary")
 
                                                                                    
     if 'mca_segment' in df.columns and 'age_group' in df.columns and df['age_group'].notna().any():
         print("\n" + "="*80)
-        print(f"E. 部位別×年齢帯別の統計 (COVERAGE_HAT_CORE_MIN={coverage_min})")
+        print(f"E. By segment × age-band stats (COVERAGE_HAT_CORE_MIN={coverage_min})")
         print("="*80)
-        print("（mca_segment は Core にのみ設定しているため、Core のみの mca_segment×年齢帯×脳表拘束を出力する）")
+        print("(mca_segment is Core-only; reporting Core-only mca_segment × age-band × surface constraint)")
         
         core_df = df[df[col_name_periodicity] == "Core"].copy()
         if len(core_df) > 0:
-            print("\n【Coreのみ: mca_segment × age_group × 脳表拘束】")
+            print("\n[Core only: mca_segment × age_group × surface constraint]")
             surface_by_segment_age_core = pd.crosstab(
                 [core_df['mca_segment'], core_df['age_group']],
                 core_df[col_name_surface],
@@ -463,14 +463,14 @@ for coverage_min in COVERAGE_HAT_CORE_MIN_VALUES:
             surface_by_segment_age_core_pct = surface_by_segment_age_core_pct.div(surface_by_segment_age_core_pct.sum(axis=1), axis=0) * 100
             if 'All' not in surface_by_segment_age_core.columns:
                 row_sums = surface_by_segment_age_core_pct.sum(axis=1)
-                surface_by_segment_age_core_pct['合計'] = row_sums.round(2)
+                surface_by_segment_age_core_pct['Total'] = row_sums.round(2)
             
             surface_by_segment_age_core_combined = combine_count_and_percentage(surface_by_segment_age_core, surface_by_segment_age_core_pct)
-            print("件数 (割合%):")
+            print("Counts (pct%):")
             print(surface_by_segment_age_core_combined)
         else:
-            print("\n【Coreのみ】")
-            print("Coreが存在しないため、部位×年齢帯別の集計はない")
+            print("\n[Core only]")
+            print("No Core rows; no segment × age-band summary")
 
 def show_figure_with_space_to_close(fig):
     closed = [False]
@@ -601,7 +601,7 @@ if 'directory_id' in df.columns:
         if mask_pt is None:
             axes[1, i].text(
                 0.5, 0.5,
-                f'coverage_{coverage_min}\nperiodicity / surface_constraint がない',
+                f'coverage_{coverage_min}\nperiodicity / surface_constraint missing',
                 ha='center', va='center', transform=axes[1, i].transAxes,
             )
             axes[1, i].set_axis_off()
@@ -612,7 +612,7 @@ if 'directory_id' in df.columns:
 
     show_figure_with_space_to_close(fig)
 else:
-    print("\nWarning: 'directory_id' 列がないため、セグメント数ヒストグラムはスキップした")
+    print("\nWarning: 'directory_id' column missing; skipped segment-count histogram")
 
                                                                                   
 if "directory_id" in df.columns:
@@ -623,12 +623,12 @@ else:
     _subject_col = None
 
 print("\n" + "="*80)
-print("Predominantly tangential / Substantial normal component: セグメント数と被験者数（coverage 別）")
+print("Predominantly tangential / Substantial normal component: segment and subject counts (by coverage)")
 print("="*80)
 if _subject_col is None:
     print(
-        "Warning: 'directory_id' も 'IXI_ID' もないため、"
-        "被験者数は数えられない（セグメント数のみ表示）。"
+        "Warning: neither 'directory_id' nor 'IXI_ID' present; "
+        "cannot count subjects (showing segment counts only)."
     )
 for _cov in COVERAGE_HAT_CORE_MIN_VALUES:
     _col_core = f"periodicity_coverage_{_cov}"
@@ -654,7 +654,7 @@ for _cov in COVERAGE_HAT_CORE_MIN_VALUES:
     for _surface in SURFACE_LEVELS:
         _m_surface = core_surface_mask(df, _cov, _surface)
         if _m_surface is None:
-            print(f"  coverage_{_cov} {_surface}: periodicity / surface_constraint がない")
+            print(f"  coverage_{_cov} {_surface}: periodicity / surface_constraint missing")
             continue
         _n_seg_surface = int(_m_surface.sum())
         if _subject_col is not None:
@@ -674,11 +674,11 @@ for _cov in COVERAGE_HAT_CORE_MIN_VALUES:
                                                                                                 
 if _subject_col is None:
     print(
-        "\nWarning: 参加者ID列がないため、"
-        "脳表拘束コホートの年齢ヒストグラムはスキップした。"
+        "\nWarning: participant ID column missing; "
+        "skipped age histogram for surface-constraint cohort."
     )
 elif "AGE" not in df.columns:
-    print("\nWarning: 'AGE' 列がないため、年齢ヒストグラムはスキップした。")
+    print("\nWarning: 'AGE' column missing; skipped age histogram.")
 else:
     _age_df = df[[_subject_col, "AGE"]].copy()
     _age_df["AGE"] = pd.to_numeric(_age_df["AGE"], errors="coerce")
@@ -702,7 +702,7 @@ else:
             if _mask is None:
                 _ax.text(
                     0.5, 0.5,
-                    f"coverage_{_cov}\nperiodicity / surface_constraint がない",
+                    f"coverage_{_cov}\nperiodicity / surface_constraint missing",
                     ha="center", va="center", transform=_ax.transAxes,
                 )
                 _ax.set_title(f"coverage_{_cov}\nAGE: {_surface}")
@@ -736,7 +736,7 @@ else:
 
 if _ellipticity is not None:
     print("\n" + "=" * 80)
-    print("ellipticity (sigma2_over_sigma1): 中央値とIQR（各群）")
+    print("ellipticity (sigma2_over_sigma1): median and IQR (per group)")
     print("=" * 80)
     df["_ellipticity"] = _ellipticity.replace([np.inf, -np.inf], np.nan)
 
@@ -805,10 +805,10 @@ if _ellipticity is not None:
     df.drop(columns=["_ellipticity"], inplace=True)
 else:
     print(
-        "\nWarning: sigma2_over_sigma1 も amp_minor_mm / amp_major_mm もないため、"
-        "ellipticity のヒストグラムはスキップした"
+        "\nWarning: neither sigma2_over_sigma1 nor amp_minor_mm / amp_major_mm present; "
+        "skipped ellipticity histogram"
     )
 
 print("\n" + "="*80)
-print("完了")
+print("Done")
 print("="*80)

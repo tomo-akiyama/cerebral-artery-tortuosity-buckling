@@ -56,12 +56,12 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     )
     p.add_argument("--run-id", default=DEFAULT_RUN_ID)
     p.add_argument("--frame-reference", default=FRAME_BASELINE, choices=list(FRAME_REFERENCES))
-    p.add_argument("--analysis-csv", type=Path, default=None, help="33 の正式解析 CSV。未指定なら run-id から解決")
+    p.add_argument("--analysis-csv", type=Path, default=None, help="Formal analysis CSV from step 33; if omitted, resolve from run-id")
     p.add_argument(
         "--output-dir",
         type=Path,
         default=PROJECT_ROOT / "data" / "statistics",
-        help="係数 CSV の出力先",
+        help="Output path for coefficients CSV",
     )
     p.add_argument(
         "--table-path",
@@ -281,19 +281,19 @@ def print_outcomes_and_covariates(df: pd.DataFrame, specs: Sequence[Dict[str, An
         f"{SURFACE_PREDOMINANTLY_TANGENTIAL}: "
         f"{n_intervals} intervals, {n_participants} participants"
     )
-    print("調整共変量（多変量モデルで共通）:")
+    print("Adjustment covariates (shared across multivariate models):")
     print(f"  sex (reference: {refs['sex']})")
     print(f"  side (reference: {refs['side']})")
     print(f"  ethnicity_group (reference: {refs['ethnicity_group']})")
     print("  TIV_cuberoot")
     print(f"  mca_segment (reference: {refs['mca_segment']})")
-    print("各モデルの outcome と共変量:")
+    print("Outcome and covariates per model:")
     for spec in specs:
         outcome = spec["columns"][0]
         covariates = ", ".join(str(name) for name in spec["columns"][1:])
         print(f"{spec['model_id']}")
         print(f"  outcome: {outcome}")
-        print(f"  共変量: {covariates}")
+        print(f"  Covariates: {covariates}")
 
 
 def run_models(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:

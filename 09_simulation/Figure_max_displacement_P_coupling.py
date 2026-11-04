@@ -406,7 +406,7 @@ def make_max_displacement_figure(
 
 
 def main() -> None:
-    print(f"図の保存先: {get_figures_dir()}")
+    print(f"Figures saved to: {get_figures_dir()}")
     print("Loading simulation results...")
 
     P_cr = P_cr_theory_linear(EI, k_s)

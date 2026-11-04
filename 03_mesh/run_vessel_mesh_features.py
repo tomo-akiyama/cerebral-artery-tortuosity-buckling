@@ -179,7 +179,7 @@ def calculate_and_save_vessel_mesh_features(
         if os.path.exists(csv_path):
             df_csv = pd.read_csv(csv_path)
         else:
-            raise FileNotFoundError(f"csvファイルが見つからない: {csv_path}")
+            raise FileNotFoundError(f"CSV file not found: {csv_path}")
         
                                
         mask = df_csv['directory_id'] == directory_id
@@ -192,7 +192,7 @@ def calculate_and_save_vessel_mesh_features(
         
                     
         df_csv.to_csv(csv_path, index=False)
-        print(f"csvファイルを更新しました: {csv_path}")
+        print(f"Updated CSV: {csv_path}")
         
         return df_csv[mask]
     

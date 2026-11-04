@@ -160,7 +160,7 @@ def make_k_grid(L, N_cyc=0.5, N_pp=20, ds_eff=1, q_fine=4, verbose=True):
         ks = np.append(ks, k_max)
     if verbose:
         print(
-            f"探索波数 grid: k_min={k_min:.4f}, k_max={k_max:.4f}, dk={dk:.4f}, 点数={len(ks)}"
+            f"search k grid: k_min={k_min:.4f}, k_max={k_max:.4f}, dk={dk:.4f}, n={len(ks)}"
         )
     return ks, k_min, k_max, dk
 

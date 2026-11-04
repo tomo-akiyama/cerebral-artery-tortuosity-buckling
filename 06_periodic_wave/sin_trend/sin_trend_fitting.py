@@ -92,14 +92,14 @@ def kmeans_1d_two_clusters(x, n_iter=50):
     return labels, centers
 
 """
-# ===== 信号処理・FFT関連関数 =====
+# ===== Signal processing / FFT helpers =====
 def dct_power_sum(uU_arr, uV_arr, detrend_deg=2):
-    # DCT-II (orthonormal) を uU,uV に別々に適用し、パワー和 S[m] を返す。
+    # Apply orthonormal DCT-II separately to uU,uV and return power sum S[m].
     uU_arr = np.asarray(uU_arr, float)
     uV_arr = np.asarray(uV_arr, float)
     N = len(uU_arr)
 
-    # デトレンド
+    # detrend
     uU_detr, metaU = poly_trend(uU_arr, np.arange(N), degree=detrend_deg)
     uV_detr, metaV = poly_trend(uV_arr, np.arange(N), degree=detrend_deg)
 
@@ -114,13 +114,13 @@ def dct_power_sum(uU_arr, uV_arr, detrend_deg=2):
 
 """
 def dct_index_to_k(m_arr, N, ds):
-    # DCT-II のインデックスmを波数k[rad/length] に換算（目安）
+    # Convert DCT-II index m to wavenumber k [rad/length] (approximate)
     return np.pi * m_arr / (N * ds)
 """
 
 """
 def pick_peak_in_band(m_arr, S_arr, k_arr, lambda_prior=None, mult_range=(0.5, 2.0), exclude_dc=True):
-    # バンド制限（k_band=(kmin,kmax)）内で S のピークを取る。
+    # Take S peaks inside the band limit k_band=(kmin,kmax).
     if lambda_prior is None:
         sel = (m_arr >= 1) if exclude_dc else np.ones_like(m_arr, dtype=bool)
     else:
@@ -155,12 +155,12 @@ def find_candidate_peaks_in_band(
     include_edge=True,
     force_take_argmax=True):
     
-    # DCTパワー和 S = |U|^2 + |V|^2から、事前帯域内の局所ピークを"最大top_n個"抽出
+    # From DCT power sum S=|U|^2+|V|^2, extract up to top_n local peaks in the prior band
     mode_arr = np.asarray(mode_arr)
     power_arr = np.asarray(power_arr, float)
     k_arr = np.asarray(k_arr, float)
 
-    # 事前帯域
+    # prior band
     lam_min = mult_range[0] * lambda_prior
     lam_max = mult_range[1] * lambda_prior
     k_min = 2 * np.pi / lam_max
@@ -261,14 +261,14 @@ def find_candidate_peaks_in_band(
 
 """
 def k_to_dct_index(k, N, ds):
-    # k [rad/voxel] から DCT モード番号 m に変換
+    # Convert k [rad/voxel] to DCT mode index m
     m = k * N * ds / np.pi
     return int(np.floor(m + 0.5))
 """
 
 """
 def harmonic_ratio_dct(m, S):
-    # DCT-IIの近似ビンでE3/E1を評価（CoreのQC用）
+    # Evaluate E3/E1 on approximate DCT-II bins (Core QC)
     m1 = int(m)
     m3 = 3 * m1
 
@@ -314,14 +314,14 @@ def harmonic_ratio_from_fit(uU, uV, s, k, ds, weights=None, trend_degree=1):
 
 """
 def dk_bin_from_s(N, ds):
-    # 1 binの波数幅 Δk_bin [rad/voxel] を計算
+    # Compute one-bin wavenumber width Δk_bin [rad/voxel]
     dk_bin = np.pi / (N * ds)
     return dk_bin
 """
 
 """
 def grid_around(k0, N, ds, B_bins, q_rel, step_frac):
-    # k_seedsの周りを"bin幅"と"％幅"の大きい方で半幅を決めて等間隔グリッドを返す
+    # Build a uniform grid around k_seeds using the larger of bin-width and %-width half-spans
     k0 = float(k0)
     dk_bin = dk_bin_from_s(N, ds)
 
@@ -519,11 +519,11 @@ def choose_k_from_tie_set(candidates,
                           lambda_prior=None,
                           dR2_tol=0.006, 
                           dhr_amp_tol=0.05):
-    # 統計学的に同等のkをもつTie setから1つに絞る
+    # Reduce a statistically equivalent-k tie set to a single choice
     R2_vals = np.array([c['R2'] for c in candidates], float)
     R2_max = R2_vals.max()
     tie = [c for c in candidates if (R2_max - c['R2']) <= dR2_tol]
-    print("複数のkが統計学的に同等（ΔR² ≤ {:.4f}）: {} 個".format(dR2_tol, len(tie)))
+    print("Statistically equivalent k (ΔR² ≤ {:.4f}): {} candidates".format(dR2_tol, len(tie)))
     print("k values in tie set:", [c['k'] for c in tie])
 
     if len(tie) == 1:
@@ -532,7 +532,7 @@ def choose_k_from_tie_set(candidates,
     hr_amp_vals = np.array([c['hr_amp'] for c in tie])
     hr_amp_min = float(hr_amp_vals.min())
     tie2 = [c for c in tie if (c['hr_amp'] - hr_amp_min) <= dhr_amp_tol]
-    print("さらにtie set内での複数のkでhr_ampに大きな差がない（Δhr_amp ≤ {:.4f}）: {} 個".format(dhr_amp_tol, len(tie2)))
+    print("Within tie set, hr_amp also similar (Δhr_amp ≤ {:.4f}): {} candidates".format(dhr_amp_tol, len(tie2)))
     print("k values in tie set2:", [c['k'] for c in tie2])
 
     if len(tie2) == 1:
@@ -541,11 +541,11 @@ def choose_k_from_tie_set(candidates,
     if lambda_prior is not None:
         k_prior = 2 * np.pi / lambda_prior
         tie3 = sorted(tie2, key=lambda c: abs(c['k'] - k_prior))
-        print("k_priorに近い順:", [c['k'] for c in tie3])
+        print("Ordered by proximity to k_prior:", [c['k'] for c in tie3])
         return tie3[0], tie3
     else:
         tie3 = sorted(tie2, key=lambda c: c['k'])
-        print("k小さい順:", [c['k'] for c in tie3])
+        print("Ordered by increasing k:", [c['k'] for c in tie3])
         return tie3[0], tie3
 """
 
@@ -559,13 +559,13 @@ def grid_search_k(uU, uV, s, N, ds,
                   trend_degree=1,
                   lambda_prior=None
                   ):
-    # 最適な波数 k を「粗→細」で探す
+    # Search optimal wavenumber k coarse→fine
     k_seeds = np.atleast_1d(np.asarray(k_seeds, float))
     s = np.asarray(s, float)
 
-    # 1) 粗探索（k_seedsの ±30% or ±1.5bin）
-    # k_seedsの各seed k_0の周りを分割(_grid_around) -> 複数seedがあれば結合して重複を除去。
-    # ※近い複数のピークなら粗グリッドが自然に重なってくれるので、そのままで問題なし。離れた複数のpeakでも、粗探索でどちらがデータに合うかを自動で判定。
+    # 1) coarse search (±30% or ±1.5 bin around k_seeds)
+    # Split around each seed k_0 via _grid_around; merge seeds and drop duplicates.
+    # Nearby peaks naturally overlap on the coarse grid; distant peaks are compared by which fits better.
 
     coarse_ks = np.unique(np.concatenate([grid_around(k0=k0, 
                                                        N=N, 
@@ -600,7 +600,7 @@ def grid_search_k(uU, uV, s, N, ds,
     hr_energy_best = best_cand['hr_energy']
     print(f"Coarse search best k={k_best:.4f} rad/length: lambda={lambda_best:.4f}, R2={R2_best:.4f}, partial R2={partial_R2_best:.4f}, hr(E3/E1)_amp={hr_amp_best:4f}, hr(E3/E1)_energy={hr_energy_best:.4f}")
 
-    # 2) 細探索（best の ±10% or ±0.5bin）
+    # 2) fine search (±10% or ±0.5 bin around best)
     fine_ks = grid_around(k0=k_best, 
                            N=N, 
                            ds=ds, 
@@ -695,7 +695,7 @@ def make_k_grid(L,
     if ks[-1] < k_max - 1e-12:
         ks = np.append(ks, k_max)
     if verbose:
-        print(f"探索波数 grid: k_min={k_min:.4f}, k_max={k_max:.4f}, dk={dk:.4f}, 点数={len(ks)}")
+        print(f"search k grid: k_min={k_min:.4f}, k_max={k_max:.4f}, dk={dk:.4f}, n={len(ks)}")
 
     return ks, k_min, k_max, dk                          
 
@@ -712,7 +712,7 @@ def choose_k_from_tie_set(candidates,
     R2_max = R2_vals.max()
     tie = [c for c in candidates if (R2_max - c['R2']) <= dR2_tol]
     if verbose:
-        print("複数のkが統計学的に同等（ΔR² ≤ {:.4f}）: {} 個".format(dR2_tol, len(tie)))
+        print("Statistically equivalent k (ΔR² ≤ {:.4f}): {} candidates".format(dR2_tol, len(tie)))
         print("k values in tie set:", [c['k'] for c in tie])
                                                     
     if len(tie) == 1:
@@ -730,7 +730,7 @@ def choose_k_from_tie_set(candidates,
                                  
             tie2 = tie
     if verbose:
-        print("さらにtie set内での複数のkでhr_ampに大きな差がない（Δhr_amp ≤ {:.4f}）: {} 個".format(dhr_amp_tol, len(tie2)))
+        print("Within tie set, hr_amp also similar (Δhr_amp ≤ {:.4f}): {} candidates".format(dhr_amp_tol, len(tie2)))
         print("k values in tie set2:", [c['k'] for c in tie2])
                
     tie_sorted = sorted(tie2, key=lambda c: float(c['k']))             
@@ -900,31 +900,31 @@ def clip_mesh_to_coords(P_3darr, mesh, margin=10):
     return cropped_mesh
 
 """
-# PCA法：近傍の「脳表点座標（位置）」の広がりを PCA -> "平面っぽいか/トンネルっぽいか"と法線を推定
-# 「2面が入って“厚み”が主成分になって法線が壊れる」問題がPCA法の弱点
+# PCA method: PCA of nearby cortex point positions -> flat vs tunnel-like + normal estimate
+# Weakness: when two walls enter, thickness becomes a principal axis and the normal breaks
 def analyze_surface_constraint_pca(
-    P_3darr,                         # (N,3) voxel座標
-    dPsin_3darr,                     # (N,3) 変位
-    g1_3d,                           # bucklingモード主方向（N,3）単位ベクトル推(QC)
-    ds_vox,                          # 1点あたり弧長ステップ（voxel）
+    P_3darr,                         # (N,3) voxel coordinates
+    dPsin_3darr,                     # (N,3) displacement
+    g1_3d,                           # buckling-mode principal direction (N,3) unit vectors (QC)
+    ds_vox,                          # arc-length step per sample (voxel)
     tree,                            # cKDTree(face_centers_cropped_mesh)
-    face_centers_cropped_mesh,       # (M,3) voxel座標（面中心 or 頂点）
-    r_patch_vox,                     # パッチ探索半径（voxel）
-    stride=10,                       # 0.1mm samplingなら 1mmごと=10
-    min_neighbors=5,                 # PCAに必要な最低点数
-    flat_thresh=0.5,                 # flatness=lam3/lam2 の閾値（トンネル判定）
-    tunnel_ratio_thresh=0.5,         # トンネル割合が過半数なら Excluded
-    sheet_coverage_thresh=0.5,       # sheet-like の点が過半数未満なら Excluded
-    squared_displacement_coverage_thresh=0.6,      # sheet-like で説明できる変位エネルギー割合、変位の大半は「壁が曖昧／評価不能な場所」で起きている
-    R_out_thresh=0.25,               # 面外率の閾値（R_out < 0.25 → predominantly tangential; 面との角で sin²θ、θ_eq=30°）
+    face_centers_cropped_mesh,       # (M,3) voxel coords (face centers or vertices)
+    r_patch_vox,                     # patch search radius (voxel)
+    stride=10,                       # with 0.1 mm sampling, every 1 mm => 10
+    min_neighbors=5,                 # minimum points required for PCA
+    flat_thresh=0.5,                 # flatness=lam3/lam2 threshold (tunnel decision)
+    tunnel_ratio_thresh=0.5,         # Excluded if tunnel fraction is majority
+    sheet_coverage_thresh=0.5,       # Excluded if sheet-like points are minority
+    squared_displacement_coverage_thresh=0.6,      # fraction of displacement energy on sheet-like points; remainder is ambiguous/inevaluable wall
+    R_out_thresh=0.25,               # out-of-plane fraction threshold (R_out < 0.25 → predominantly tangential; sin²θ vs surface, θ_eq=30°)
     verbose=True
 ):
-    # 目的：局所PCAで「脳表の実効法線」を推定（flatness_ratio=lam3/lam2）
-    #       tunnel_ratio（flatnessが大きい=壁が定義しにくい点の割合）
-    #       sheet_coverage（flatnessが小さい=壁が定義できる点の割合）
-    #       R_out = (法線方向エネルギー)/(全エネルギー) を sheet-like 点だけで計算
-    #       判定：Excluded / In-plane Buckling / Terrain Following
-    #       ※重要：R_out は flatness <= flat_thresh の点だけで計算する（物理的に意味がある点に限定）
+    # Goal: estimate effective cortex normal via local PCA (flatness_ratio=lam3/lam2)
+    #       tunnel_ratio (fraction of high-flatness / poorly defined wall points)
+    #       sheet_coverage (fraction of low-flatness / well-defined wall points)
+    #       R_out = (normal-energy)/(total-energy) on sheet-like points only
+    #       labels: Excluded / In-plane Buckling / Terrain Following
+    #       IMPORTANT: compute R_out only where flatness <= flat_thresh (physically meaningful points)
 
     P_3darr = np.asarray(P_3darr, float)
     dPsin_3darr = np.asarray(dPsin_3darr, float)
@@ -932,7 +932,7 @@ def analyze_surface_constraint_pca(
     assert P_3darr.shape == dPsin_3darr.shape
     n_points = len(P_3darr)
 
-    # --- 0. アンカー作成 ---
+    # --- 0. build anchors ---
     anchor_indices = np.arange(0, n_points, stride)
     if anchor_indices[-1] != n_points - 1:
         anchor_indices = np.append(anchor_indices, n_points - 1)
@@ -954,15 +954,15 @@ def analyze_surface_constraint_pca(
     neighbors_list = []
     prev_normal = None
 
-    # --- 1. アンカー毎に局所PCA ---
+    # --- 1. local PCA per anchor ---
     for pt in anchor_pts:
         idx = tree.query_ball_point(pt, r=r_patch_vox)
 
         if len(idx) < min_neighbors:
-            # パッチ空/少なすぎる → cortex法線が信頼できない点
+            # empty/too-small patch → cortex normal not trustworthy
             has_cortex = False
             v3 = prev_normal.copy() if prev_normal is not None else np.array([0.0, 0.0, 1.0])
-            flatness_ratio = np.nan  # ★ 値なし（トンネル扱いにせず、後で除外）
+            flatness_ratio = np.nan  # no value (do not treat as tunnel; exclude later)
         else:
             has_cortex = True
             neighbors = face_centers_cropped_mesh[idx]
@@ -970,14 +970,14 @@ def analyze_surface_constraint_pca(
             pca.fit(neighbors)
 
             lam1, lam2, lam3 = pca.explained_variance_  # lam1>=lam2>=lam3
-            v3 = pca.components_[2]                    # 最小固有値方向＝法線
+            v3 = pca.components_[2]                    # smallest-eigenvalue direction = normal
 
             if lam2 > 1e-9:
                 flatness_ratio = lam3 / lam2
             else:
                 flatness_ratio = np.nan
 
-        # 法線符号の整合性（急な反転防止）
+        # keep normal sign consistent (avoid abrupt flips)
         if prev_normal is not None and np.dot(prev_normal, v3) < 0:
             v3 = -v3
         prev_normal = v3
@@ -988,44 +988,44 @@ def analyze_surface_constraint_pca(
 
     anchor_normals = np.array(anchor_normals, float)
     anchor_flatness = np.array(anchor_flatness, float)
-    anchor_has_cortex = np.array(anchor_has_cortex, float)  # 補間のため float
+    anchor_has_cortex = np.array(anchor_has_cortex, float)  # float for interpolation
 
-    # --- 2. 補間（アンカー→全点） ---
+    # --- 2. interpolate anchors → all points ---
     func_n = interp1d(s_anchors, anchor_normals, axis=0, kind='linear', fill_value="extrapolate")
     func_f = interp1d(s_anchors, anchor_flatness, axis=0, kind='linear', fill_value="extrapolate")
-    func_c = interp1d(s_anchors, anchor_has_cortex, kind='nearest', fill_value="extrapolate")  # True/False は nearest
+    func_c = interp1d(s_anchors, anchor_has_cortex, kind='nearest', fill_value="extrapolate")  # True/False via nearest
 
     normals_full = func_n(s_full)
     flatness_full = func_f(s_full)
     has_cortex_full = func_c(s_full) > 0.5
 
-    # 補間後の法線は再正規化
+    # re-normalize normals after interpolation
     norms = np.linalg.norm(normals_full, axis=1, keepdims=True)
     normals_full = normals_full / (norms + 1e-9)
 
-    # --- 3. 有効マスク整理 ---
-    # flatness が finite で、かつ has_cortex=True の点だけを「cortex評価可能点」とする
+    # --- 3. build valid masks ---
+    # cortex-evaluable points: finite flatness and has_cortex=True
     valid_flat = np.isfinite(flatness_full)
     mask_eval = has_cortex_full & valid_flat
 
-    cortex_coverage = float(np.mean(mask_eval))  # どれくらいの点で cortex 評価できたか（空パッチなどの影響を見る）
+    cortex_coverage = float(np.mean(mask_eval))  # fraction of points with usable cortex evaluation
 
-    # R_out は sheet-like 点のみ（flatness <= flat_thresh）
+    # R_out uses sheet-like points only (flatness <= flat_thresh)
     mask_sheet = mask_eval & (flatness_full <= flat_thresh)
 
-    sheet_coverage = float(np.mean(mask_sheet))  # 全点に対する sheet-like の割合（“壁が定義できる長さ”）
+    sheet_coverage = float(np.mean(mask_sheet))  # sheet-like fraction of all points (definable wall length)
 
-    # tunnel_ratio は「評価可能点の中」で flatness > flat_thresh の割合
-    # これが “壁が定義できない点がどれだけ支配的か” の指標
+    # tunnel_ratio: among evaluable points, fraction with flatness > flat_thresh
+    # measures how dominant poorly defined wall regions are
     if np.any(mask_eval):
         tunnel_ratio = float(np.mean(flatness_full[mask_eval] > flat_thresh))
     else:
         tunnel_ratio = np.nan
 
-    # --- 4. R_out の計算（sheet-like点のみ） ---
-    # 注意：mask_sheet が少ない場合は R_out を計算しても不安定なので判定保留する
+    # --- 4. compute R_out (sheet-like only) ---
+    # Note: if few sheet points, R_out is unstable → defer classification
     displ = dPsin_3darr
-    E_tot_all = float(np.sum(np.sum(displ**2, axis=1)))  # 全点でのエネルギー
+    E_tot_all = float(np.sum(np.sum(displ**2, axis=1)))  # energy over all points
 
     if np.any(mask_sheet):
         displ_sheet = displ[mask_sheet]
@@ -1035,35 +1035,35 @@ def analyze_surface_constraint_pca(
         E_sheet = float(np.sum(np.sum(displ_sheet**2, axis=1)))
         E_perp = float(np.sum(d_perp**2))
 
-        R_out = E_perp / (E_sheet + 1e-9)    # sheet-like点に限定した面外率
-        squared_displacement_coverage = E_sheet / (E_tot_all + 1e-9)  # 変位エネルギーのうち、何割がsheet-like点で説明できるか
+        R_out = E_perp / (E_sheet + 1e-9)    # out-of-plane fraction on sheet-like points
+        squared_displacement_coverage = E_sheet / (E_tot_all + 1e-9)  # fraction of displacement energy on sheet-like points
     else:
         R_out = np.nan
         squared_displacement_coverage = 0.0
     
-    # --- 4.1 点ごとの “面外率” r_out_local(s) を計算（★追加） ---
-    # 注意：normals_full は全点で定義されているが、mask_eval=False の点は信頼性が低いので、
-    # r_out_local_masked では NaN に落とす
+    # --- 4.1 per-point out-of-plane fraction r_out_local(s) ---
+    # Note: normals_full is defined everywhere, but mask_eval=False points are unreliable, so
+    # set them to NaN in r_out_local_masked
     d2 = np.sum(displ**2, axis=1) + 1e-12
     d_dot = np.sum(displ * normals_full, axis=1)
-    r_out_local = (d_dot**2) / d2  # 0～1（点ごとの面外率）
+    r_out_local = (d_dot**2) / d2  # 0–1 per-point out-of-plane fraction
 
-    # 評価可能点だけ残す版（mask_eval=False は NaN）
+    # keep evaluable points only (mask_eval=False → NaN)
     r_out_local_eval = r_out_local.copy()
     r_out_local_eval[~mask_eval] = np.nan
 
-    # sheet-like点だけ残す版（mask_sheet=False は NaN）
+    # keep sheet-like points only (mask_sheet=False → NaN)
     r_out_local_sheet = r_out_local.copy()
     r_out_local_sheet[~mask_sheet] = np.nan
 
-    # --- 4.2 R_dir = mean(cos^2)（g1_3d と法線の直交性） ---
-    # 判定には使わない（QC用）
+    # --- 4.2 R_dir = mean(cos^2) (alignment of g1_3d with normals) ---
+    # not used for classification (QC only)
     g1_3d = np.asarray(g1_3d, float)
-    # 長さ合わせ
+    # length alignment
     min_len_dir = min(len(g1_3d), len(normals_full))
     g1_use = g1_3d[:min_len_dir]
     n_use  = normals_full[:min_len_dir]
-    # sheet-like 点だけで評価（mask_sheet と整合）
+    # evaluate on sheet-like points only (consistent with mask_sheet)
     mask_sheet_dir = mask_sheet[:min_len_dir]
     if np.any(mask_sheet_dir):
         cos2 = (np.sum(g1_use * n_use, axis=1))**2
@@ -1075,46 +1075,46 @@ def analyze_surface_constraint_pca(
     # --- 5. Summary ---
     if verbose:
         print("-" * 30)
-        print("解析結果 Summary")
+        print("Analysis summary")
         print(f"flat_thresh                 : {flat_thresh}")
         if np.any(mask_eval):
             fv = flatness_full[mask_eval]
             print(f"Flatness Ratio max/min/mean : {np.max(fv):.4f} / {np.min(fv):.4f} / {np.mean(fv):.4f}")
         else:
             print("Flatness Ratio              : (no valid cortex points)")
-        print(f"Cortex coverage (評価可能点): {cortex_coverage:.2%}")
+        print(f"Cortex coverage (evaluable points): {cortex_coverage:.2%}")
         print(f"Sheet coverage              : {sheet_coverage:.2%}  (flatness <= {flat_thresh})")
         print(f"Tunnel ratio                : {tunnel_ratio:.2%}    (flatness > {flat_thresh} among valid)")
         print(f"Energy coverage (sheet)     : {squared_displacement_coverage:.2%}")
-        print(f"R_out (面外率; sheet-only)   : {R_out}")
-        print(f"R_dir (=mean(cos^2)): {R_dir:.2f} => 接平面内成分が優勢（約{1-R_dir:.1%}）")
-        # R_out ≈ R_dir -> モードがきれい
-        # 乖離 -> 局所不安定／境界／登録誤差
+        print(f"R_out (out-of-plane; sheet-only): {R_out}")
+        print(f"R_dir (=mean(cos^2)): {R_dir:.2f} => tangential component dominant (~{1-R_dir:.1%})")
+        # R_out ≈ R_dir -> clean mode
+        # mismatch -> local instability / boundary / registration error
 
-    # --- 6. 判定 ---
-    # (A) cortex 評価可能点が少なすぎる
+    # --- 6. classification ---
+    # (A) too few cortex-evaluable points
     if cortex_coverage < 0.3:
         category = "Excluded (No cortex constraint evaluated)"
 
-    # (B) トンネル的な点が過半数（壁法線が安定して定義できない領域が支配的）
+    # (B) tunnel-like points are majority (unstable wall-normal regions dominate)
     elif tunnel_ratio_thresh is not None and np.isfinite(tunnel_ratio) and (tunnel_ratio > tunnel_ratio_thresh):
         category = "Excluded (Tunnel/Enclosed)"
 
-    # (C) sheet-like点が少なすぎる（点数割合 or エネルギー割合でゲート）
+    # (C) too few sheet-like points (gate by count fraction or energy fraction)
     elif (sheet_coverage < sheet_coverage_thresh) or (squared_displacement_coverage < squared_displacement_coverage_thresh):
         category = "Excluded (Insufficient sheet)"
 
-    # (D) ここまで来れば sheet-like 領域は十分ある。R_outで in-plane / terrain を判定
+    # (D) enough sheet-like region; classify in-plane vs terrain via R_out
     elif np.isfinite(R_out) and (R_out < R_out_thresh):
         category = "In-plane Buckling"
     else:
         category = "Terrain Following / Artifact"
 
     if verbose:
-        print(f"判定: {category}")
+        print(f"label: {category}")
 
     return dict(
-        # 判定・主要指標
+        # label and primary metrics
         category=category,
         R_out=R_out,
         R_dir=R_dir,
@@ -1123,17 +1123,17 @@ def analyze_surface_constraint_pca(
         squared_displacement_coverage=squared_displacement_coverage,
         tunnel_ratio=tunnel_ratio,
 
-        # エネルギー内訳（再計算不要にする）
+        # energy breakdown (avoid recomputation)
         total_energy=E_tot_all,
         energy_sheet=E_sheet,
         perp_energy=E_perp,
 
-        # 点数（割合だけだと危ない）
-        n_points_total=int(n_points), # 全点数
-        n_eval=int(mask_eval.sum()), # 評価できた点の数（脳表法線が定義できた点）
-        n_sheet=int(mask_sheet.sum()), # その中で「壁（シート）」として信頼できた点の数
+        # counts (fractions alone can mislead)
+        n_points_total=int(n_points), # total points
+        n_eval=int(mask_eval.sum()), # evaluable points (cortex normal defined)
+        n_sheet=int(mask_sheet.sum()), # trusted sheet/wall points among them
 
-        # 閾値・設定（再現性）
+        # thresholds/settings (reproducibility)
         flat_thresh=flat_thresh,
         R_out_thresh=R_out_thresh,
         tunnel_ratio_thresh=tunnel_ratio_thresh,
@@ -1143,7 +1143,7 @@ def analyze_surface_constraint_pca(
         min_neighbors=int(min_neighbors),
         r_patch_vox=float(r_patch_vox),
 
-        # 可視化用（あなたの今の構成でOK）
+        # for visualization (current layout)
         r_out_local=r_out_local,
         r_out_local_eval=r_out_local_eval,
         r_out_local_sheet=r_out_local_sheet,
@@ -1239,7 +1239,7 @@ def analyze_surface_constraint_coherence(
     n_points = len(P_3darr)
 
     if cropped_mesh is None:
-        raise ValueError("cropped_mesh（compute_normals済み）が必要!!")
+        raise ValueError("cropped_mesh with compute_normals already applied is required")
 
                        
     anchor_indices = np.arange(0, n_points, stride)
@@ -1394,14 +1394,14 @@ def analyze_surface_constraint_coherence(
     # --- 5. Summary ---
     if verbose:
         print("-" * 30)
-        print("解析結果 Summary (coherence-based surface constraint)")
+        print("Analysis summary (coherence-based surface constraint)")
         print(f"coherence threshold (coh_thr)               : {coh_thr}")
-        print(f"cortex_coverage (評価可能点).                 : {cortex_coverage:.2%}")
+        print(f"cortex_coverage (evaluable points)            : {cortex_coverage:.2%}")
         print(f"constraint_coverage                         : {constraint_coverage:.2%} (good/bridged; C≥{coh_thr})")
         print(f"bridge_max_gap_mm / axis_max_deg            : {bridge_max_gap_mm:g} / {bridge_axis_max_deg:g}")
         print(f"squared_displacement_coverage (constraint)                : {squared_displacement_coverage:.2%}")
-        print(f"R_out (面外率; constraint)                   : {R_out:.2f}")
-        print(f"R_dir (=mean(cos^2), 脳表法線方向成分)         : {R_dir:.1%} <=> 接平面内成分（{1 - R_dir:.1%}）")
+        print(f"R_out (out-of-plane; constraint)             : {R_out:.2f}")
+        print(f"R_dir (=mean(cos^2), cortex-normal component): {R_dir:.1%} <=> tangential ({1 - R_dir:.1%})")
 
     if verbose:
         print(f"E_tot_all: {E_tot_all:.2f}")

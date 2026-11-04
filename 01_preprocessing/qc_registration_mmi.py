@@ -5,12 +5,12 @@
 """Public pipeline module: qc registration mmi."""
 
 """
-=>既存の指標(MMIなど)は役に立たない
-"情報の密度(Density)の圧倒的な不均衡"にある
-T1画像(Dense): 脳実質、白質、灰白質、脳室、頭皮など、空間の100%に意味のある信号が詰まっている。
-MRA画像(Sparse / 疎): 空間の95%以上が無(背景ノイズ)であり、意味のある信号(血管)はごくわずか。
-MMI(相互情報量)としてはT1の『灰白質』の画素値分布と、MRAの『背景』の画素値分布を比較しよう…MRA側はほとんどゼロだから、T1の画素値がどう変わろうと、MRAはずっとゼロで無関係（スコア0）
-背景領域(99%)の「無相関」が、血管領域(1%)の「相関」を完全に薄めて消し去ってしまうため、数学的に指標として機能しない
+=> Existing metrics (e.g. MMI) are not useful
+due to an extreme imbalance in information density
+T1 (dense): meaningful signal fills ~100% of space (parenchyma, WM, GM, ventricles, scalp, etc.).
+MRA (sparse): >95% is empty/background noise; meaningful signal (vessels) is tiny.
+MMI would compare T1 GM intensity vs MRA background; MRA is mostly zero, so T1 changes stay uncorrelated (score ~0).
+Background (99%) uncorrelation swamps vessel (1%) correlation, so MMI fails as a metric.
 """
 
 ########################################################
@@ -42,8 +42,8 @@ all_directory_ids = df['directory_id'].dropna().unique()
                       
 directory_ids = sorted(all_directory_ids.tolist())
 
-print(f"抽出されたdirectory_id数: {len(all_directory_ids)}")
-print(f"処理対象のdirectory_id数: {len(directory_ids)}")
+print(f"Extracted directory_id count: {len(all_directory_ids)}")
+print(f"directory_ids to process: {len(directory_ids)}")
 
 
 # 1. T1 (CAT12 processed)

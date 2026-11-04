@@ -98,7 +98,7 @@ def close_on_space():
 
 pl.add_key_event('space', close_on_space)
 pl.add_text("Press SPACE to close and save", position='lower_left', font_size=14, color='red')
-print("可視化ウィンドウを表示中... (SPACEキーで閉じて保存へ)")
+print("Showing visualization window... (press SPACE to close and save)")
 
 try:
     pl.show(interactive=True)

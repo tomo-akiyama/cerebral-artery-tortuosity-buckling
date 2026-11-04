@@ -52,7 +52,7 @@ VMTK requires an **x86_64** Conda stack (use Rosetta on Apple Silicon).
 Symlinks `simulation` → `09_simulation`, `statistics` → `08_statistics`, and `figures` → `10_figures`
 preserve historical import names.
 
-## Pipeline order (high level)
+## Pipeline order
 
 1. Download IXI Hammersmith Hospital MRA + T1WI.  
 2. `01_preprocessing/run_mri_preprocessing.py` — 0.5 mm B-spline resample; MRA denoise (`p=1,r=3`), N4, BET (`bt=0.45`), TRSAA→SyNOnly; hysteresis 99.9/98.5.  
@@ -69,7 +69,7 @@ preserve historical import names.
 
 **Shipped data already include steps 8–12 outputs** needed to reproduce statistics/figures without raw MRI.
 
-## Script ↔ paper figure/table map (selected)
+## Paper figure/table map
 
 | Script | Paper item |
 |--------|------------|
@@ -98,7 +98,7 @@ ACTIVE simulation: `data/simulation/buckling_simulation_P_coupling_age_20to80yea
 
 ## IXI data access
 
-http://brain-development.org/ixi-dataset/  
+https://brain-development.org/ixi-dataset/  
 Use the Hammersmith Hospital (HH) 3 T subset with paired MRA and T1WI, under CC BY-SA 3.0.
 
 ## Citation
@@ -111,6 +111,7 @@ Tomoaki Akiyama — corresponding contact listed in the manuscript.
 
 ## Notes for contributors
 
-- Entry-point module docstrings for the main runners were rewritten in English.
-- Some Japanese inline comments remain inside `06_periodic_wave/sin_trend/` helper modules; behavior is unchanged. Further Englishization can be done without changing logic.
+- Code comments and docstrings are in English.
 - MCA anatomical labels (`mca_segment`) in the public analysis CSV are retained only for `core_inplane==1` intervals (n=275).
+
+We used Cursor (Anysphere) with automatic model selection to prepare the analysis code for public release.

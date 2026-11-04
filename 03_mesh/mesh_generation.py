@@ -334,7 +334,7 @@ def gifti_to_vtkpolydata(gii_file_path, nii_file_path):
         vertices = gii_data.darrays[0].data
         faces = gii_data.darrays[1].data
     else:
-        raise ValueError("GIFTIファイルのDataArrayのIntentが不明")
+        raise ValueError("Unknown Intent on GIFTI DataArray")
 
 
                           

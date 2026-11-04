@@ -104,29 +104,29 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         default=Path(
             "results/analysis/sin_trend/length_selection_validation/lengthsel_A_20261027"
         ),
-        help="検証Aの出力ディレクトリ（all_cases.csv がある場所）",
+        help="Suite A output directory (containing all_cases.csv)",
     )
     p.add_argument("--config", type=Path, default=None)
-    p.add_argument("--start", type=int, default=0, help="開始インデックス（フィルタ後）")
-    p.add_argument("--case-id", default=None, help="特定 case_id から開始")
-    p.add_argument("--only-underest", action="store_true", help="λ̂/λ_true < 0.9 のみ")
+    p.add_argument("--start", type=int, default=0, help="start index (after filtering)")
+    p.add_argument("--case-id", default=None, help="start from a specific case_id")
+    p.add_argument("--only-underest", action="store_true", help="only cases with λ̂/λ_true < 0.9")
     p.add_argument("--only-accepted", action="store_true")
     p.add_argument("--only-rejected", action="store_true")
     p.add_argument(
         "--only-accepted-n-true-lt-1p5",
         action="store_true",
-        help="真の周期数 N_true<1.5 かつ採択された例のみ",
+        help="only accepted cases with true period count N_true<1.5",
     )
     p.add_argument("--only-exceptions", action="store_true")
     p.add_argument("--min-n-true-target", type=float, default=None)
     p.add_argument("--max-n-true-target", type=float, default=None)
-    p.add_argument("--lambda-true", type=float, default=None, help="真波長フィルタ [mm]")
+    p.add_argument("--lambda-true", type=float, default=None, help="true wavelength filter [mm]")
     p.add_argument("--background", default=None, choices=[None, "straight", "quadratic_c0p005"])
     p.add_argument(
         "--save-dir",
         type=Path,
         default=None,
-        help="s キー保存先（省略時 run-dir/inspect_snapshots）",
+        help="snapshot save directory (default: run-dir/inspect_snapshots)",
     )
     return p.parse_args(argv)
 
@@ -153,8 +153,8 @@ def filter_cases(df: pd.DataFrame, args: argparse.Namespace) -> pd.DataFrame:
         col = "accepted_N_true_lt_1p5"
         if col not in g.columns and "false_accept_N_true_lt_1p5" in g.columns:
             raise KeyError(
-                "旧列 false_accept_N_true_lt_1p5 のみ存在します。"
-                "accepted_N_true_lt_1p5 付きの結果を再生成してください。"
+                "Only legacy column false_accept_N_true_lt_1p5 is present. "
+                "Please regenerate results that include accepted_N_true_lt_1p5."
             )
         g = g[pd.to_numeric(g.get(col), errors="coerce").fillna(0).astype(int) == 1]
     if args.only_exceptions:

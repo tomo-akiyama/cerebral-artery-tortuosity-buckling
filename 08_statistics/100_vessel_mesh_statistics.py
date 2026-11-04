@@ -68,13 +68,13 @@ def merge_vessel_mesh_features(directory_ids):
         frames.append(df_case)
 
     if missing:
-        print(f"Warning: CSV が見つからない症例: {len(missing)}件")
+        print(f"Warning: cases with missing CSV: {len(missing)}")
         for did in missing:
             print(f"  - {did}")
 
     if not frames:
         raise FileNotFoundError(
-            f"統合対象の CSV が1件もない: {vessel_meshes_root}"
+            f"No CSVs to merge under: {vessel_meshes_root}"
         )
 
     df = pd.concat(frames, ignore_index=True)
@@ -89,12 +89,12 @@ def merge_vessel_mesh_features(directory_ids):
     missing_edge = [c for c in EDGE_LENGTH_COLS if c not in df.columns]
     if missing_edge:
         print(
-            "Warning: 統合CSVに辺長列がない（症例CSVの再生成が必要）: "
+            "Warning: merged CSV lacks edge-length columns (regenerate case CSVs): "
             + ", ".join(missing_edge)
         )
     else:
         n_with_edge = int(df[EDGE_MEDIAN_COL].notna().sum())
-        print(f"辺長列を統合に含めた: {len(EDGE_LENGTH_COLS)}列, 有効症例 n = {n_with_edge}")
+        print(f"Included edge-length columns in merge: {len(EDGE_LENGTH_COLS)} cols, valid cases n = {n_with_edge}")
 
     return df, missing
 
@@ -178,14 +178,14 @@ ANALYSIS_VARS = [
 
 def print_edge_median_of_medians(df: pd.DataFrame) -> None:
     if EDGE_MEDIAN_COL not in df.columns:
-        print(f"\nWarning: {EDGE_MEDIAN_COL} がないため中央値の中央値は計算しない")
+        print(f"\nWarning: {EDGE_MEDIAN_COL}  missing; skipping median-of-medians")
         return
 
     r = summarize_continuous(df[EDGE_MEDIAN_COL])
     print("\n" + "=" * 72)
     print("Edge length: median of per-case medians (mm)")
     print("=" * 72)
-    print(f"  対象列: {EDGE_MEDIAN_COL}")
+    print(f"  Columns: {EDGE_MEDIAN_COL}")
     print(f"  n (cases) = {r['n']}")
     print(
         f"  median of medians = {r['median']:.6g} mm  "
@@ -199,7 +199,7 @@ def print_vessel_length_per_hemisphere(df: pd.DataFrame) -> None:
     ]
     if missing:
         print(
-            "\nWarning: vessel length 列がないため半球集計をスキップ: "
+            "\nWarning: vessel length  columns missing; skipping hemisphere summary: "
             + ", ".join(missing)
         )
         return
@@ -213,9 +213,9 @@ def print_vessel_length_per_hemisphere(df: pd.DataFrame) -> None:
     print("\n" + "=" * 72)
     print("Vessel length per hemisphere (mm): pooled Rt + Lt")
     print("=" * 72)
-    print(f"  対象列: {RT_VESSEL_LENGTH_COL}, {LT_VESSEL_LENGTH_COL}")
+    print(f"  Columns: {RT_VESSEL_LENGTH_COL}, {LT_VESSEL_LENGTH_COL}")
     print(f"  n (cases) = {n_cases}")
-    print(f"  n (hemispheres) = {r['n']}  (期待値 {n_cases * 2})")
+    print(f"  n (hemispheres) = {r['n']}  (expected {n_cases * 2})")
     print(
         f"  median = {r['median']:.6g} mm / hemisphere  "
         f"(IQR = {r['q1']:.6g}–{r['q3']:.6g} mm; IQR width = {r['iqr']:.6g} mm)"
@@ -225,7 +225,7 @@ def print_vessel_length_per_hemisphere(df: pd.DataFrame) -> None:
 def print_and_plot_statistics(df: pd.DataFrame) -> None:
     for label, col in ANALYSIS_VARS:
         if col not in df.columns:
-            print(f"\nWarning: 必要な列がないためスキップ: {col}")
+            print(f"\nWarning: required column missing; skipping: {col}")
             continue
 
         print("\n" + "=" * 72)
@@ -246,7 +246,7 @@ def print_and_plot_statistics(df: pd.DataFrame) -> None:
 
         if np.isnan(r["W"]):
             print(f"  n = {r['n']}; W/p unavailable ({r['note'] or 'NA'})")
-            print("  → 使用する要約: 判定不可（データ不足）")
+            print("  → Summary to use: indeterminate (insufficient data)")
             continue
 
         verdict = "normal" if r["normal"] else "non-normal"
@@ -255,12 +255,12 @@ def print_and_plot_statistics(df: pd.DataFrame) -> None:
             print(f"  note: {r['note']}")
         if r["normal"]:
             print(
-                "  → 使用する要約: mean (SD)  "
+                "  → Summary to use: mean (SD)  "
                 f"= {r['mean']:.6g} ({r['sd']:.6g})"
             )
         else:
             print(
-                "  → 使用する要約: median (IQR)  "
+                "  → Summary to use: median (IQR)  "
                 f"= {r['median']:.6g} ({r['q1']:.6g}–{r['q3']:.6g})"
             )
 
@@ -275,24 +275,24 @@ def print_and_plot_statistics(df: pd.DataFrame) -> None:
 
 def main():
     if not os.path.exists(participants_csv):
-        raise FileNotFoundError(f"participants CSV が見つからない: {participants_csv}")
+        raise FileNotFoundError(f"participants CSV not found: {participants_csv}")
 
     df_participants = pd.read_csv(participants_csv)
     directory_ids = (
         df_participants["directory_id"].dropna().astype(str).unique().tolist()
     )
-    print(f"participants の directory_id 数: {len(directory_ids)}")
+    print(f"participants directory_id count: {len(directory_ids)}")
 
     df, missing = merge_vessel_mesh_features(directory_ids)
-    print(f"統合した症例数: {len(df)}")
-    print(f"欠損症例数: {len(missing)}")
+    print(f"Merged case count: {len(df)}")
+    print(f"Missing case count: {len(missing)}")
 
     df = add_face_density(df)
 
     os.makedirs(output_dir, exist_ok=True)
     df.to_csv(output_csv, index=False)
-    print(f"保存: {output_csv}")
-    print(f"統合CSVの列数: {df.shape[1]}（辺長関連列を含む）")
+    print(f"Saved: {output_csv}")
+    print(f"Merged CSV column count: {df.shape[1]} (including edge-length columns)")
 
     print_edge_median_of_medians(df)
     print_vessel_length_per_hemisphere(df)

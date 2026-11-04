@@ -49,7 +49,7 @@ def aggregate_subject_level(df: pd.DataFrame) -> pd.DataFrame:
     required = ["IXI_ID", "AGE", "total_vessel_length"]
     missing = [column for column in required if column not in df.columns]
     if missing:
-        raise ValueError(f"列がない: {missing}")
+        raise ValueError(f"Missing columns: {missing}")
 
     sub = df.copy()
     sub["IXI_ID"] = sub["IXI_ID"].astype(str)
@@ -76,7 +76,7 @@ def aggregate_subject_level(df: pd.DataFrame) -> pd.DataFrame:
 def load_participant_frame(project_root: Optional[Path] = None) -> tuple[pd.DataFrame, Path]:
     csv_path = formal_csv_path(project_root)
     if not csv_path.is_file():
-        raise FileNotFoundError(f"正式解析 CSV がない: {csv_path}")
+        raise FileNotFoundError(f"Formal analysis CSV not found: {csv_path}")
     raw = pd.read_csv(csv_path, low_memory=False)
     return aggregate_subject_level(raw), csv_path
 
@@ -121,7 +121,7 @@ def fit_age_ols(df: pd.DataFrame, y_col: str, cov_terms: Iterable[str]):
     subset = ["AGE", y_col, *_columns_in_terms(terms)]
     work = df.dropna(subset=subset).copy()
     if len(work) < 3 or work["AGE"].nunique() < 2:
-        raise ValueError(f"{y_col}: 完全症例が足りない")
+        raise ValueError(f"{y_col}: insufficient complete cases")
     return smf.ols(formula, data=work).fit(), work
 
 

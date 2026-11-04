@@ -373,7 +373,7 @@ def make_modal_amplitude_figure(
 
 
 def main() -> None:
-    print(f"図の保存先: {get_figures_dir()}")
+    print(f"Figures saved to: {get_figures_dir()}")
     print("Loading simulation results...")
     _x, t_saved, h_saved, P_saved, meta = load_simulation_run()
     age_offset = age_offset_from_meta(meta)

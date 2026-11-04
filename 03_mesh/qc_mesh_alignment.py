@@ -35,13 +35,13 @@ import mesh_generation
 import centerline_extraction
 
 print("="*80)
-print("brain_mesh、vessel_mesh、merged_centerlinesの位置合わせチェック")
+print("Alignment check for brain_mesh, vessel_mesh, and merged_centerlines")
 print("="*80)
 
                      
 participants_csv_path = os.path.join(project_root, 'results', 'participants', 'IXI_HH_participants.csv')
 if not os.path.exists(participants_csv_path):
-    print(f"Error: CSVファイルが見つからない: {participants_csv_path}")
+    print(f"Error: CSV file not found: {participants_csv_path}")
     sys.exit(1)
 
 df_participants = pd.read_csv(participants_csv_path)
@@ -55,11 +55,11 @@ else:
         target_directory_ids = [target_directory_ids]
     directory_ids = [did for did in sorted(all_directory_ids) if did in target_directory_ids]
 
-print(f"処理対象のdirectory_id数: {len(directory_ids)}")
+print(f"directory_ids to process: {len(directory_ids)}")
 if len(directory_ids) > 0:
-    print(f"directory_idリスト: {directory_ids[:10]}{'...' if len(directory_ids) > 10 else ''}")
+    print(f"directory_id list: {directory_ids[:10]}{'...' if len(directory_ids) > 10 else ''}")
 else:
-    print("Warning: 処理対象のdirectory_idがない。")
+    print("Warning: no directory_ids to process.")
     sys.exit(1)
 print("="*80)
 
@@ -83,20 +83,20 @@ def check_alignment(directory_id):
     
                
     if not os.path.exists(vessel_mesh_path):
-        print(f"  Error: vessel_meshが見つからない: {vessel_mesh_path}")
+        print(f"  Error: vessel_mesh not found: {vessel_mesh_path}")
         missing_files.append('vessel_mesh')
         return False, missing_files
     
     if not os.path.exists(merged_centerlines_path):
-        print(f"  Error: merged_centerlinesが見つからない: {merged_centerlines_path}")
+        print(f"  Error: merged_centerlines not found: {merged_centerlines_path}")
         missing_files.append('merged_centerlines')
         return False, missing_files
     
     if not os.path.exists(brain_mesh_lt_path):
-        print(f"  Warning: brain_mesh_ltが見つからない: {brain_mesh_lt_path}")
+        print(f"  Warning: brain_mesh_lt not found: {brain_mesh_lt_path}")
         missing_files.append('brain_mesh_lt')
     if not os.path.exists(brain_mesh_rt_path):
-        print(f"  Warning: brain_mesh_rtが見つからない: {brain_mesh_rt_path}")
+        print(f"  Warning: brain_mesh_rt not found: {brain_mesh_rt_path}")
         missing_files.append('brain_mesh_rt')
     
                           
@@ -153,7 +153,7 @@ def check_alignment(directory_id):
         
         pl.add_key_event('space', close_on_space)
         pl.add_text("Press SPACE to close and continue", position='lower_left', font_size=14, color='red')
-        print(f"  可視化ウィンドウを表示中... (SPACEキーで次へ進む)")
+        print(f"  Showing visualization window... (press SPACE to continue)")
         
         try:
             pl.show(interactive=True)
@@ -164,7 +164,7 @@ def check_alignment(directory_id):
         return True, missing_files
         
     except Exception as e:
-        print(f"  Error: メッシュの読み込みまたは可視化中にエラーが発生した: {e}")
+        print(f"  Error: failed while loading or visualizing mesh: {e}")
         import traceback
         traceback.print_exc()
         return False, missing_files
@@ -188,30 +188,30 @@ for directory_id in directory_ids:
             all_missing_files[directory_id] = missing_files
             
     except KeyboardInterrupt:
-        print(f"\n\n処理が中断された。")
-        print(f"現在の位置: {directory_id}")
-        print(f"再開する場合: target_directory_ids = '{directory_id}' 以降のdirectory_idを指定")
+        print(f"\n\nProcessing interrupted.")
+        print(f"Current position: {directory_id}")
+        print(f"To resume: set target_directory_ids starting from '{directory_id}'")
         break
     except Exception as e:
         error_count += 1
-        print(f"\n  Error: {directory_id}の処理中にエラーが発生した: {e}")
+        print(f"\n  Error: failed while processing {directory_id}: {e}")
         import traceback
         traceback.print_exc()
 
          
 print("\n" + "="*80)
-print("処理完了")
+print("Processing complete")
 print("="*80)
-print(f"処理したdirectory_id数: {total_count}")
-print(f"成功: {success_count}")
-print(f"エラー: {error_count}")
+print(f"Processed directory_id count: {total_count}")
+print(f"Succeeded: {success_count}")
+print(f"Errors: {error_count}")
 
 if all_missing_files:
-    print(f"\n欠損ファイルがあるdirectory_id数: {len(all_missing_files)}")
-    print("欠損ファイルの詳細:")
+    print(f"\ndirectory_ids with missing files: {len(all_missing_files)}")
+    print("Missing file details:")
     for dir_id, missing in all_missing_files.items():
         print(f"  {dir_id}: {', '.join(missing)}")
 else:
-    print("\nすべてのファイルが存在した。")
+    print("\nAll files were present.")
 
 print("="*80)

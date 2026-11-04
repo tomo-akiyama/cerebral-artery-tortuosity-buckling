@@ -197,7 +197,7 @@ def make_H_evolution_figure(
 
 
 def main() -> None:
-    print(f"図の保存先: {get_figures_dir()}")
+    print(f"Figures saved to: {get_figures_dir()}")
     print(
         f"Figure size (standard): {FIGSIZE[0] * 2.54:.2f} cm (W) × "
         f"{FIGSIZE[1] * 2.54:.2f} cm (H)"

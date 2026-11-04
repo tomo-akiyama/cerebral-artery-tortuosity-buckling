@@ -211,13 +211,13 @@ def print_modal_amplitude_v_turn_times(
     if g is not None and mu is not None:
         print(f"\n[g={float(g):g}, mu={float(mu):g}]")
     print("================================================")
-    print("t_cr前後の固有値と振幅転換時刻の比較")
+    print("Eigenvalues around t_cr vs amplitude turnaround times")
     print("================================================")
     for n in mode_ns:
         t_n = t_cr_n_for_mode(t_saved, h_saved, n=int(n), N=N)
-        suffix = "  [評価除外: min|â|<floor]" if int(n) in excluded_set else ""
+        suffix = "  [excluded: min|a-hat|<floor]" if int(n) in excluded_set else ""
         print(
-            f"mode n={int(n)}: 振幅が最小（転換点）の時刻 t_cr_n = {t_n:.2f}{suffix}"
+            f"mode n={int(n)}: time of min amplitude (turnaround) t_cr_n = {t_n:.2f}{suffix}"
         )
 
 

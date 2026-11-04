@@ -10,7 +10,7 @@
 - Acceptance still requires estimated cycles `coverage_hat >= 1.5` via production `classify_row`.
 
 - Elapsed: 19.4 s; rows: 528
-- Config: [local-path-removed] 系統解剖研究室/10 Geometric analysis 220401-/cerebral_artery_bucling_project/analysis_code/sin_trend/configs/length_selection_validation_default.json
+- Config: [local path removed]
 - Config sha256: 7823f23dc0e3d16bc903d583b68da47598c28830dc3a2ac92f55dd2c2b110774
 
 ## Length definitions

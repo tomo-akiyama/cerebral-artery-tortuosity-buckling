@@ -182,14 +182,14 @@ def make_dispersion_animation(
     )
     try:
         ani.save(out_gif_path, writer="pillow", fps=20, dpi=150)
-        print(f"保存: {out_gif_path}")
+        print(f"Saved: {out_gif_path}")
     except Exception as e:
-        print(f"dispersion GIF 保存に失敗した（Pillow が必要）: {e}")
+        print(f"Failed to save dispersion GIF (Pillow required): {e}")
     plt.close(fig)
 
 
 def main() -> None:
-    print(f"GIF の保存先: {get_figures_dir()}")
+    print(f"GIF saved to: {get_figures_dir()}")
     print("Loading simulation results...")
     _x, t_saved, h_saved, P_saved, meta = load_simulation_run()
     mu = mu_from_meta(meta)

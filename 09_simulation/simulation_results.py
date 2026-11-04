@@ -134,7 +134,7 @@ def save_simulation_run(
     if epsilon_saved is not None:
         payload["epsilon_saved"] = np.asarray(epsilon_saved, dtype=float)
     np.savez_compressed(path, **payload)
-    print(f"保存: {os.path.abspath(path)}")
+    print(f"Saved: {os.path.abspath(path)}")
 
 
 def load_simulation_run(
@@ -144,9 +144,9 @@ def load_simulation_run(
         path = result_path()
     if not os.path.isfile(path):
         raise FileNotFoundError(
-            f"シミュレーション結果が見つからない: {path}\n"
-            "先に buckling_simulation_P_coupling.py を実行するか、\n"
-            "simulation/simulation_figure_config.py の ACTIVE_NPZ_PATH を確認すること。"
+            f"Simulation results not found: {path}\n"
+            "Run buckling_simulation_P_coupling.py first, or\n"
+            "check ACTIVE_NPZ_PATH in simulation/simulation_figure_config.py."
         )
     data = np.load(path, allow_pickle=False)
     meta: dict[str, Any] = {}
