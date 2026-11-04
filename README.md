@@ -109,9 +109,7 @@ See `CITATION.cff`. Please also cite the IXI Dataset when using IXI-derived tabl
 
 Tomoaki Akiyama — corresponding contact listed in the manuscript.
 
-## Notes for contributors
+## Notes
 
-- Code comments and docstrings are in English.
 - MCA anatomical labels (`mca_segment`) in the public analysis CSV are retained only for `core_inplane==1` intervals (n=275).
-
-We used Cursor (Anysphere) with automatic model selection to prepare the analysis code for public release.
+- We used Cursor (Anysphere) with automatic model selection to prepare the analysis code for public release.
