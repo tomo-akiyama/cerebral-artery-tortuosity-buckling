@@ -1,0 +1,15 @@
+term,vif
+HEIGHT,3821.0417031484917
+TIV_cuberoot,1746.9529240355887
+bsa_dubois,1511.941758189431
+bmi,210.22868585613222
+m1_radius_median,143.34961385182558
+CSF_relative_volume,90.1240673020738
+AGE,37.8169485836951
+vol_rel_WMH,8.03773517133426
+"C(sex, Treatment(reference='female'))[T.male]",4.469916269531359
+"C(branch_pattern, Treatment(reference='single'))[T.dominant]",2.4464980307127226
+C(side)[T.rt],2.0477405375773143
+"C(branch_pattern, Treatment(reference='single'))[T.codominant]",2.047247235295241
+"C(ethnicity_group, Treatment(reference='white'))[T.asian]",1.2945331448470458
+"C(ethnicity_group, Treatment(reference='white'))[T.black/other/unknown]",1.1918270183580744

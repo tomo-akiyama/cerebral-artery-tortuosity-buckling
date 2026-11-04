@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Jupyter / IDE
+.ipynb_checkpoints/
+.idea/
+.vscode/
+.cursor/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local regenerable heavy outputs
+results/
+data/raw/
+data/preprocessed/
+data/derived/
+*.nii
+*.nii.gz
+*.vtp
+*.ply
+*.gii
+*.vtk
+
+# Figures generated locally
+**/figures/**/*.pdf
+!docs/**
+09_simulation/figures/
+08_statistics/figures/
+10_figures/*.pdf
+
+# Caches / logs
+*.log
+.mplconfig*/
+_pdf_previews/
+
+# Editor / local backups
+*.bak
+*.bak_*
+*~

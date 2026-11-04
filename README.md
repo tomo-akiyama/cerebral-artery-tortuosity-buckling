@@ -1,193 +1,116 @@
-# Cerebral Artery Tortuosity and Buckling Analysis
+# Cerebral artery tortuosity and growth-driven buckling
 
-## Overview
-This repository contains all custom Python code used in the study **“Geometric analysis and mechanical buckling model of human cerebral artery tortuosity”**.  
+Custom Python pipelines and **processed measurements** accompanying the manuscript:
 
-This study aims to quantify age-related changes in cerebral arterial tortuosity and to develop a mathematical model based on a mechanical buckling framework, using human brain MRI data. The analyses include MRI preprocessing, vessel centerline extraction, quantification of vascular tortuosity, numerical simulations based on a mechanical buckling model, and statistical analyses.  
+> Akiyama T., Yoshimoto K., Miura T.  
+> *Growth-driven mechanical buckling as a mechanism of age-related tortuosity in human cerebral arteries.*
 
+This repository does **not** redistribute IXI MRI volumes. Download IXI separately, then run the
+preprocessing stages locally if you need to regenerate meshes/centerlines.
 
-本リポジトリは**脳動脈弯曲の形態変化と座屈メカニズムの数理解析**に関する研究で使用した**すべてのカスタム Python コード**を収録している。本研究ではヒトの**脳主幹動脈および皮質動脈**の加齢に伴う血管蛇行の変化を対象とし、頭部MRIデータの前処理、血管中心線の抽出、血管弯曲の定量評価、座屈モデルに基づく数値シミュレーション、および統計解析を統合的に行っている。  
+Repository (intended): https://github.com/tomo-akiyama/cerebral-artery-tortuosity-buckling
 
----
+## Licenses
 
-## Datasets
+| Content | License |
+|---------|---------|
+| Source code | MIT (`LICENSE`) |
+| IXI-derived CSVs (`data/participants`, `data/m1`, `data/periodic_wave`) | CC BY-SA 3.0 (`LICENSE-DATA`) |
+| Simulation outputs & analysis summaries (`data/simulation`, `data/statistics`, `data/validation`) | CC BY 4.0 (`LICENSE-DATA`) |
 
-All MRI data used in this study are publicly available human datasets, including T1-weighted images and MR angiography. 
+## Environment
 
-The IXI Dataset can be downloaded from the following URL:  [IXI Dataset](https://brain-development.org/ixi-dataset/)
-
----
-
-## Directory Structure
-
-Below is the directory structure of the project:
-
-    cerebral-artery-tortuosity-buckling/
-        data/
-            raw/                               # raw MRI data (nii.gz files)
-            preprocessed/                      # preprocessed MRI data
-                MRA_preprocessed/
-                    segmentations/
-                    vessel_meshes/
-                    
-                T1_preprocessed/
-                    post_cat12/
-                    brain_meshes/
-                    
-            derived/
-                vessel_centerlines/             # centerline extraction
-                morphometrics/                  # 解析で生成される中間表現（array, per-segment outputs）
-                    m1_features/
-
-        notebooks/            # 探索用 Jupyter notebook (最終的には不要)
-
-        analysis_code/
-            preprocessing/
-                run_mri_preprocessing.py            # pipeline for preprocessing
-                preprocessing.py                    # function modules
-            mesh/
-                run_mesh_generation.py             # pipeline for mesh generation
-                mesh_generation.py                 # function modules
-                m1_definition.py                   # function modules (defining distal M1 end)
-
-                run_centerline_extraction.py       # pipeline for centerline extraction
-                centerline_extraction.py           # function modules
-
-                run_vessel_mesh_statistics.py      # pipeline for calculating the statistics of vessel mesh
-                compute_vessel_mesh_statistics.py   # function modules
-
-            morphometrics/                      # segmentごとの形態計測
-                run_extract_m1_features.py      # 
-
-                *run_sin_trend_fitting.py
-                *compute_sin_trend_metrics.py
-                *sin_trend_utils.py
-            
-            utils/                              # common utility
-
-        simulation/
-            run_buckling_simulation_semi_implicit.py    # semi-implicit Euler simulation of cerebral artery buckling dynamics
-            run_bifurcation_and_wavelength_selection.py # Pi_P sweep for bifurcation and wavelength selection
-            parameters.py                               # parameters for buckling simulations
-
-        statistics/           # LMM, GAM, GAMM の統計解析コード
-            summarize_demographic.py            # subjects / Demographics
-            summarize_basic_morphometrics.py    # basic morphometrics
-            regression_*.py                # Statistical analysis
-
-        figures/              # 論文で使用した図
-
-        results/              # 中間・最終解析結果（CSV など）
-            participants/
-                IXI_HH_subjects.csv         # participant-level integrated analysis table
-            basic_morphometrics/            # 何が計算されたか（解析入力）
-                basic_morphometrics.csv
-                per_case/                   # 症例ごとのログ）
-            morphometrics/
-                sin_trend/
-            tables/                         # 論文に出す最終形
-                Table1_demographics.csv
-                Table2_basic_morphometrics.csv
-
-        environment.yml       # conda 環境（再現性の確保）
-        README.md             # このファイル  
-        **日本語部分は修正予定**  
-
----
-
-## Requirements
-
-The Vascular Modeling Toolkit (VMTK, http://www.vmtk.org/) requires an x86_64 (Intel / AMD) Conda environment.
-
-- Windows / Linux with Intel or AMD CPUs are supported.
-- On Apple Silicon (arm64) Macs, VMTK must be run under Rosetta using an x86_64 Conda distribution.
+- Python **3.10**
+- Key packages: NumPy, SciPy, pandas, statsmodels, scikit-image, VTK, **VMTK 1.5.0**, PyMeshLab, PyVista, ANTsPy, brainextractor
+- External (not in Conda env): **MATLAB + SPM12/CAT12 12.9**, **3D Slicer 5.6**
 
 ```bash
 conda env create -f environment.yml
 conda activate cerebral-tortuosity-buckling
 ```
 
----
+VMTK requires an **x86_64** Conda stack (use Rosetta on Apple Silicon).
 
-## Steps for Analysis
+## Repository layout
 
-The analysis presented in this study can be reproduced by executing the following Python scripts in order.
+| Directory | Role |
+|-----------|------|
+| `01_preprocessing/` | Resample, MRA denoising/N4/BET, registration, hysteresis segmentation |
+| `02_segmentation/` | Notes for manual 3D Slicer QC (no automated code) |
+| `03_mesh/` | Brain-surface remesh; vessel marching cubes / Taubin / Butterfly |
+| `04_centerline/` | VMTK centerline extraction, smoothing, resampling |
+| `05_m1_analysis/` | Limen-insulae M1 definition and M1 morphometrics |
+| `06_periodic_wave/sin_trend/` | Bishop-frame sinusoid-plus-trend pipeline (**paper analysis code**) |
+| `07_validation/` | Pointers to synthetic accuracy / procedure-bias scripts + summary data |
+| `08_statistics/` | OLS / spline / piecewise / bootstrap analyses and paper figure/table scripts |
+| `09_simulation/` | Growth-driven buckling PDE simulation and simulation figures |
+| `10_figures/` | Shared plotting config |
+| `data/` | Processed tables + ACTIVE simulation `.npz` (no raw MRI) |
+| `lib/` | Shared utilities |
+| `docs/` | CAT12 notes, data dictionary |
 
-### 1. Image processing
-- `analysis_code/preprocessing.py`
-- `analysis_code/segmentation.py`
-- `analysis_code/centerline_extraction.py`
+Symlinks `simulation` → `09_simulation`, `statistics` → `08_statistics`, and `figures` → `10_figures`
+preserve historical import names.
 
-### 2. Geometric analysis
-- `analysis_code/curvature_torsion.py`
-- `analysis_code/feature_extraction.py`
+## Pipeline order (high level)
 
-### 3. Buckling model and numerical simulation
-- `simulation/buckling_solver.py`
-- `simulation/amplitude_estimation.py`
-- `simulation/wavelength_radius_scaling.py`
+1. Download IXI Hammersmith Hospital MRA + T1WI.  
+2. `01_preprocessing/run_mri_preprocessing.py` — 0.5 mm B-spline resample; MRA denoise (`p=1,r=3`), N4, BET (`bt=0.45`), TRSAA→SyNOnly; hysteresis 99.9/98.5.  
+3. CAT12 on resampled T1 (GUI; see `docs/CAT12_NOTES.md`).  
+4. `03_mesh/run_surface_remesh.py` — isotropic remesh (10 iter, 0.33 mm).  
+5. Manual mask QC in 3D Slicer (`02_segmentation/README.md`).  
+6. `03_mesh/run_mesh_generation.py` — discrete marching cubes; remove ≤62.5 mm³; Taubin; Butterfly×2.  
+7. `04_centerline/run_centerline_extraction.py` — VMTK; smooth 1.2×100; resample 0.1 mm.  
+8. `05_m1_analysis/` — M1 endpoints and \(L\), \(L_0\), \(\rho\).  
+9. `06_periodic_wave/sin_trend/31_*.py` → `32_*.py` → `33_*.py` — periodic-wave quantification.  
+10. `07_validation` / `36_*`–`44_*` — synthetic accuracy tests (optional regenerate).  
+11. `08_statistics/` — regressions and Main/SI figure–table scripts.  
+12. `09_simulation/buckling_simulation_P_coupling.py` — numerical model; figures via `simulation_figure_config.py`.
 
-### 4. Statistical analysis
-- `statistics/stat_LMM.py`   (Linear mixed-effects model)
-- `statistics/stat_GAM.py`   (Generalized additive model)
-- `statistics/stat_GAMM.py`  (GAMM using R mgcv; optional)
+**Shipped data already include steps 8–12 outputs** needed to reproduce statistics/figures without raw MRI.
 
-### 5. Figure generation
-- `analysis_code/plotting.py`
+## Script ↔ paper figure/table map (selected)
 
-Generated figures and tables are saved in the `figures/` and `results/` directories.
+| Script | Paper item |
+|--------|------------|
+| `08_statistics/00_Figure_age_sex_distribution.py` | SI age/sex distribution |
+| `08_statistics/01_summarize_M1_morphometrics.py` + `02_*`/`03_*` tables | SI M1 morphology & regression tables |
+| `08_statistics/03_Figure_M1_Length_EuclidDistance_rho*.py` / `101_Figure_*wavelength_scaling*.py` | Main geometric figure (M1 panels + wavelength scaling) |
+| `08_statistics/03_Figure_M1_rho_nonlinear_patterns.py` / `03_Table_piecewise_models_rho.py` | SI ρ nonlinearity / piecewise table |
+| `08_statistics/11_model_validation*.py` + wavelength/amplitude figure scripts | Main wavelength–diameter / amplitude analyses; SI model tables |
+| `08_statistics/13_Figure_age_related_visibility.py` | SI age-related visibility |
+| `09_simulation/simulation_figure_config.py` (+ `Figure_*.py`) | Main numerical simulation figure |
+| Schematic Main/SI illustrations (MIP, anatomy, flowcharts, etc.) | Created outside this repo (not included) |
 
----
+## Reproducing statistics with shipped CSVs
 
-##  Statistical Analysis
+From the repository root:
 
-- LMM（線形混合効果モデル）  
-- GAM（一般化加法モデル）  
-- GAMM（mgcv を用いた非線形＋ランダム効果モデル）  
-- AIC / BIC  
-- 尤度比検定（LRT）  
-- ブートストラップ信頼区間  
-**日本語部分は修正予定**
+```bash
+python 08_statistics/00_Figure_age_sex_distribution.py
+python 08_statistics/101_Figure_M1_Length_EuclidDistance_rho_wavelength_scaling.py
+python 08_statistics/11_model_validation.py
+python 09_simulation/simulation_figure_config.py
+```
 
----
+Default analysis CSV: `data/periodic_wave/IXI_HH_sin_trend_analysis_dataset.csv`  
+ACTIVE simulation: `data/simulation/buckling_simulation_P_coupling_age_20to80years_mu0p005_g0p35/P_coupling.npz`
 
-##  Mechanical Buckling Model
+## IXI data access
 
-`simulation/` includes the following:
-
-- Euler buckling モデル  
-- 弱非線形近似（amplitude equation）  
-- 座屈波長 λ と血管半径 r のスケーリング  
-- 血圧・tethering・伸長 mismatch の負荷分解  
-- 加齢による tortuosity 増大の時間発展モデル  
-**日本語部分は修正予定**  
-
----
-
-## Dependencies
-
-See `environment.yml` for details of the Python/Conda environment used in this study.  
-
----
+http://brain-development.org/ixi-dataset/  
+Use the Hammersmith Hospital (HH) 3 T subset with paired MRA and T1WI, under CC BY-SA 3.0.
 
 ## Citation
 
-When using these codes, please cite the following reports:   
-Akiyama T., et al. (2025) Geometric analysis and mechanical buckling model of human cerebral artery tortuosity. Journal.  
+See `CITATION.cff`. Please also cite the IXI Dataset when using IXI-derived tables.
 
----
+## Contact
 
-## Contacts
+Tomoaki Akiyama — corresponding contact listed in the manuscript.
 
-**First Author**  
-Tomoaki Akiyama (秋山 智明), MD  
-Email: akiyama.tomoaki@kyudai.jp  
-Affiliation:  
-- Department of Neurosurgery, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 脳神経外科)  
-- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)   
+## Notes for contributors
 
-**Corresponding Author**  
-Prof. Takashi Miura (三浦 岳), MD, PhD  
-Email: miura.takashi.869@m.kyushu-u.ac.jp  
-Affiliation:  
-- Department of Anatomy and Cell Biology, Graduate School of Medical Sciences, Kyushu University, Fukuoka, Fukuoka, Japan (九州大学大学院医学研究院 系統解剖学分野)  
+- Entry-point module docstrings for the main runners were rewritten in English.
+- Some Japanese inline comments remain inside `06_periodic_wave/sin_trend/` helper modules; behavior is unchanged. Further Englishization can be done without changing logic.
+- MCA anatomical labels (`mca_segment`) in the public analysis CSV are retained only for `core_inplane==1` intervals (n=275).

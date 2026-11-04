@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the article below."
+title: "cerebral-artery-tortuosity-buckling"
+authors:
+  - family-names: Akiyama
+    given-names: Tomoaki
+    orcid: "https://orcid.org/0000-0002-5104-5829"
+  - family-names: Yoshimoto
+    given-names: Koji
+    orcid: "https://orcid.org/0000-0001-7912-2024"
+  - family-names: Miura
+    given-names: Takashi
+    orcid: "https://orcid.org/0000-0002-9465-275X"
+keywords:
+  - cerebral arteries
+  - tortuosity
+  - buckling
+  - MRA
+  - biomechanics
+license: MIT
+repository-code: "https://github.com/tomo-akiyama/cerebral-artery-tortuosity-buckling"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Akiyama
+      given-names: Tomoaki
+    - family-names: Yoshimoto
+      given-names: Koji
+    - family-names: Miura
+      given-names: Takashi
+  title: "Growth-driven mechanical buckling as a mechanism of age-related tortuosity in human cerebral arteries"
+  year: 2026
+  notes: "Update with bioRxiv/DOI after preprint posting."

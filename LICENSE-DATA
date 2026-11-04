@@ -1,0 +1,41 @@
+Data license notice
+==================
+
+This repository contains processed measurement tables and simulation outputs.
+Licenses differ by file origin.
+
+1) IXI-derived measurement tables (CC BY-SA 3.0)
+-----------------------------------------------
+Files under:
+  data/participants/
+  data/m1/
+  data/periodic_wave/
+
+These tables were derived from the IXI Dataset
+(http://brain-development.org/ixi-dataset/), which is distributed under the
+Creative Commons Attribution-ShareAlike 3.0 Unported License (CC BY-SA 3.0).
+ShareAlike obligations therefore apply to these derived tables.
+
+License text: https://creativecommons.org/licenses/by-sa/3.0/
+
+When redistributing these files or adaptations of them, you must:
+  - give appropriate credit to the IXI Dataset and to this repository/paper;
+  - indicate if changes were made;
+  - distribute adaptations under CC BY-SA 3.0 (or a compatible license).
+
+2) Simulation outputs and non-IXI summary tables (CC BY 4.0)
+-----------------------------------------------------------
+Files under:
+  data/simulation/
+  data/statistics/
+  data/validation/
+
+These materials are licensed under Creative Commons Attribution 4.0
+International (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+You must give appropriate credit. ShareAlike is not required for this subset.
+
+3) Code
+-------
+Python source code in this repository is licensed separately under the MIT
+License (see LICENSE).

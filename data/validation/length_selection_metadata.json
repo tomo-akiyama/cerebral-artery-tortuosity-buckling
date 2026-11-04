@@ -1,0 +1,9 @@
+{
+  "output_tag": "sin_trend",
+  "measurement_version": "sin_trend",
+  "n_replicates": 20,
+  "n_per_replicate": 500,
+  "seed": 0,
+  "created_utc": "2026-10-27T15:22:43.391710+00:00",
+  "note": "Absolute local paths removed for public release. Large per-case CSVs omitted; regenerate with 07_validation scripts."
+}

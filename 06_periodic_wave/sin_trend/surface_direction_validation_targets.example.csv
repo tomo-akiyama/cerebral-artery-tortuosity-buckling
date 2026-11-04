@@ -1,0 +1,4 @@
+directory_id,segment_id,geometry_note
+EXAMPLE_DIR_001,0,平坦な場所の例（実IDに置き換える）
+EXAMPLE_DIR_001,1,峰と峰を通る場所の例（任意メモ）
+EXAMPLE_DIR_002,3,急な側壁付近の例（任意メモ）

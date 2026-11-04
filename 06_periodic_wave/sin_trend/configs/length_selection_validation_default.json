@@ -1,0 +1,162 @@
+{
+  "schema_version": 2,
+  "frame_reference": "baseline",
+  "target_ds_mm": 0.1,
+  "removal_points": 10,
+  "voxel_size_mm": 0.5,
+  "N_cyc_search": 0.5,
+  "q_fine": 8,
+  "search_band_mode": "geometry_longwave_2D",
+  "acceptance_flag": "core_all",
+  "note_acceptance": "core_all is alias of core_periodic; core_inplane/surface are not used",
+  "suite_A": {
+    "enabled": true,
+    "diameter_mm": [
+      1.4
+    ],
+    "lambda_true_mm": [
+      10.0,
+      20.0,
+      40.0
+    ],
+    "amplitude_mm": [
+      0.5,
+      1.0
+    ],
+    "phase_rad": [
+      0.0,
+      0.7853981633974483,
+      1.5707963267948966,
+      2.356194490192345
+    ],
+    "n_true_targets": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      1.75,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "backgrounds": [
+      {
+        "name": "straight",
+        "type": null,
+        "curvature_mm": 0.0
+      },
+      {
+        "name": "quadratic_c0p005",
+        "type": "quadratic",
+        "curvature_mm": 0.005
+      }
+    ],
+    "noise_sd_mm": 0.0,
+    "n_true_match_atol": 0.02,
+    "parent_length_atol_mm": 0.05,
+    "parent_extra_cycles": 0.75,
+    "window_start_pad_cycles": 0.05
+  },
+  "suite_B": {
+    "enabled": true,
+    "clinical_csv": "results/analysis/sin_trend/run_154_baseline_v2_r0/baseline/IXI_HH_sin_trend_analysis_dataset.csv",
+    "population_mode": "pre_selection",
+    "dl_pairing": [
+      "paired",
+      "shuffled_DL"
+    ],
+    "amplitude_mm": [
+      0.5,
+      1.0
+    ],
+    "lambda_scenarios": [
+      {
+        "name": "proportional_sigma0",
+        "kind": "proportional",
+        "k_lambda_over_D": 17.4,
+        "epsilon_sd": 0.0
+      },
+      {
+        "name": "proportional_sigma0p2",
+        "kind": "proportional",
+        "k_lambda_over_D": 17.4,
+        "epsilon_sd": 0.2
+      },
+      {
+        "name": "independent_perm_of_proportional_sigma0",
+        "kind": "independent_permute",
+        "source_scenario": "proportional_sigma0"
+      }
+    ],
+    "backgrounds": [
+      {
+        "name": "straight",
+        "type": null,
+        "curvature_mm": 0.0
+      }
+    ],
+    "include_quadratic_background": false,
+    "length_atol_mm": 0.05,
+    "length_rtol": 0.0
+  },
+  "diagnostics": {
+    "save_example_waveforms": false,
+    "example_case_ids": [],
+    "max_example_plots": 3
+  },
+  "smoke_overrides": {
+    "suite_A": {
+      "lambda_true_mm": [
+        20.0
+      ],
+      "amplitude_mm": [
+        1.0
+      ],
+      "phase_rad": [
+        0.0,
+        1.5707963267948966
+      ],
+      "n_true_targets": [
+        1.25,
+        1.5,
+        2.0
+      ],
+      "backgrounds": [
+        {
+          "name": "straight",
+          "type": null,
+          "curvature_mm": 0.0
+        }
+      ]
+    },
+    "suite_B": {
+      "amplitude_mm": [
+        1.0
+      ],
+      "lambda_scenarios": [
+        {
+          "name": "proportional_sigma0",
+          "kind": "proportional",
+          "k_lambda_over_D": 17.4,
+          "epsilon_sd": 0.0
+        },
+        {
+          "name": "independent_perm_of_proportional_sigma0",
+          "kind": "independent_permute",
+          "source_scenario": "proportional_sigma0"
+        }
+      ],
+      "dl_pairing": [
+        "paired"
+      ],
+      "backgrounds": [
+        {
+          "name": "straight",
+          "type": null,
+          "curvature_mm": 0.0
+        }
+      ]
+    }
+  }
+}
