@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 35 compare frame methods."""
+"""Public pipeline module: 06 compare frame methods."""
 
 from __future__ import annotations
 

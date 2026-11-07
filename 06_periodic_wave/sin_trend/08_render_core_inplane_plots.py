@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 39 render core inplane plots."""
+"""Public pipeline module: 08 render core inplane plots."""
 
 from __future__ import annotations
 

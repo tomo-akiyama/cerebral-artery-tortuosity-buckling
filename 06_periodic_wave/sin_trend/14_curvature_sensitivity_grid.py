@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 42 curvature sensitivity grid."""
+"""Public pipeline module: 14 curvature sensitivity grid."""
 
 from __future__ import annotations
 

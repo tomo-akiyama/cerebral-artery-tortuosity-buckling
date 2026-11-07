@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 38 surface direction validation."""
+"""Public pipeline module: 09 surface direction validation."""
 
 from __future__ import annotations
 

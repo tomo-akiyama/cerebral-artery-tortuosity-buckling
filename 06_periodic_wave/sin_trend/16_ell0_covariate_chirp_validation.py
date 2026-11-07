@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 44 ell0 covariate chirp validation."""
+"""Public pipeline module: 16 ell0 covariate chirp validation."""
 from __future__ import annotations
 
 import argparse

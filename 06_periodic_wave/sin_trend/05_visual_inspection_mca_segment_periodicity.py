@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 34 visual inspection mca segment periodicity."""
+"""Public pipeline module: 05 visual inspection mca segment periodicity."""
 
 from __future__ import annotations
 

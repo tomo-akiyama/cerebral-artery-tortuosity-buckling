@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 37 run clinical models."""
+"""Public pipeline module: 07 run clinical models."""
 
 from __future__ import annotations
 

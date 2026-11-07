@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 36 measurement validation."""
+"""Public pipeline module: 10 measurement validation."""
 
 from __future__ import annotations
 
