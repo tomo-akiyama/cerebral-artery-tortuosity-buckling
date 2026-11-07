@@ -89,7 +89,7 @@ Classification revision: `CLASSIFICATION_REVISION=v2_partialR2_050_c4` (c4: Pred
 
 - **Measurement stage**: centerline processing, baseline/frame estimation, trim, periodic fitting, and measurement Core decision; writes measurement CSV and pointwise NPZ. With `--measure-only`, surface evaluation is `not_run`.
 - **Surface stage**: reads saved `P`, `P_full`, `d_latent`, `T0` and post-trim radius; runs the same mesh crop, normal estimation, and classification as production. With `--surface-only`, fitting is not repeated. Estimators and `core_periodic` / `core_all` stay fixed; only surface classification is added into tag-specific products.
-- **full (default in 31)**: after saving the measurement stage, run the surface stage. Primary products are also written to separate CSV/status paths.
+- **full (default in 01)**: after saving the measurement stage, run the surface stage. Primary products are also written to separate CSV/status paths.
 
 Measurement `voxel_size` is fixed in the surface stage and cannot be overridden. Surface JSON may specify surface settings only. Settings are checked for finiteness and allowed ranges. Specifying only `R_tan_thresh` resolves `R_out_thresh=1−R_tan_thresh`; specifying both requires consistency.
 
@@ -97,4 +97,4 @@ Measurement `voxel_size` is fixed in the surface stage and cannot be overridden.
 
 Search radius in mm is `r_patch=clip((1+patch_r_ratio)×r_trim, r_min_mm, r_max_mm)`, so default ratio=3 is 4× before clamps. Mesh-crop padding per axis is `max(10 voxel, ceil(r_patch_vox))` so larger search radii do not truncate the search ball. Anchor spacing along the centerline uses the saved centerline sample spacing.
 
-Surface aggregation in 32 uses tag-specific status completion, compares SHA-256 of surface CSV/status and each row’s source measurement CSV against the current measurement CSV, and rejects mismatches or missing source measurement CSV. 33 reads metadata beside the chosen long CSV and isolates non-primary analysis outputs per tag.
+Surface aggregation in 03 uses tag-specific status completion, compares SHA-256 of surface CSV/status and each row’s source measurement CSV against the current measurement CSV, and rejects mismatches or missing source measurement CSV. 04 reads metadata beside the chosen long CSV and isolates non-primary analysis outputs per tag.
