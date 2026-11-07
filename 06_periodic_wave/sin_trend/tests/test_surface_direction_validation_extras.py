@@ -162,7 +162,7 @@ class TestAggregateOverallStatus(unittest.TestCase):
 
         import pandas as pd
 
-        path = Path(__file__).resolve().parents[1] / "38_surface_direction_validation.py"
+        path = Path(__file__).resolve().parents[1] / "09_surface_direction_validation.py"
         spec = importlib.util.spec_from_file_location("surf_dir_val38", path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader is not None
@@ -302,7 +302,7 @@ class TestClinicalAggregateAndPerpT(unittest.TestCase):
     def _load38(self):
         import importlib.util
 
-        path = Path(__file__).resolve().parents[1] / "38_surface_direction_validation.py"
+        path = Path(__file__).resolve().parents[1] / "09_surface_direction_validation.py"
         spec = importlib.util.spec_from_file_location("surf_dir_val38_clin", path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader is not None

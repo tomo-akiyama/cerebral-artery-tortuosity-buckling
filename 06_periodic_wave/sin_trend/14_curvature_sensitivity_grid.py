@@ -287,7 +287,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             ),
             "config_sha256": sha256_json(cfg),
             "source_hashes": source_code_hashes(
-                ["42_curvature_sensitivity_grid.py", "sin_trend_synthetic.py"],
+                ["14_curvature_sensitivity_grid.py", "sin_trend_synthetic.py"],
                 here=_HERE,
             ),
             "design": {

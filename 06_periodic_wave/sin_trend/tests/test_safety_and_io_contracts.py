@@ -20,7 +20,7 @@ def test_source_code_hashes_local_only():
     h = source_code_hashes()
     assert "sin_trend_paths.py" in h
     assert h["sin_trend_paths.py"] != "missing"
-    assert h.get("31_run_sin_trend_fitting.py") != "missing"
+    assert h.get("01_run_sin_trend_fitting.py") != "missing"
     assert OUTPUT_TAG == "sin_trend"
     assert isinstance(h, dict)
 
@@ -129,7 +129,7 @@ def test_version_rejects_foreign_method():
 def test_ixi_id_float_int_compatible():
     import importlib.util
 
-    path = _HERE / "33_prepare_core_inplane_dataset.py"
+    path = _HERE / "04_prepare_core_inplane_dataset.py"
     spec = importlib.util.spec_from_file_location("prep33", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -289,7 +289,7 @@ def test_stress_only_conditions_include_curved_and_short():
 
     from sin_trend_synthetic import stress_validation_conditions
 
-    path = _HERE / "36_measurement_validation.py"
+    path = _HERE / "10_measurement_validation.py"
     spec = importlib.util.spec_from_file_location("val36_stress", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -313,7 +313,7 @@ def test_stress_only_conditions_include_curved_and_short():
 def test_target_ds_mm_cli_removed():
     import importlib.util
 
-    path = _HERE / "36_measurement_validation.py"
+    path = _HERE / "10_measurement_validation.py"
     spec = importlib.util.spec_from_file_location("val36_ds", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -331,7 +331,7 @@ def test_target_ds_mm_cli_removed():
 def test_metadata_diameters_from_actual_conditions():
     import importlib.util
 
-    path = _HERE / "36_measurement_validation.py"
+    path = _HERE / "10_measurement_validation.py"
     spec = importlib.util.spec_from_file_location("val36_meta_D", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -357,7 +357,7 @@ def test_summarize_reports_core_abs_errors_separately():
 
     import pandas as pd
 
-    path = _HERE / "36_measurement_validation.py"
+    path = _HERE / "10_measurement_validation.py"
     spec = importlib.util.spec_from_file_location("val36_sum", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -505,7 +505,7 @@ def test_selected_rank_copied_to_measurement_row():
 def test_gui_cli_include_surface_unevaluable():
     import importlib.util
 
-    path = _HERE / "34_visual_inspection_mca_segment_periodicity.py"
+    path = _HERE / "05_visual_inspection_mca_segment_periodicity.py"
     spec = importlib.util.spec_from_file_location("gui34", path)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None

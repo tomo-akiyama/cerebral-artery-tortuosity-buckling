@@ -15,7 +15,7 @@ import pandas as pd
 _HERE = Path(__file__).resolve().parents[1]
 if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
-spec = importlib.util.spec_from_file_location("surface_validation_workflow", _HERE / "38_surface_direction_validation.py")
+spec = importlib.util.spec_from_file_location("surface_validation_workflow", _HERE / "09_surface_direction_validation.py")
 validation = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(validation)
 import sin_trend_paths as paths

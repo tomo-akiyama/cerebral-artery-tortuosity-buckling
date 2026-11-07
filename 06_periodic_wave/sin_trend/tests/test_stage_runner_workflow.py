@@ -28,8 +28,8 @@ def load_script(name, filename):
 class TestStageRunnerWorkflow(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.runner = load_script("runner_stage_workflow", "31_run_sin_trend_fitting.py")
-        cls.batch = load_script("batch_stage_workflow", "31_batch_sin_trend_fitting.py")
+        cls.runner = load_script("runner_stage_workflow", "01_run_sin_trend_fitting.py")
+        cls.batch = load_script("batch_stage_workflow", "02_batch_sin_trend_fitting.py")
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -141,7 +141,7 @@ class TestStageRunnerWorkflow(unittest.TestCase):
             called.append(cmd)
             return types.SimpleNamespace(returncode=0)
         with patch.object(self.batch, "read_participant_status", return_value={"surface_enabled": True}), patch.object(self.batch, "verify_participant_complete_for_resume", return_value=(True, "ok")) as verify, patch.object(self.batch.subprocess, "run", side_effect=child):
-            rec = self.batch.run_one_participant(runner=HERE / "31_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
+            rec = self.batch.run_one_participant(runner=HERE / "01_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
         self.assertTrue(verify.call_args.kwargs["expect_surface"])
         self.assertEqual(len(called), 0)
         self.assertEqual(rec[0]["outcome"], "skipped_complete")
@@ -158,7 +158,7 @@ class TestStageRunnerWorkflow(unittest.TestCase):
                 return False, "surface_incomplete:surface_eval_failed"
             return True, "ok"
         with patch.object(self.batch, "read_participant_status", return_value={"surface_enabled": True}), patch.object(self.batch, "verify_participant_complete_for_resume", side_effect=verify_side_effect) as verify, patch.object(self.batch.subprocess, "run", side_effect=child):
-            rec = self.batch.run_one_participant(runner=HERE / "31_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
+            rec = self.batch.run_one_participant(runner=HERE / "01_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
         self.assertEqual(verify.call_count, 2)
         self.assertEqual(len(called), 1)
         self.assertIn("--surface-only", called[0])
@@ -168,7 +168,7 @@ class TestStageRunnerWorkflow(unittest.TestCase):
         args = self.batch.parse_args(["--run-id", self.run, "--directory-id", self.did, "--surface-only", "--resume", "--no-plots"])
         logs = self.root / "logs"; logs.mkdir()
         with patch.object(self.batch, "verify_participant_complete_for_resume", side_effect=AssertionError("surface-only queried measurement")), patch.object(self.batch.subprocess, "run", return_value=types.SimpleNamespace(returncode=0)) as child:
-            self.batch.run_one_participant(runner=HERE / "31_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
+            self.batch.run_one_participant(runner=HERE / "01_run_sin_trend_fitting.py", project_root=self.root, directory_id=self.did, run_id=self.run, frames=[self.frame], args=args, log_dir=logs)
         self.assertIn("--surface-only", child.call_args.args[0])
 
 

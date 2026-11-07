@@ -4,7 +4,7 @@
 (3) Accuracy across cycle counts
 (4) Procedure-induced bias in wavelength–diameter scaling
 
-Unified entry: 39_synthetic_accuracy_validation.py --part 3|4|3+4
+Unified entry: 11_synthetic_accuracy_validation.py --part 3|4|3+4
 Docs: SYNTHETIC_ACCURACY_VALIDATION.md
 
 Durable per-case results and strict resume.
@@ -40,7 +40,7 @@ from sin_trend_length_selection_validation import (
     DEFAULT_CLINICAL_CSV_REL, DEFAULT_CONFIG_PATH, VALIDATION_SOURCE_FILES,
     aggregate_suite_A, aggregate_suite_B_across_replicates, aggregate_suite_B_replicate,
     apply_smoke_overrides, build_suite_B_replicate_jobs, check_resume_consistency,
-    crosscheck_with_36_short_coverage, ensure_result_schema, iter_suite_A_jobs,
+    crosscheck_with_measurement_short_coverage, ensure_result_schema, iter_suite_A_jobs,
     length_selection_validation_root, load_clinical_DL_pool, load_config,
     measurement_config_from_validation_cfg, resume_fingerprint, run_suite_A_job,
     run_suite_A_jobs_batched, run_suite_B_job, save_summary_figures,
@@ -199,7 +199,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         raise ValueError("n-replicates, n-per-replicate and n-workers must be positive")
     meas_cfg = measurement_config_from_validation_cfg(vcfg)
     if args.suite == "crosscheck36":
-        cross = crosscheck_with_36_short_coverage(meas_cfg)
+        cross = crosscheck_with_measurement_short_coverage(meas_cfg)
         print(json.dumps(cross, indent=2))
         return 0 if cross["ok"] else 2
 
@@ -309,10 +309,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             figures += save_example_waveforms(jobs, df, meas_cfg, vcfg, out_dir / "figures/examples")
 
         try:
-            cross = crosscheck_with_36_short_coverage(meas_cfg)
+            cross = crosscheck_with_measurement_short_coverage(meas_cfg)
         except Exception as exc:
             cross = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
-        atomic_write_json(cross, out_dir / "crosscheck_36_short_coverage.json")
+        atomic_write_json(cross, out_dir / "crosscheck_measurement_short_coverage.json")
         n_gen_fail = int(df.generation_status.ne("ok").sum())
         n_exec_fail = int((df.generation_status.eq("ok") & df.execution_status.ne("ok")).sum())
         status = "complete" if not (n_gen_fail or n_exec_fail) and cross["ok"] else "partial"

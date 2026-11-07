@@ -1,16 +1,16 @@
 # Synthetic accuracy validation
 
 End-to-end checks of amplitude/wavelength accuracy on synthetic centerlines, and of how interval length / acceptance affect the wavelength–diameter relation.  
-Entry point: `39_synthetic_accuracy_validation.py` (implementation calls 36 / 42 / 40).
+Entry point: `11_synthetic_accuracy_validation.py` (implementation calls 36 / 42 / 40).
 
 Shared measurement settings: \(D=1.4\,\mathrm{mm}\) (lumen), \(ds=0.1\,\mathrm{mm}\), 10-point trim at each end, \(N_{\mathrm{cyc,search}}=0.5\), search band `geometry_longwave_2D` (\(\lambda_{\min}=2D\)), frame = baseline arclength, acceptance `core_all`.
 
 | # | Name | Script |
 |---|------|--------|
-| (1) | Accuracy across amplitudes, wavelengths, and phases | `36_measurement_validation.py` |
-| (2) | Accuracy across background curvatures | `42_curvature_sensitivity_grid.py` |
-| (3) | Accuracy across cycle counts | `40_length_selection_validation.py --suite A` |
-| (4) | Procedure-induced bias in wavelength–diameter scaling | `40_length_selection_validation.py --suite B` |
+| (1) | Accuracy across amplitudes, wavelengths, and phases | `10_measurement_validation.py` |
+| (2) | Accuracy across background curvatures | `14_curvature_sensitivity_grid.py` |
+| (3) | Accuracy across cycle counts | `12_length_selection_validation.py --suite A` |
+| (4) | Procedure-induced bias in wavelength–diameter scaling | `12_length_selection_validation.py --suite B` |
 
 ---
 
@@ -28,8 +28,8 @@ With known \(A,\lambda,\varphi\) and a post-trim target period count, check that
 Input \(n_{\mathrm{cycles}}\) is back-calculated so the post-trim count equals \(N_{\mathrm{target}}\). noise = 0. Total 156 cases.
 
 ```bash
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part 1
-# equivalent: python 06_periodic_wave/sin_trend/36_measurement_validation.py --stress
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part 1
+# equivalent: python 06_periodic_wave/sin_trend/10_measurement_validation.py --stress
 ```
 
 Output: `results/analysis/sin_trend/<run_id>/synthetic_validation/`
@@ -50,8 +50,8 @@ The main suite (1) uses only \(c=0.005\) for curved baselines. For the same repr
 | Grid | \(3\times3\times2=18\) × 2\(c\) = 36 |
 
 ```bash
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part 2
-# equivalent: python 06_periodic_wave/sin_trend/42_curvature_sensitivity_grid.py
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part 2
+# equivalent: python 06_periodic_wave/sin_trend/14_curvature_sensitivity_grid.py
 ```
 
 Output: `results/analysis/sin_trend/<run_id>/curvature_sensitivity_grid/`
@@ -76,9 +76,9 @@ From the same long parent curve, cut windows of different lengths and compare es
 Parent-curve length tolerance uses `suite_A.parent_length_atol_mm` (default 0.05 mm).
 
 ```bash
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part 3 \
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part 3 \
   --seed 0 --run-id lengthsel_A_<tag>
-# equivalent: python 06_periodic_wave/sin_trend/40_length_selection_validation.py --suite A ...
+# equivalent: python 06_periodic_wave/sin_trend/12_length_selection_validation.py --suite A ...
 ```
 
 ---
@@ -99,10 +99,10 @@ From the clinical pre-selection pool, extract usable \(D\) and \(L_{\mathrm{base
 Generation-length tolerance is `length_atol_mm + length_rtol * L0_target` (default 0.05 mm). Failures outside tolerance are recorded as generation failures.
 
 ```bash
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part 4 \
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part 4 \
   --seed 0 --n-replicates 20 --n-per-replicate 500 --n-workers 4 \
   --run-id lengthsel_B_<tag>
-# equivalent: python 06_periodic_wave/sin_trend/40_length_selection_validation.py --suite B ...
+# equivalent: python 06_periodic_wave/sin_trend/12_length_selection_validation.py --suite B ...
 ```
 
 Outputs for (3)(4): `results/analysis/sin_trend/length_selection_validation/<run_id>/`  
@@ -113,14 +113,14 @@ Interrupt/resume/fingerprint behavior is unchanged (`--resume`, JSONL append, st
 ## Batch / smoke
 
 ```bash
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part all --seed 0
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part all --seed 0
 
-python 06_periodic_wave/sin_trend/39_synthetic_accuracy_validation.py --part 3+4 --smoke --seed 0
+python 06_periodic_wave/sin_trend/11_synthetic_accuracy_validation.py --part 3+4 --smoke --seed 0
 ```
 
 ## Out of scope / limits
 
-- Does not reproduce cortex mesh, normals, coverage, or \(R_{\tan}\) selection (surface direction: `38_surface_direction_validation.py`).
+- Does not reproduce cortex mesh, normals, coverage, or \(R_{\tan}\) selection (surface direction: `09_surface_direction_validation.py`).
 - Not a validation of the full selection of the final 275 intervals, nor of the causal origin of buckling.
 - Does not classify as Predominantly tangential merely because the synthetic surface is planar.
 

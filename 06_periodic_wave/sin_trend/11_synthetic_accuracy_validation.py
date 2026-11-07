@@ -89,7 +89,7 @@ def _normalize_part(raw: str) -> str:
 
 
 def _run_part1(args: argparse.Namespace) -> int:
-    mod = importlib.import_module("36_measurement_validation")
+    mod = importlib.import_module("10_measurement_validation")
     argv: List[str] = ["--stress"]
     if args.run_id:
         argv.extend(["--run-id", args.run_id])
@@ -99,7 +99,7 @@ def _run_part1(args: argparse.Namespace) -> int:
 
 
 def _run_part2(args: argparse.Namespace) -> int:
-    mod = importlib.import_module("42_curvature_sensitivity_grid")
+    mod = importlib.import_module("14_curvature_sensitivity_grid")
     argv: List[str] = []
     if args.run_id:
         argv.extend(["--run-id", args.run_id])
@@ -109,7 +109,7 @@ def _run_part2(args: argparse.Namespace) -> int:
 
 
 def _run_length_selection(args: argparse.Namespace, suite: str) -> int:
-    mod = importlib.import_module("40_length_selection_validation")
+    mod = importlib.import_module("12_length_selection_validation")
     argv: List[str] = ["--suite", suite, "--seed", str(args.seed), "--n-workers", str(args.n_workers)]
     if args.run_id:
         argv.extend(["--run-id", args.run_id])

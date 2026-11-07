@@ -3,8 +3,8 @@
 Standalone from accuracy validations (1)–(4). Entry point:
 
 ```bash
-python analysis_code/sin_trend/43_ell0_covariate_scaling_validation.py --part 5a+clinical
-python analysis_code/sin_trend/43_ell0_covariate_scaling_validation.py --part 5b+5c --n-workers 4
+python analysis_code/sin_trend/15_ell0_covariate_scaling_validation.py --part 5a+clinical
+python analysis_code/sin_trend/15_ell0_covariate_scaling_validation.py --part 5b+5c --n-workers 4
 ```
 
 - **5a**: reanalyze Suite B `all_cases.csv` (no new generation); uses pipeline `L_base_mm` as ℓ̂0.

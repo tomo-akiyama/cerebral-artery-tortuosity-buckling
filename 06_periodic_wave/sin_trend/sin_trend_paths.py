@@ -149,10 +149,10 @@ BASELINE_SOURCE_FILES = (
     "sin_trend_mca_labels.py",
     "sin_trend_mca_registry.py",
     "sin_trend_visualize.py",
-    "31_run_sin_trend_fitting.py",
-    "31_batch_sin_trend_fitting.py",
-    "32_create_long_format_csv.py",
-    "33_prepare_core_inplane_dataset.py",
+    "01_run_sin_trend_fitting.py",
+    "02_batch_sin_trend_fitting.py",
+    "03_create_long_format_csv.py",
+    "04_prepare_core_inplane_dataset.py",
 )
 # Stage manifests retain only the executable dependencies of their own stage.
 # Shared modules remain in both sets: changing them cannot silently claim the
@@ -162,7 +162,7 @@ MEASUREMENT_SOURCE_FILES = tuple(
     if name not in {
         "sin_trend_surface.py", "sin_trend_synthetic.py", "sin_trend_dataset.py",
         "sin_trend_mca_labels.py", "sin_trend_mca_registry.py", "sin_trend_visualize.py",
-        "32_create_long_format_csv.py", "33_prepare_core_inplane_dataset.py",
+        "03_create_long_format_csv.py", "04_prepare_core_inplane_dataset.py",
     }
 )
 SURFACE_SOURCE_FILES = (

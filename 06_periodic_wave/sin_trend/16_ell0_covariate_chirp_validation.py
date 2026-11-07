@@ -51,7 +51,7 @@ from sin_trend_length_selection_validation import (  # noqa: E402
 from importlib import import_module  # noqa: E402
 
 # reuse OLS / MC summary from (5)
-_ell0 = import_module("43_ell0_covariate_scaling_validation")
+_ell0 = import_module("15_ell0_covariate_scaling_validation")
 
 K_LAMBDA_OVER_D = 17.4
 CLINICAL_N_MED = 1.6875

@@ -238,7 +238,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 1
     do_execute = bool(args.execute)
     project_root = project_root_from_here(__file__)
-    runner = _HERE / "31_run_sin_trend_fitting.py"
+    runner = _HERE / "01_run_sin_trend_fitting.py"
     frames = [validate_frame_reference(f) for f in (args.frame_reference or [FRAME_BASELINE])]
     if args.surface_only and not args.run_id:
         print("Error: --surface-only requires the existing --run-id", file=sys.stderr)

@@ -178,7 +178,7 @@ class TestLengthSelectionSafeguards(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.helper = importlib.import_module("sin_trend_length_selection_validation")
-        cls.cli = importlib.import_module("40_length_selection_validation")
+        cls.cli = importlib.import_module("12_length_selection_validation")
 
     def setUp(self):
         self.cfg = apply_smoke_overrides(load_config())
@@ -331,7 +331,7 @@ class TestLengthSelectionSafeguards(unittest.TestCase):
         cp = self.path / "config.json"
         cp.write_text(json.dumps(cfg))
         out = self.path / "cross_failure"
-        with patch.object(self.cli, "crosscheck_with_36_short_coverage", return_value={"ok": False}):
+        with patch.object(self.cli, "crosscheck_with_measurement_short_coverage", return_value={"ok": False}):
             result = self.cli.main(["--suite", "A", "--config", str(cp), "--output-dir", str(out),
                                     "--no-plots", "--quiet"])
         self.assertEqual(result, 2)
@@ -364,7 +364,7 @@ class TestLengthSelectionSafeguards(unittest.TestCase):
         clinical = self.path / "inputs.csv"
         pd.DataFrame({"radius_median_mm":[.4,.6,.8,1.0],
                       "L_base_mm":[10.,20.,30.,40.]}).to_csv(clinical, index=False)
-        script = _HERE / "40_length_selection_validation.py"
+        script = _HERE / "12_length_selection_validation.py"
         argv = [sys.executable, "-B", str(script), "--smoke", "--seed", "20261027",
                 "--n-replicates", "1", "--n-per-replicate", "4",
                 "--clinical-csv", str(clinical), "--no-plots", "--quiet"]

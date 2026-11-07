@@ -741,7 +741,7 @@ def run_interactive_gui(args: argparse.Namespace) -> int:
         print(f"synced {n_synced} unchanged confirmed labels into manual table")
     print(f"work CSV: {work}")
     print(f"manual labels: {labels_path}")
-    script_23 = _HERE / "33_prepare_core_inplane_dataset.py"
+    script_23 = _HERE / "04_prepare_core_inplane_dataset.py"
     print(
         "Re-integrate labels into formal analysis dataset "
         "(previous formal labels are kept as base; manual updates overlay):\n"

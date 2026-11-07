@@ -22,8 +22,8 @@ def _load(name):
     mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
     return mod
 
-agg=_load('32_create_long_format_csv.py')
-analysis=_load('33_prepare_core_inplane_dataset.py')
+agg=_load('03_create_long_format_csv.py')
+analysis=_load('04_prepare_core_inplane_dataset.py')
 
 
 class TestSurfaceTagAggregation(unittest.TestCase):

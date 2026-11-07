@@ -16,10 +16,10 @@ Parts
 ℓ̂0 is the pipeline estimate L_base_mm (same quantity used for N̂cyc).
 
 Example:
-  python 06_periodic_wave/sin_trend/43_ell0_covariate_scaling_validation.py \\
+  python 06_periodic_wave/sin_trend/15_ell0_covariate_scaling_validation.py \\
       --part 5a+clinical --suite4-dir results/analysis/sin_trend/length_selection_validation/lengthsel_B_n500_r20_20261027
 
-  python 06_periodic_wave/sin_trend/43_ell0_covariate_scaling_validation.py \\
+  python 06_periodic_wave/sin_trend/15_ell0_covariate_scaling_validation.py \\
       --part 5b+5c --n-workers 4 --n-replicates 20 --n-per-replicate 500
 """
 from __future__ import annotations

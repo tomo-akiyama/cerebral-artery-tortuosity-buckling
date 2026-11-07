@@ -49,13 +49,13 @@ DEFAULT_CLINICAL_CSV_REL = Path(
 
 VALIDATION_SOURCE_FILES = tuple(sorted(set(MEASUREMENT_SOURCE_FILES) | {
     "sin_trend_length_selection_validation.py",
-    "40_length_selection_validation.py",
+    "12_length_selection_validation.py",
     "sin_trend_synthetic.py",
     "sin_trend_measure.py",
     "sin_trend_classify.py",
     "sin_trend_band.py",
     "sin_trend_paths.py",
-    "36_measurement_validation.py",
+    "10_measurement_validation.py",
 }))
 
 RESULT_NUMERIC_COLUMNS = (
@@ -1685,7 +1685,7 @@ def save_example_waveforms(jobs, df, meas_cfg, vcfg, out_dir):
     if not chosen:
         return []
     from importlib import import_module
-    plot = import_module("36_measurement_validation").plot_original_and_baseline_centerlines
+    plot = import_module("10_measurement_validation").plot_original_and_baseline_centerlines
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     written = []
@@ -1860,12 +1860,12 @@ def check_resume_consistency(out_dir: Path, fp: Dict[str, Any]) -> None:
         raise RuntimeError("resume fingerprint mismatch: " + ", ".join(changed))
 
 
-def crosscheck_with_36_short_coverage(
+def crosscheck_with_measurement_short_coverage(
     meas_cfg: Dict[str, Any],
 ) -> Dict[str, Any]:
     from importlib import import_module
 
-    m36 = import_module("36_measurement_validation")
+    m36 = import_module("10_measurement_validation")
     cond = {
         "amplitude_mm": 1.0,
         "lambda_x_mm": 20.0,
