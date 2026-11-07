@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 33 prepare core inplane dataset."""
+"""Public pipeline module: 04 prepare core inplane dataset."""
 
 from __future__ import annotations
 
@@ -350,7 +350,7 @@ def _main_unlocked(argv: Optional[List[str]] = None) -> int:
             {"reason": "run_config_missing", "detail": str(exc)},
             out_dir / "rejected_input_run_config.json",
         )
-        print(f"Error: run_config required for formal 33 path: {exc}")
+        print(f"Error: run_config required for formal 04 path: {exc}")
         return 3
     except Exception as exc:  # noqa: BLE001
         atomic_write_json(

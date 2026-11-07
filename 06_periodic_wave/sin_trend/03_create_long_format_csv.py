@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 32 create long format csv."""
+"""Public pipeline module: 03 create long format csv."""
 
 from __future__ import annotations
 
@@ -364,7 +364,7 @@ def create_long_format(
         fit_status_counts=fit_counts,
         surface_status_counts=surf_counts,
         selection_flow=selection,
-        paired_table_note="long CSV keeps all readable intervals; MCA Core subsets are built in 33, not here.",
+        paired_table_note="long CSV keeps all readable intervals; MCA Core subsets are built in 04, not here.",
         note_eligibility_reject_is_not_failure="numerical Core rejection and surface unevaluable are kept as rows; they do not alone mark aggregation incomplete",
     )
     atomic_write_json(meta, diag_dir / "long_format_metadata.json")

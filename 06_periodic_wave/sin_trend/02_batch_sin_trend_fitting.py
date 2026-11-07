@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Public pipeline module: 31 batch sin trend fitting."""
+"""Public pipeline module: 02 batch sin trend fitting."""
 
 from __future__ import annotations
 
