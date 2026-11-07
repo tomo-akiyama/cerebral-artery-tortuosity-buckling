@@ -44,7 +44,6 @@ import preprocessing
 
 # Import from utils
 import utils
-import tool
 
 
 ########################################################
