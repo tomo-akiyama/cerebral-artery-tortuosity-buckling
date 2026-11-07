@@ -61,7 +61,7 @@ preserve historical import names.
 5. Manual mask QC in 3D Slicer (`02_segmentation/README.md`).  
 6. `03_mesh/run_mesh_generation.py` — discrete marching cubes; remove ≤62.5 mm³; Taubin; Butterfly×2.  
 7. `04_centerline/run_centerline_extraction.py` — VMTK; smooth 1.2×100; resample 0.1 mm.  
-8. `05_m1_analysis/` — M1 endpoints and \(L\), \(L_0\), \(\rho\).  
+8. `05_m1_analysis/` — M1 endpoints and $L$, $L_0$, $\rho$.  
 9. `06_periodic_wave/sin_trend/31_*.py` → `32_*.py` → `33_*.py` — periodic-wave quantification.  
 10. `07_validation` / `36_*`–`44_*` — synthetic accuracy tests (optional regenerate).  
 11. `08_statistics/` — regressions and Main/SI figure–table scripts.  
