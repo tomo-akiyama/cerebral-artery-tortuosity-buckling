@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from normality_diagnostics import show_shapiro_diagnostic_plots
 
 # Path to the csv file
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 csv_path = os.path.join(project_root, "data", "participants", "IXI_HH_participants.csv")
 
 # Load the data

@@ -14,7 +14,7 @@ from scipy.stats import shapiro
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from normality_diagnostics import show_shapiro_diagnostic_plots
 
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 participants_csv = os.path.join(
     project_root, "data", "participants", "IXI_HH_participants.csv"

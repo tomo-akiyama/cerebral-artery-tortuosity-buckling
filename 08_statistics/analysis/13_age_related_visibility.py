@@ -9,11 +9,11 @@ from pathlib import Path
 
 import numpy as np
 
-STATISTICS_ROOT = Path(__file__).resolve().parent
+STATISTICS_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _load_visibility():
-    path = STATISTICS_ROOT / "12_buckling_visibility.py"
+    path = STATISTICS_ROOT / "analysis" / "12_buckling_visibility.py"
     spec = importlib.util.spec_from_file_location("buckling_visibility", path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot load {path}")

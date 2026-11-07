@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 # csv file path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 csv_path = os.path.join(project_root, 'results', 'participants', 'IXI_HH_participants.csv')
 
 # Load csv file

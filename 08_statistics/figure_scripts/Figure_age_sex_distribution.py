@@ -35,7 +35,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = PROJECT_ROOT / "data" / "participants" / "IXI_HH_participants.csv"
 OUT_DIR = PROJECT_ROOT / "statistics" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

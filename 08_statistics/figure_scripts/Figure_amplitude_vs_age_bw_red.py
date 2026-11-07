@@ -14,7 +14,10 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 from patsy import dmatrix
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+STAT_DIR = Path(__file__).resolve().parents[1]
+if str(STAT_DIR) not in sys.path:
+    sys.path.insert(0, str(STAT_DIR))
 OUT_DIR = PROJECT_ROOT / "statistics" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 

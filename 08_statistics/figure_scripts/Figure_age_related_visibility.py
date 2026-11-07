@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Generate paper figure: 13_Figure_age_related_visibility."""
+"""Generate paper figure: Figure_age_related_visibility."""
 
 from __future__ import annotations
 
@@ -32,14 +32,14 @@ _FIG_WIDTH_IN = _FIG_WIDTH_CM * _CM_TO_INCH
                                     
 _PANEL_LABEL_PAD_PT = 8.0
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = PROJECT_ROOT / "statistics" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Ensure project root is importable (so we can import figures/plot_config.py)
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-_SIN_TREND_V2 = PROJECT_ROOT / "06_periodic_wave"
+_SIN_TREND_V2 = PROJECT_ROOT / "06_periodic_wave" / "sin_trend"
 if str(_SIN_TREND_V2) not in sys.path:
     sys.path.insert(0, str(_SIN_TREND_V2))
 

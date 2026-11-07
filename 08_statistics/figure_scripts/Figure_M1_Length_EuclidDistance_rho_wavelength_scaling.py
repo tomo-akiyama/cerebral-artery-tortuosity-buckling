@@ -31,7 +31,10 @@ from matplotlib.ticker import FixedFormatter, FixedLocator, FormatStrFormatter, 
 import statsmodels.formula.api as smf
 from patsy import dmatrix
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+STAT_DIR = Path(__file__).resolve().parents[1]
+if str(STAT_DIR) not in sys.path:
+    sys.path.insert(0, str(STAT_DIR))
 M1_DATA_PATH = PROJECT_ROOT / "data" / "m1" / "IXI_HH_m1_features_long.csv"
 OUT_DIR = PROJECT_ROOT / "statistics" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

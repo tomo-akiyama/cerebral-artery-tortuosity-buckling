@@ -15,7 +15,7 @@ from statsmodels.nonparametric.smoothers_lowess import lowess
 from patsy import dmatrix
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = PROJECT_ROOT / "data" / "m1" / "IXI_HH_m1_features_long.csv"
 OUT_RESULTS = PROJECT_ROOT / "statistics" / "results"
 OUT_FIGURES = PROJECT_ROOT / "statistics" / "figures"
@@ -522,7 +522,7 @@ def main(
     pw_out_csv_legacy = OUT_RESULTS / "lnTI_candidate_knot_piecewise_table.csv"
     pw_df.rename(columns={"breakpoint": "knot"}).to_csv(pw_out_csv_legacy, index=False)
 
-    # ρ piecewise table for statistics/03_Table_piecewise_models_rho.py
+    # ρ piecewise table for statistics/table_scripts/Table_m1_piecewise_models_rho.py
     # Values are stored unrounded; display rounding is applied only in the table script.
     pw_rho_out_csv = OUT_RESULTS / "rho_candidate_breakpoint_piecewise_table.csv"
     pw_rho_df.to_csv(pw_rho_out_csv, index=False)

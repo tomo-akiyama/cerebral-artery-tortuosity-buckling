@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedFormatter, FixedLocator, LogLocator, NullFormatter
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = (
     PROJECT_ROOT / "data" / "periodic_wave" / "IXI_HH_sin_trend_analysis_dataset.csv"
     / "run_154_baseline_v2_r0"

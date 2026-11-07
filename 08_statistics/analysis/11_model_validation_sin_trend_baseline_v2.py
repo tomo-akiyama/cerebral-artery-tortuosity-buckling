@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-_STATISTICS_DIR = Path(__file__).resolve().parent
+_STATISTICS_DIR = Path(__file__).resolve().parents[1]
 _PROJECT_ROOT = _STATISTICS_DIR.parent
 _SIN_TREND_V2 = _PROJECT_ROOT / "06_periodic_wave"
 _AC = _PROJECT_ROOT / "06_periodic_wave"

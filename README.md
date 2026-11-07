@@ -42,7 +42,7 @@ VMTK requires an **x86_64** Conda stack (use Rosetta on Apple Silicon).
 | `05_m1_analysis/` | Limen-insulae M1 definition and M1 morphometrics |
 | `06_periodic_wave/sin_trend/` | Bishop-frame sinusoid-plus-trend pipeline (**paper analysis code**) |
 | `07_validation/` | Pointers to synthetic accuracy / procedure-bias scripts + summary data |
-| `08_statistics/` | OLS / spline / piecewise / bootstrap analyses and paper figure/table scripts |
+| `08_statistics/` | `analysis/` regressions; `figure_scripts/` / `table_scripts/` paper outputs |
 | `09_simulation/` | Growth-driven buckling PDE simulation and simulation figures |
 | `10_figures/` | Shared plotting config |
 | `data/` | Processed tables + ACTIVE simulation `.npz` (no raw MRI) |
@@ -64,7 +64,7 @@ preserve historical import names.
 8. `05_m1_analysis/` — M1 endpoints and $L$, $L_0$, $\rho$.  
 9. `06_periodic_wave/sin_trend/01_*.py` → `03_*.py` → `04_*.py` — periodic-wave quantification.  
 10. `07_validation` / `10_*`–`16_*` — synthetic accuracy tests (optional regenerate).  
-11. `08_statistics/` — regressions and Main/SI figure–table scripts.  
+11. `08_statistics/analysis/` + `figure_scripts/` / `table_scripts/` — regressions and Main/SI outputs.  
 12. `09_simulation/buckling_simulation_P_coupling.py` — numerical model; figures via `simulation_figure_config.py`.
 
 **Shipped data already include steps 8–12 outputs** needed to reproduce statistics/figures without raw MRI.
@@ -73,12 +73,12 @@ preserve historical import names.
 
 | Script | Paper item |
 |--------|------------|
-| `08_statistics/00_Figure_age_sex_distribution.py` | SI age/sex distribution |
-| `08_statistics/01_summarize_M1_morphometrics.py` + `02_*`/`03_*` tables | SI M1 morphology & regression tables |
-| `08_statistics/03_Figure_M1_Length_EuclidDistance_rho*.py` / `101_Figure_*wavelength_scaling*.py` | Main geometric figure (M1 panels + wavelength scaling) |
-| `08_statistics/03_Figure_M1_rho_nonlinear_patterns.py` / `03_Table_piecewise_models_rho.py` | SI ρ nonlinearity / piecewise table |
-| `08_statistics/11_model_validation*.py` + wavelength/amplitude figure scripts | Main wavelength–diameter / amplitude analyses; SI model tables |
-| `08_statistics/13_Figure_age_related_visibility.py` | SI age-related visibility |
+| `08_statistics/figure_scripts/Figure_age_sex_distribution.py` | SI age/sex distribution |
+| `08_statistics/analysis/01_summarize_M1_morphometrics.py` + `table_scripts/Table_m1_*.py` | SI M1 morphology & regression tables |
+| `08_statistics/figure_scripts/Figure_M1_Length_EuclidDistance_rho*.py` / `Figure_M1_Length_EuclidDistance_rho_wavelength_scaling.py` | Main geometric figure (M1 panels + wavelength scaling) |
+| `08_statistics/figure_scripts/Figure_M1_rho_nonlinear_patterns.py` / `table_scripts/Table_m1_piecewise_models_rho.py` | SI ρ nonlinearity / piecewise table |
+| `08_statistics/analysis/11_model_validation*.py` + wavelength/amplitude figure scripts | Main wavelength–diameter / amplitude analyses; SI model tables |
+| `08_statistics/figure_scripts/Figure_age_related_visibility.py` | SI age-related visibility |
 | `09_simulation/simulation_figure_config.py` (+ `Figure_*.py`) | Main numerical simulation figure |
 | Schematic Main/SI illustrations (MIP, anatomy, flowcharts, etc.) | Created outside this repo (not included) |
 
@@ -87,9 +87,9 @@ preserve historical import names.
 From the repository root:
 
 ```bash
-python 08_statistics/00_Figure_age_sex_distribution.py
-python 08_statistics/101_Figure_M1_Length_EuclidDistance_rho_wavelength_scaling.py
-python 08_statistics/11_model_validation.py
+python 08_statistics/figure_scripts/Figure_age_sex_distribution.py
+python 08_statistics/figure_scripts/Figure_M1_Length_EuclidDistance_rho_wavelength_scaling.py
+python 08_statistics/analysis/11_model_validation.py
 python 09_simulation/simulation_figure_config.py
 ```
 

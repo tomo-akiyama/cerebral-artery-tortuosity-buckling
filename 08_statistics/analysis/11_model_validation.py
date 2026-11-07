@@ -13,12 +13,12 @@ import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 
-STATISTICS_ROOT = Path(__file__).resolve().parent
+STATISTICS_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = STATISTICS_ROOT.parent
 TABLES_ROOT = STATISTICS_ROOT / "tables"
 if str(TABLES_ROOT) not in sys.path:
     sys.path.insert(0, str(TABLES_ROOT))
-_SIN_TREND_V2 = PROJECT_ROOT / "06_periodic_wave"
+_SIN_TREND_V2 = PROJECT_ROOT / "06_periodic_wave" / "sin_trend"
 if str(_SIN_TREND_V2) not in sys.path:
     sys.path.insert(0, str(_SIN_TREND_V2))
 

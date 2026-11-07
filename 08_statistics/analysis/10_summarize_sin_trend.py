@@ -108,7 +108,7 @@ def align_crosstab_columns(table: pd.DataFrame, preferred: list) -> pd.DataFrame
     return table.loc[:, cols]
 
               
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
                                     
 sys.path.insert(0, project_root)
 from figures.plot_config import (

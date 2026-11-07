@@ -15,7 +15,7 @@ from patsy import dmatrix
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = PROJECT_ROOT / "data" / "m1" / "IXI_HH_m1_features_long.csv"
 OUT_RESULTS = PROJECT_ROOT / "data" / "statistics"
 

@@ -33,7 +33,7 @@ import statsmodels.formula.api as smf
 from patsy import dmatrix
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = PROJECT_ROOT / "data" / "m1" / "IXI_HH_m1_features_long.csv"
 OUT_DIR = PROJECT_ROOT / "statistics" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
