@@ -9,7 +9,9 @@ import os
 import sys
 
 # Add the path to make the utils module importable
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 utils_path = os.path.join(project_root, 'lib')
 preprocessing_path = os.path.join(project_root, '01_preprocessing')
 sys.path.insert(0, os.path.join(project_root, 'lib'))  # Add analysis_code to path for package imports
@@ -18,7 +20,7 @@ sys.path.append(preprocessing_path)
 # Import function modules from the same directory
 import mesh_generation
 import preprocessing
-import utils
+from lib import file_utils as utils
 import m1_definition
 import centerline_extraction
 ########################################################

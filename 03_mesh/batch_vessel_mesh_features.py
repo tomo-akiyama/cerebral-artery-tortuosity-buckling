@@ -8,7 +8,9 @@ import os
 import sys
 
               
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
             
 csv_path = os.path.join(project_root, 'results', 'participants', 'IXI_HH_participants.csv')
@@ -32,7 +34,7 @@ sys.path.append(utils_path)
                                                                  
 
 from run_vessel_mesh_features import calculate_and_save_vessel_mesh_features
-import utils
+from lib import file_utils as utils
 import mesh_generation
 import centerline_extraction
 

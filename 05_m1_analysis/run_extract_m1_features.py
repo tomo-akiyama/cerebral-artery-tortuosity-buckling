@@ -12,13 +12,15 @@ import pyvista as pv
 import pandas as pd
 
 # Add the path to make the utils module importable
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 utils_path = os.path.join(project_root, 'lib')
 mesh_path = os.path.join(project_root, '03_mesh')
 sys.path.insert(0, os.path.join(project_root, 'lib'))
 sys.path.append(mesh_path)
 
-import utils
+from lib import file_utils as utils
 import mesh_generation
 import centerline_extraction
 import vessel_mesh_features

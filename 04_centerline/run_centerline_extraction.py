@@ -13,14 +13,16 @@ import pyvista as pv
 
 
 # Add the path to make the utils module importable
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 utils_path = os.path.join(project_root, 'lib')
 sys.path.insert(0, os.path.join(project_root, 'lib'))  # Add analysis_code to path for package imports
 sys.path.append(utils_path)
 
 # Import function modules from the same directory
 import mesh_generation
-import utils
+from lib import file_utils as utils
 import centerline_extraction
 
 ########################################################

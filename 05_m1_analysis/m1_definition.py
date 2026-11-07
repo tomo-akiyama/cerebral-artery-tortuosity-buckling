@@ -13,7 +13,9 @@ import matplotlib.pyplot as plt
 import sys
 
 # Add the path to make the preprocessing module importable
-project_root_for_import = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root_for_import = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root_for_import not in sys.path:
+    sys.path.insert(0, project_root_for_import)
 preprocessing_path = os.path.join(project_root_for_import, '01_preprocessing')
 sys.path.insert(0, os.path.join(project_root_for_import, 'lib'))
 sys.path.append(preprocessing_path)
@@ -39,7 +41,9 @@ def m1_definition(directory_id, show_plots=True):
         Path to the generated subtraction image
     """
     # Load the MNI template image
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
     mni_template_path = os.path.join(project_root, 'data', 'raw', 'CAT12 template', 'Template_T1.nii')
     img_mni = ants.image_read(mni_template_path)
 

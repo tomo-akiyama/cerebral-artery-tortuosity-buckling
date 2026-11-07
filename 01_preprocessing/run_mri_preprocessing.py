@@ -33,17 +33,14 @@ from skimage.morphology import remove_small_objects
 import os
 import sys
 
-# Add the path to make the utils module importable
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-utils_path = os.path.join(project_root, 'lib')
-sys.path.insert(0, os.path.join(project_root, 'lib'))  # Add analysis_code to path for package imports
-sys.path.append(utils_path)
+# Repository root (01_preprocessing/ -> repo root)
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-# Import function modules from the same directory
+# Same-directory helpers
 import preprocessing
-
-# Import from utils
-import utils
+from lib import file_utils as utils
 
 
 ########################################################

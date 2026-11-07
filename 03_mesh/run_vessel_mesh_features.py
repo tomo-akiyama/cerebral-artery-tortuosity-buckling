@@ -19,7 +19,9 @@ import os
 import sys
 
 # Add the path to make the utils module importable
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 utils_path = os.path.join(project_root, 'lib')
 sys.path.insert(0, os.path.join(project_root, 'lib'))  # Add analysis_code to path for package imports
 sys.path.append(utils_path)
@@ -32,7 +34,7 @@ from vessel_mesh_features import (
     split_mesh_left_right,
     summarize_edge_lengths,
 )
-import utils
+from lib import file_utils as utils
 import mesh_generation
 import centerline_extraction
 
