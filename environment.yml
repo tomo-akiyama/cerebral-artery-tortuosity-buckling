@@ -19,9 +19,11 @@ dependencies:
   - matplotlib
   - seaborn
 
-  # statistics (conda-forge)
-  - scikit-learn
+  # image processing / geometry (conda-forge)
   - scikit-image
+  - scikit-learn
+
+  # statistics (conda-forge)
   - statsmodels
 
   # pip-managed packages (installed via pip in this project)
